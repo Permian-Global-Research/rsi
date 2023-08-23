@@ -11,7 +11,8 @@ stack_rasters(
   resolution,
   extent,
   reference_raster = 1,
-  resampling_method = "bilinear"
+  resampling_method = "bilinear",
+  band_names
 )
 }
 \arguments{
@@ -40,6 +41,10 @@ reference raster.}
 
 \item{resampling_method}{The method to use when resampling to different
 resolutions.}
+
+\item{band_names}{Either a character vector of band names, or a function that
+when given a character vector of band names, returns a character vector of
+the same length containing new band names.}
 }
 \value{
 \code{raster_path}, unchanged.

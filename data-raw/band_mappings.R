@@ -14,7 +14,7 @@ sentinel2_band_mapping <- list(
       "B11" = "S1",
       "B12" = "S2"
     ),
-    scl_name = "SCL",
+    mask_band = "SCL",
     stac_source = "https://earth-search.aws.element84.com/v0/",
     collection_name = "sentinel-s2-l2a-cogs",
     download_function = \(q) {
@@ -36,7 +36,7 @@ sentinel2_band_mapping <- list(
       swir16 = "S1",
       swir22 = "S2"
     ),
-    scl_name = "scl",
+    mask_band = "scl",
     stac_source = "https://earth-search.aws.element84.com/v1/",
     collection_name = "sentinel-2-l2a",
     download_function = \(q) {
@@ -66,7 +66,7 @@ landsat_band_mapping <- list(
       "lwir" = "T",
       "lwir11" = "T1"
     ),
-    qa_name = "qa_pixel",
+    mask_band = "qa_pixel",
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "landsat-c2-l2",
     download_function = rsi::download_planetary_computer
