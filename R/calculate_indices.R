@@ -34,6 +34,9 @@ calculate_indices <- function(raster,
     )
   }
   if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
+
+  check_indices(names(raster), indices)
+
   terra::predict(
     raster,
     indices,

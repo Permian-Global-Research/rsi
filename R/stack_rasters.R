@@ -26,6 +26,9 @@
 #' reference raster.
 #' @param resampling_method The method to use when resampling to different
 #' resolutions.
+#' @param band_names Either a character vector of band names, or a function that
+#' when given a character vector of band names, returns a character vector of
+#' the same length containing new band names.
 #'
 #' @returns `raster_path`, unchanged.
 #'
@@ -45,7 +48,8 @@ stack_rasters <- function(rasters,
                           resolution,
                           extent,
                           reference_raster = 1,
-                          resampling_method = "bilinear") {
+                          resampling_method = "bilinear",
+                          band_names) {
   rlang::check_dots_empty()
 
   out_dir <- dirname(raster_path)
@@ -98,25 +102,33 @@ stack_rasters <- function(rasters,
 
   ref_crs <- terra::crs(ref_rast)
 
-  var_names <- unlist(
-    lapply(
-      rasters,
-      function(r) {
-        r <- terra::rast(r)
-        # this is the only place we instantiate these rasters, so may as well
-        # check CRS alignment while we're here...
-        if (terra::crs(r) != ref_crs) {
-          rlang::abort(c(
-            "Rasters do not all share the reference raster's CRS.",
-            i = "Reproject rasters to all share the same CRS."
-          ),
-          class = "rsi_multiple_crs"
-          )
+  if (missing(band_names) || is.function(band_names)) {
+    var_names <- unlist(
+      lapply(
+        rasters,
+        function(r) {
+          r <- terra::rast(r)
+          # this is the only place we instantiate these rasters, so may as well
+          # check CRS alignment while we're here...
+          if (terra::crs(r) != ref_crs) {
+            rlang::abort(c(
+              "Rasters do not all share the reference raster's CRS.",
+              i = "Reproject rasters to all share the same CRS."
+            ),
+            class = "rsi_multiple_crs"
+            )
+          }
+          names(r)
         }
-        names(r)
-      }
+      )
     )
-  )
+  }
+  if (!missing(band_names) && is.function(band_names)) {
+    var_names <- band_names(var_names)
+  }
+  if (is.character(band_names)) {
+    var_names <- band_names
+  }
 
   vrt_container_file <- tempfile(tmpdir = out_dir, fileext = ".vrt")
   sf::gdal_utils(
