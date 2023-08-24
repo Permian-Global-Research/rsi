@@ -49,11 +49,11 @@
 #' [query_planetary_computer()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
-#' @inheritParams rlang::args_dots_empty
+#' @param ... Passed to `item_filter_functiion`.
 #' @param item_filter_function A function that takes the outputs of
-#' `query_function` (usually a `STACItemCollection`) and returns a filtered
-#' `STACItemCollection`. This is used, for example, to only download images from
-#' specific Landsat platforms.
+#' `query_function` (usually a `STACItemCollection`) and `...` and returns a
+#' filtered `STACItemCollection`. This is used, for example, to only download
+#' images from specific Landsat platforms.
 #' @param mask_band Character of length 1: The name of the asset in your
 #' STAC source to use to mask the data. Set to `NULL` to not mask. See the
 #' `mask_band` slots of [sentinel1_band_mapping], [sentinel2_band_mapping], and
@@ -124,7 +124,6 @@ get_stac_data <- function(aoi,
                             "-co", "PREDICTOR=2",
                             "-co", "NUM_THREADS=ALL_CPUS"
                           )) {
-  rlang::check_dots_empty()
 
   gdalwarp_options <- process_gdalwarp_options(
     gdalwarp_options = gdalwarp_options,
@@ -144,7 +143,7 @@ get_stac_data <- function(aoi,
   )
 
   if (!is.null(item_filter_function)) {
-    items <- item_filter_function(items)
+    items <- item_filter_function(items, ...)
   }
 
   items_urls <- lapply(
