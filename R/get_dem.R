@@ -6,17 +6,7 @@
 #' `download_function` are provided, but currently all default and input
 #' checking are specific to Planetary Computer.
 #'
-#' @param buffer An optional buffer (in the same units as `aoi`) to apply to the
-#' AOI before downloading data.
-#' @param output_filename The filename to write the output raster to.
-#' @param asset_names The names of the assets to download.
-#' @inheritParams get_landsat_imagery
-#' @inheritParams terra::writeRaster
-#' @param ... Arguments passed to [terra::writeRaster()].
-#' @param gdalbuildvrt_options,gdalwarp_options Options passed to `gdalbuildvrt`
-#' and `gdalwarp`, respectively, through the `options` argument of
-#' [sf::gdal_utils()].
-#'
+#' @inheritParams get_stac_data
 #' @examples
 #' \dontrun{
 #' aoi <- sf::st_point(c(-74.912131, 44.080410)) |>

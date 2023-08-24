@@ -28,42 +28,38 @@ get_dem(
 Will be used to get the bounding box used for calculating metrics and the
 output data's CRS.}
 
-\item{...}{Arguments passed to \code{\link[terra:writeRaster]{terra::writeRaster()}}.}
+\item{...}{These dots are for future extensions and must be empty.}
 
-\item{pixel_x_size}{Numeric of length 1: size of pixels in x-direction
-(longitude / easting).}
+\item{pixel_x_size, pixel_y_size}{Numeric of length 1: size of pixels in
+x-direction (longitude / easting) and y-direction (latitude / northing).}
 
-\item{pixel_y_size}{Numeric of length 1: size of pixels in y-direction
-(latitude / northing).}
-
-\item{buffer}{An optional buffer (in the same units as \code{aoi}) to apply to the
-AOI before downloading data.}
-
-\item{output_filename}{The filename to write the output raster to.}
+\item{output_filename}{The filename to write the output raster to. If
+\code{composite_function} is \code{NULL}, something will be appended to the end of the
+filename (before the extension) to create a unique file for each downloaded
+image. Currently this means sequential numbers are added to each file, but
+this may change in the future -- do not depend on the resulting filenames
+staying the same across versions!}
 
 \item{start_date, end_date}{Character of length 1: The first and last date,
 respectively, of imagery to include in metrics calculations. Should be in
 YYYY-MM-DD format.}
 
 \item{stac_source}{Character of length 1: the STAC URL to download
-imagery from. Defaults to the \code{stac_source} attribute of \code{remap_band_names}.}
+imagery from.}
 
-\item{collections}{a \code{character} vector of collection IDs to include in
-the search for items. Only items in one of the provided collections will be
-searched.}
-
-\item{asset_names}{The names of the assets to download.}
-
-\item{download_function}{A function that takes the output from
-\code{\link[rstac:stac_search]{rstac::stac_search()}} and executes the request. Use this if you need to sign
-requests for your endpoint, or use a non-GET verb.}
+\item{asset_names}{The names of the assets to download. If this vector has
+names, then the names of the vector are assumed to be the names of assets on
+the STAC server, which will be renamed to the elements of the vector in the
+final output.}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}
 
-\item{gdalbuildvrt_options, gdalwarp_options}{Options passed to \code{gdalbuildvrt}
-and \code{gdalwarp}, respectively, through the \code{options} argument of
-\code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
+\item{gdalwarp_options}{Options passed to \code{gdalwarp} through the \code{options}
+argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The same set of options are used for all
+downloaded data and the final output images; this means that some common
+options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
+varying data types.}
 }
 \value{
 \code{output_filename}, unchanged.

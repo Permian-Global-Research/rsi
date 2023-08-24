@@ -5,13 +5,8 @@
 #' in this package contains metadata relevant to the Planetary Computer STAC
 #' endpoint.
 #'
-#' @inheritParams get_sentinel2_imagery
-#' @param qa_band_name Character of length 1: The name of the QA band in your
-#' STAC source. The built-in band mappings store this in the `qa_name` attribute
-#' of each set, which will be used automatically if this argument is not
-#' manually provided.
+#' @inheritParams get_stac_data
 #' @param platforms The acceptable satellites to download imagery from.
-#' @inheritParams rlang::args_dots_empty
 #'
 #' @inherit get_sentinel2_imagery return
 #'
@@ -70,17 +65,11 @@ get_landsat_imagery <- function(aoi,
   )
 
   if (!is.null(platforms)) {
-    acceptable_platforms <- vapply(
-      items$features,
-      \(x) tryCatch(x$properties$platform %in% platforms, error = \(e) FALSE),
-      logical(1)
-    )
-    items$features <- items$features[acceptable_platforms]
+    items <- landsat_platform_filter(items, platforms)
   }
 
   qa_band_name <- qa_band_name %||% "qa_pixel"
-  # "Clear with lows set"
-  # https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/LSDS-1619_Landsat-8-9-C2-L2-ScienceProductGuide-v4.pdf
+
   stac_mask <- gdalcubes::image_mask(
     qa_band_name,
     values = 21824,
@@ -140,4 +129,13 @@ get_landsat_imagery <- function(aoi,
     creation_options = creation_options
   )
   out
+}
+
+landsat_platform_filter <- function(items, platforms) {
+  acceptable_platforms <- vapply(
+    items$features,
+    function(x) tryCatch(x$properties$platform %in% platforms, error = function(e) FALSE),
+    logical(1)
+  )
+  items$features <- items$features[acceptable_platforms]
 }

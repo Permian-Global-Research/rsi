@@ -1,3 +1,4 @@
+library(rsi)
 sentinel2_band_mapping <- list(
   aws_v0 = structure(
     c(
@@ -15,11 +16,13 @@ sentinel2_band_mapping <- list(
       "B12" = "S2"
     ),
     mask_band = "SCL",
+    mask_function = sentinel2_mask_function,
     stac_source = "https://earth-search.aws.element84.com/v0/",
     collection_name = "sentinel-s2-l2a-cogs",
-    download_function = \(q) {
+    query_function = \(q) {
       rstac::items_fetch(rstac::get_request(q))
-    }
+    },
+    class = "rsi_band_mapping"
   ),
   aws_v1 = structure(
     c(
@@ -37,11 +40,13 @@ sentinel2_band_mapping <- list(
       swir22 = "S2"
     ),
     mask_band = "scl",
+    mask_function = sentinel2_mask_function,
     stac_source = "https://earth-search.aws.element84.com/v1/",
     collection_name = "sentinel-2-l2a",
-    download_function = \(q) {
+    query_function = \(q) {
       rstac::items_fetch(rstac::get_request(q))
-    }
+    },
+    class = "rsi_band_mapping"
   )
 )
 
@@ -49,7 +54,7 @@ sentinel2_band_mapping$planetary_computer_v1 <- sentinel2_band_mapping$aws_v0
 attr(sentinel2_band_mapping$planetary_computer_v1, "scl_name") <- "SCL"
 attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source") <- "https://planetarycomputer.microsoft.com/api/stac/v1/"
 attr(sentinel2_band_mapping$planetary_computer_v1, "collection_name") <- "sentinel-2-l2a"
-attr(sentinel2_band_mapping$planetary_computer_v1, "download_function") <- rsi::download_planetary_computer
+attr(sentinel2_band_mapping$planetary_computer_v1, "query_function") <- query_planetary_computer
 
 usethis::use_data(sentinel2_band_mapping, overwrite = TRUE)
 
@@ -67,9 +72,11 @@ landsat_band_mapping <- list(
       "lwir11" = "T1"
     ),
     mask_band = "qa_pixel",
+    mask_function = landsat_mask_function,
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "landsat-c2-l2",
-    download_function = rsi::download_planetary_computer
+    query_function = query_planetary_computer,
+    class = "rsi_band_mapping"
   )
 )
 
@@ -85,7 +92,8 @@ sentinel1_band_mapping <- list(
     ),
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "sentinel-1-grd",
-    download_function = rsi::download_planetary_computer
+    query_function = query_planetary_computer,
+    class = "rsi_band_mapping"
   )
 )
 
