@@ -6,7 +6,7 @@
 \alias{get_sentinel2_imagery}
 \alias{get_landsat_imagery}
 \alias{get_dem}
-\title{Retrieve images (or composite images) from STAC endpoints}
+\title{Retrieve and composite images from STAC endpoints}
 \usage{
 get_stac_data(
   aoi,
@@ -169,18 +169,12 @@ STAC source to use to mask the data. Set to \code{NULL} to not mask. See the
 raster, where \code{TRUE} pixels will be preserved and \code{FALSE} or \code{NA} pixels will
 be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function()}}.}
 
-\item{output_filename}{The filename to write the output raster to. If
-\code{composite_function} is \code{NULL}, something will be appended to the end of the
-filename (before the extension) to create a unique file for each downloaded
-image. Currently this means sequential numbers are added to each file, but
-this may change in the future -- do not depend on the resulting filenames
-staying the same across versions!}
+\item{output_filename}{The filename to write the output raster to.}
 
 \item{composite_function}{The (quoted) name of a function from
 \code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine downloaded images
 into a single composite (i.e., to aggregate pixel values from multiple images
-into a single value). Set to \code{NULL} to not composite images, but instead
-save each image as a separate file.}
+into a single value).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}
@@ -195,13 +189,17 @@ varying data types.}
 \code{output_filename}, unchanged.
 }
 \description{
-This function retrieves composites of satellite images from STAC endpoints.
+These function retrieves composites of satellite images from STAC endpoints.
+\code{get_stac_data()} is a generic function which should be able to download and
+composite images from a variety of data sources, while the other helper
+functions have useful defaults for downloading common data sets from standard
+STAC sources.
 }
 \section{Usage Tips}{
 
 It's often useful to buffer your \code{aoi} object slightly, on the order of 1-2
 cell widths, in order to ensure that data is downloaded for your entire AOI
-even after accounting for any reprojection necessary to compare your AOI to
+even after accounting for any reprojection needed to compare your AOI to
 the data on the STAC server.
 
 Setting the following GDAL configuration variables via \code{Sys.setenv()} or in

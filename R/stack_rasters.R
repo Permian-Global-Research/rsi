@@ -102,31 +102,31 @@ stack_rasters <- function(rasters,
 
   ref_crs <- terra::crs(ref_rast)
 
-  if (missing(band_names) || is.function(band_names)) {
-    var_names <- unlist(
-      lapply(
-        rasters,
-        function(r) {
-          r <- terra::rast(r)
-          # this is the only place we instantiate these rasters, so may as well
-          # check CRS alignment while we're here...
-          if (terra::crs(r) != ref_crs) {
-            rlang::abort(c(
-              "Rasters do not all share the reference raster's CRS.",
-              i = "Reproject rasters to all share the same CRS."
-            ),
-            class = "rsi_multiple_crs"
-            )
-          }
-          names(r)
+  var_names <- unlist(
+    lapply(
+      rasters,
+      function(r) {
+        r <- terra::rast(r)
+        # this is the only place we instantiate these rasters, so may as well
+        # check CRS alignment while we're here...
+        if (terra::crs(r) != ref_crs) {
+          rlang::abort(c(
+            "Rasters do not all share the reference raster's CRS.",
+            i = "Reproject rasters to all share the same CRS."
+          ),
+          class = "rsi_multiple_crs",
+          call = rlang::caller_env()
+          )
         }
-      )
+        names(r)
+      }
     )
-  }
+  )
+
   if (!missing(band_names) && is.function(band_names)) {
     var_names <- band_names(var_names)
   }
-  if (is.character(band_names)) {
+  if (!missing(band_names) && is.character(band_names)) {
     var_names <- band_names
   }
 

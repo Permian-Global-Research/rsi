@@ -1,11 +1,15 @@
-#' Retrieve images (or composite images) from STAC endpoints
+#' Retrieve and composite images from STAC endpoints
 #'
-#' This function retrieves composites of satellite images from STAC endpoints.
+#' These function retrieves composites of satellite images from STAC endpoints.
+#' `get_stac_data()` is a generic function which should be able to download and
+#' composite images from a variety of data sources, while the other helper
+#' functions have useful defaults for downloading common data sets from standard
+#' STAC sources.
 #'
 #' @section Usage Tips:
 #' It's often useful to buffer your `aoi` object slightly, on the order of 1-2
 #' cell widths, in order to ensure that data is downloaded for your entire AOI
-#' even after accounting for any reprojection necessary to compare your AOI to
+#' even after accounting for any reprojection needed to compare your AOI to
 #' the data on the STAC server.
 #'
 #' Setting the following GDAL configuration variables via `Sys.setenv()` or in
@@ -75,17 +79,11 @@
 #' @param mask_function A function that takes a raster and returns a boolean
 #' raster, where `TRUE` pixels will be preserved and `FALSE` or `NA` pixels will
 #' be masked out. See [sentinel2_mask_function()].
-#' @param output_filename The filename to write the output raster to. If
-#' `composite_function` is `NULL`, something will be appended to the end of the
-#' filename (before the extension) to create a unique file for each downloaded
-#' image. Currently this means sequential numbers are added to each file, but
-#' this may change in the future -- do not depend on the resulting filenames
-#' staying the same across versions!
-#' @param composite_function The (quoted) name of a function from
-#' `terra` (for instance, [terra::median]) used to combine downloaded images
-#' into a single composite (i.e., to aggregate pixel values from multiple images
-#' into a single value). Set to `NULL` to not composite images, but instead
-#' save each image as a separate file.
+#' @param output_filename The filename to write the output raster to.
+#' @param composite_function Character of length 1: The (quoted) name of a
+#' function from `terra` (for instance, [terra::median]) used to combine
+#' downloaded images into a single composite (i.e., to aggregate pixel values
+#' from multiple images into a single value).
 #' @inheritParams rstac::stac_search
 #' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
 #' argument of [sf::gdal_utils()]. The same set of options are used for all
@@ -139,6 +137,29 @@ get_stac_data <- function(aoi,
                             "-co", "PREDICTOR=2",
                             "-co", "NUM_THREADS=ALL_CPUS"
                           )) {
+
+  if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
+    rlang::abort(
+      "`aoi` must be an sf or sfc object.",
+      class = "rsi_aoi_not_sf"
+    )
+  }
+
+  check_type_and_length(
+    start_date = character(1),
+    end_date = character(1),
+    pixel_x_size = numeric(1),
+    pixel_y_size = numeric(1),
+    stac_source = character(1),
+    collection = character(1),
+    rescale_bands = logical(1),
+    mask_band = character(1),
+    output_filename = character(1),
+    composite_function = character(1),
+    limit = numeric(1),
+    gdalwarp_options = character()
+  )
+
   gdalwarp_options <- process_gdalwarp_options(
     gdalwarp_options = gdalwarp_options,
     aoi = aoi,
@@ -248,54 +269,52 @@ get_stac_data <- function(aoi,
     )
   }
 
-  if (!is.null(composite_function)) {
-    download_dir <- file.path(tempdir(), "composite_dir")
-    if (!dir.exists(download_dir)) dir.create(download_dir)
+  download_dir <- file.path(tempdir(), "composite_dir")
+  if (!dir.exists(download_dir)) dir.create(download_dir)
 
-    composited_bands <- vapply(
-      names(downloaded_bands),
-      function(band_name) {
-        out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
+  composited_bands <- vapply(
+    names(downloaded_bands),
+    function(band_name) {
+      out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
-        do.call(
-          getFromNamespace(composite_function, "terra"),
-          list(
-            x = terra::rast(downloaded_bands[[band_name]]),
-            na.rm = TRUE,
-            filename = out_file,
-            overwrite = TRUE
-          )
+      do.call(
+        getFromNamespace(composite_function, "terra"),
+        list(
+          x = terra::rast(downloaded_bands[[band_name]]),
+          na.rm = TRUE,
+          filename = out_file,
+          overwrite = TRUE
         )
-
-        if (rescale_bands) {
-          out_file <- rescale_band(downloaded_bands, band_name, out_file)
-        }
-
-        out_file
-      },
-      character(1)
-    )
-    on.exit(file.remove(composited_bands), add = TRUE)
-
-    out_vrt <- tempfile(fileext = ".vrt")
-    invisible(
-      stack_rasters(
-        composited_bands,
-        out_vrt,
-        band_names = remap_band_names(names(items_urls), asset_names)
       )
-    )
-    on.exit(file.remove(out_vrt), add = TRUE)
 
-    sf::gdal_utils(
-      "warp",
+      if (rescale_bands) {
+        out_file <- rescale_band(downloaded_bands, band_name, out_file)
+      }
+
+      out_file
+    },
+    character(1)
+  )
+  on.exit(file.remove(composited_bands), add = TRUE)
+
+  out_vrt <- tempfile(fileext = ".vrt")
+  invisible(
+    stack_rasters(
+      composited_bands,
       out_vrt,
-      output_filename,
-      options = gdalwarp_options
+      band_names = remap_band_names(names(items_urls), asset_names)
     )
+  )
+  on.exit(file.remove(out_vrt), add = TRUE)
 
-    output_filename
-  }
+  sf::gdal_utils(
+    "warp",
+    out_vrt,
+    output_filename,
+    options = gdalwarp_options
+  )
+
+  output_filename
 }
 
 #' @rdname get_stac_data

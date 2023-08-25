@@ -17,3 +17,25 @@ test_that("Index calculation is stable", {
     terra::values(terra::rast(system.file("rasters/dpdd.tif", package = "rsi")))
   )
 })
+
+test_that("Index calculations fail when missing a column", {
+  expect_error(
+    calculate_indices(
+      system.file("rasters/example_sentinel1.tif", package = "rsi"),
+      filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)")["formula"],
+      index_out
+    ),
+    class = "rsi_missing_column"
+  )
+})
+
+test_that("Index calculations fail when missing bands", {
+  expect_error(
+    calculate_indices(
+      system.file("rasters/example_sentinel1.tif", package = "rsi"),
+      filter_platforms(platforms = "Landsat-OLI"),
+      index_out
+    ),
+    class = "rsi_missing_indices"
+  )
+})

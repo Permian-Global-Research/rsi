@@ -50,7 +50,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
 
   if (update_cache) {
     tryCatch(
-      download_indices(url),
+      update_cached_indices(url),
       error = function(e) {
         rlang::warn(c(
           "Failed to update the cache of indices.",
@@ -99,7 +99,7 @@ download_indices <- function(url = spectral_indices_url()) {
 
 update_cached_indices <- function(url = spectral_indices_url()) {
   if (!dir.exists(tools::R_user_dir("rsi"))) {
-    dir.create(tools::R_user_dir("rsi"))
+    dir.create(tools::R_user_dir("rsi"), recursive = TRUE)
   }
   indices_path <- file.path(
     tools::R_user_dir("rsi"),

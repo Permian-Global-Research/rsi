@@ -18,6 +18,27 @@ test_that("spectral_indices() works", {
   # we should be able to update our cache:
   skip_on_cran()
   expect_no_warning(spectral_indices())
+  expect_no_warning(spectral_indices(update_cache = TRUE))
 })
 
+test_that("spectral_indices_url() respects options", {
+  skip_if_not_installed("withr")
+  expect_identical(
+    withr::with_options(
+      list("rsi_url" = "example"),
+      spectral_indices_url()
+    ),
+    "example"
+  )
+})
 
+test_that("spectral_indices_url() respects environment variables", {
+  skip_if_not_installed("withr")
+  expect_identical(
+    withr::with_envvar(
+      list("rsi_url" = "example"),
+      spectral_indices_url()
+    ),
+    "example"
+  )
+})

@@ -1,3 +1,4 @@
+# devtools::install()
 library(rsi)
 sentinel2_band_mapping <- list(
   aws_v0 = structure(
