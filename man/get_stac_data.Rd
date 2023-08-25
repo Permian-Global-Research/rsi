@@ -4,6 +4,8 @@
 \alias{get_stac_data}
 \alias{get_sentinel1_imagery}
 \alias{get_sentinel2_imagery}
+\alias{get_landsat_imagery}
+\alias{get_dem}
 \title{Retrieve images (or composite images) from STAC endpoints}
 \usage{
 get_stac_data(
@@ -17,6 +19,7 @@ get_stac_data(
   collection,
   query_function,
   ...,
+  rescale_bands = TRUE,
   item_filter_function = NULL,
   mask_band = NULL,
   mask_function = NULL,
@@ -38,6 +41,7 @@ get_sentinel1_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  rescale_bands = FALSE,
   item_filter_function = NULL,
   mask_band = NULL,
   mask_function = NULL,
@@ -58,10 +62,56 @@ get_sentinel2_imagery(
   asset_names = sentinel2_band_mapping$planetary_computer_v1,
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
-  query_function = attr(asset_names, "download_function"),
+  query_function = attr(asset_names, "query_function"),
+  rescale_bands = FALSE,
   item_filter_function = NULL,
   mask_band = attr(asset_names, "mask_band"),
   mask_function = attr(asset_names, "mask_function"),
+  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+  composite_function = "median",
+  limit = 999,
+  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+)
+
+get_landsat_imagery(
+  aoi,
+  start_date,
+  end_date,
+  ...,
+  platforms = c("landsat-9", "landsat-8"),
+  pixel_x_size = 30,
+  pixel_y_size = 30,
+  asset_names = landsat_band_mapping$planetary_computer_v1,
+  stac_source = attr(asset_names, "stac_source"),
+  collection = attr(asset_names, "collection_name"),
+  query_function = attr(asset_names, "query_function"),
+  rescale_bands = TRUE,
+  item_filter_function = landsat_platform_filter,
+  mask_band = attr(asset_names, "mask_band"),
+  mask_function = attr(asset_names, "mask_function"),
+  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+  composite_function = "median",
+  limit = 999,
+  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+)
+
+get_dem(
+  aoi,
+  ...,
+  start_date = NULL,
+  end_date = NULL,
+  pixel_x_size = 30,
+  pixel_y_size = 30,
+  asset_names = dem_band_mapping$planetary_computer_v1$`cop-dem-glo-30`,
+  stac_source = attr(asset_names, "stac_source"),
+  collection = attr(asset_names, "collection_name"),
+  query_function = attr(asset_names, "query_function"),
+  rescale_bands = FALSE,
+  item_filter_function = NULL,
+  mask_band = NULL,
+  mask_function = NULL,
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
   limit = 999,
@@ -98,12 +148,17 @@ images from.}
 \link{sentinel1_band_mapping}, \link{sentinel2_band_mapping}, and
 \link{landsat_band_mapping}.}
 
-\item{...}{These dots are for future extensions and must be empty.}
+\item{...}{Passed to \code{item_filter_functiion}.}
+
+\item{rescale_bands}{Logical of length 1: If the STAC collection implements
+the \code{raster} STAC extension, and that extension includes \code{scale} and \code{offset}
+values, should this function attempt to automatically rescale the downloaded
+data?}
 
 \item{item_filter_function}{A function that takes the outputs of
-\code{query_function} (usually a \code{STACItemCollection}) and returns a filtered
-\code{STACItemCollection}. This is used, for example, to only download images from
-specific Landsat platforms.}
+\code{query_function} (usually a \code{STACItemCollection}) and \code{...} and returns a
+filtered \code{STACItemCollection}. This is used, for example, to only download
+images from specific Landsat platforms.}
 
 \item{mask_band}{Character of length 1: The name of the asset in your
 STAC source to use to mask the data. Set to \code{NULL} to not mask. See the
@@ -164,6 +219,18 @@ Setting the following GDAL configuration variables via \code{Sys.setenv()} or in
 }
 }
 
+\section{Rescaling}{
+
+If \code{rescale_bands} is \code{TRUE}, then this function is able to use the \code{scale}
+and \code{offset} values in the \code{bands} field of the \code{raster} STAC extension.
+This was implemented originally to work with the Landsat collections in the
+Planetary Computer STAC catalogue, but hopefully will work automatically with
+other data sources as well. Note that Sentinel-2 data typically doesn't use
+this STAC extension, and so the returned data is typically not re-scaled;
+divide the downloaded band values by 10000 to get reflectance values in the
+expected values.
+}
+
 \section{Sentinel-1 Data}{
 
 The \code{get_sentinel1_data()} function is designed to download Sentinel-1 data
@@ -181,16 +248,16 @@ aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
 aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 
 get_stac_data(aoi,
-              start_date = "2022-06-01",
-              end_date = "2022-08-30",
-              pixel_x_size = 30,
-              pixel_y_size = 30,
-              asset_names = sentinel2_band_mapping$planetary_computer_v1,
-              stac_source = attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source"),
-              collection = attr(sentinel2_band_mapping$planetary_computer_v1, "collection"),
-              query_function = download_planetary_computer,
-              mask_band = attr(sentinel2_band_mapping$planetary_computer_v1, "mask_band"),
-              mask_function = sentinel2_mask_function
+  start_date = "2022-06-01",
+  end_date = "2022-08-30",
+  pixel_x_size = 30,
+  pixel_y_size = 30,
+  asset_names = sentinel2_band_mapping$planetary_computer_v1,
+  stac_source = attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source"),
+  collection = attr(sentinel2_band_mapping$planetary_computer_v1, "collection"),
+  query_function = download_planetary_computer,
+  mask_band = attr(sentinel2_band_mapping$planetary_computer_v1, "mask_band"),
+  mask_function = sentinel2_mask_function
 )
 \dontshow{\}) # examplesIf}
 }

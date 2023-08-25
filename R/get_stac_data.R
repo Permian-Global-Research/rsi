@@ -20,6 +20,16 @@
 #' + GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES"
 #' + GDAL_NUM_THREADS = "ALL_CPUS"
 #'
+#' @section Rescaling:
+#' If `rescale_bands` is `TRUE`, then this function is able to use the `scale`
+#' and `offset` values in the `bands` field of the `raster` STAC extension.
+#' This was implemented originally to work with the Landsat collections in the
+#' Planetary Computer STAC catalogue, but hopefully will work automatically with
+#' other data sources as well. Note that Sentinel-2 data typically doesn't use
+#' this STAC extension, and so the returned data is typically not re-scaled;
+#' divide the downloaded band values by 10000 to get reflectance values in the
+#' expected values.
+#'
 #' @section Sentinel-1 Data:
 #' The `get_sentinel1_data()` function is designed to download Sentinel-1 data
 #' from the Microsoft Planetary Computer STAC API. Both the GRD and RTC
@@ -50,6 +60,10 @@
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
 #' @param ... Passed to `item_filter_functiion`.
+#' @param rescale_bands Logical of length 1: If the STAC collection implements
+#' the `raster` STAC extension, and that extension includes `scale` and `offset`
+#' values, should this function attempt to automatically rescale the downloaded
+#' data?
 #' @param item_filter_function A function that takes the outputs of
 #' `query_function` (usually a `STACItemCollection`) and `...` and returns a
 #' filtered `STACItemCollection`. This is used, for example, to only download
@@ -87,16 +101,16 @@
 #' aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 #'
 #' get_stac_data(aoi,
-#'               start_date = "2022-06-01",
-#'               end_date = "2022-08-30",
-#'               pixel_x_size = 30,
-#'               pixel_y_size = 30,
-#'               asset_names = sentinel2_band_mapping$planetary_computer_v1,
-#'               stac_source = attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source"),
-#'               collection = attr(sentinel2_band_mapping$planetary_computer_v1, "collection"),
-#'               query_function = download_planetary_computer,
-#'               mask_band = attr(sentinel2_band_mapping$planetary_computer_v1, "mask_band"),
-#'               mask_function = sentinel2_mask_function
+#'   start_date = "2022-06-01",
+#'   end_date = "2022-08-30",
+#'   pixel_x_size = 30,
+#'   pixel_y_size = 30,
+#'   asset_names = sentinel2_band_mapping$planetary_computer_v1,
+#'   stac_source = attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source"),
+#'   collection = attr(sentinel2_band_mapping$planetary_computer_v1, "collection"),
+#'   query_function = download_planetary_computer,
+#'   mask_band = attr(sentinel2_band_mapping$planetary_computer_v1, "mask_band"),
+#'   mask_function = sentinel2_mask_function
 #' )
 #'
 #' @export
@@ -110,6 +124,7 @@ get_stac_data <- function(aoi,
                           collection,
                           query_function,
                           ...,
+                          rescale_bands = TRUE,
                           item_filter_function = NULL,
                           mask_band = NULL,
                           mask_function = NULL,
@@ -124,7 +139,6 @@ get_stac_data <- function(aoi,
                             "-co", "PREDICTOR=2",
                             "-co", "NUM_THREADS=ALL_CPUS"
                           )) {
-
   gdalwarp_options <- process_gdalwarp_options(
     gdalwarp_options = gdalwarp_options,
     aoi = aoi,
@@ -159,6 +173,39 @@ get_stac_data <- function(aoi,
     function(band_name) {
       urls <- items_urls[[band_name]]
       downloads <- replicate(length(urls), tempfile(fileext = ".tif"))
+
+      scales <- vapply(
+        items$features,
+        function(x) x$assets[[band_name]]$`raster:bands`[[1]]$scale %||% NA_real_,
+        numeric(1)
+      )
+      offsets <- vapply(
+        items$features,
+        function(x) x$assets[[band_name]]$`raster:bands`[[1]]$offset %||% NA_real_,
+        numeric(1)
+      )
+
+      if (length(unique(scales)) != 1) {
+        rlang::warn(c(
+          glue::glue("Images in band {band_name} have different scaling factors."),
+          i = "Returning images without rescaling."
+        ))
+        scales <- NA_real_
+      }
+      scales <- unique(scales)
+
+      if (length(unique(offsets)) != 1) {
+        rlang::warn(c(
+          glue::glue("Images in band {band_name} have different offsets."),
+          i = "Returning images without adding the offset."
+        ))
+        offsets <- NA_real_
+      }
+      offsets <- unique(offsets)
+
+      if (!is.na(scales)) attr(downloads, "scaling_factor") <- scales
+      if (!is.na(offsets)) attr(downloads, "offset") <- offsets
+
       download_assets(urls, downloads, gdalwarp_options)
     }
   )
@@ -178,10 +225,7 @@ get_stac_data <- function(aoi,
       }
     )
 
-    # This doesn't actually change the file paths in downloaded_bands
-    # (so the earlier on.exit still catches those files)
-    # but it feels better to assign this than have it called for side effects
-    downloaded_bands <- lapply(
+    lapply(
       downloaded_bands,
       function(images) {
         temp_file_masks <- replicate(length(images), tempfile(fileext = ".tif"))
@@ -223,6 +267,10 @@ get_stac_data <- function(aoi,
           )
         )
 
+        if (rescale_bands) {
+          out_file <- rescale_band(downloaded_bands, band_name, out_file)
+        }
+
         out_file
       },
       character(1)
@@ -230,7 +278,13 @@ get_stac_data <- function(aoi,
     on.exit(file.remove(composited_bands), add = TRUE)
 
     out_vrt <- tempfile(fileext = ".vrt")
-    invisible(stack_rasters(composited_bands, out_vrt, band_names = remap_band_names(names(items_urls), asset_names)))
+    invisible(
+      stack_rasters(
+        composited_bands,
+        out_vrt,
+        band_names = remap_band_names(names(items_urls), asset_names)
+      )
+    )
     on.exit(file.remove(out_vrt), add = TRUE)
 
     sf::gdal_utils(
@@ -256,6 +310,7 @@ get_sentinel1_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  rescale_bands = FALSE,
                                   item_filter_function = NULL,
                                   mask_band = NULL,
                                   mask_function = NULL,
@@ -285,7 +340,8 @@ get_sentinel2_imagery <- function(aoi,
                                   asset_names = sentinel2_band_mapping$planetary_computer_v1,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
-                                  query_function = attr(asset_names, "download_function"),
+                                  query_function = attr(asset_names, "query_function"),
+                                  rescale_bands = FALSE,
                                   item_filter_function = NULL,
                                   mask_band = attr(asset_names, "mask_band"),
                                   mask_function = attr(asset_names, "mask_function"),
@@ -300,6 +356,69 @@ get_sentinel2_imagery <- function(aoi,
                                     "-co", "PREDICTOR=2",
                                     "-co", "NUM_THREADS=ALL_CPUS"
                                   )) {
+  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  do.call(get_stac_data, args)
+}
+
+#' @rdname get_stac_data
+#' @export
+get_landsat_imagery <- function(aoi,
+                                start_date,
+                                end_date,
+                                ...,
+                                platforms = c("landsat-9", "landsat-8"),
+                                pixel_x_size = 30,
+                                pixel_y_size = 30,
+                                asset_names = landsat_band_mapping$planetary_computer_v1,
+                                stac_source = attr(asset_names, "stac_source"),
+                                collection = attr(asset_names, "collection_name"),
+                                query_function = attr(asset_names, "query_function"),
+                                rescale_bands = TRUE,
+                                item_filter_function = landsat_platform_filter,
+                                mask_band = attr(asset_names, "mask_band"),
+                                mask_function = attr(asset_names, "mask_function"),
+                                output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                                composite_function = "median",
+                                limit = 999,
+                                gdalwarp_options = c(
+                                  "-r", "bilinear",
+                                  "-multi",
+                                  "-overwrite",
+                                  "-co", "COMPRESS=DEFLATE",
+                                  "-co", "PREDICTOR=2",
+                                  "-co", "NUM_THREADS=ALL_CPUS"
+                                )) {
+  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  do.call(get_stac_data, args)
+}
+
+#' @rdname get_stac_data
+#' @export
+get_dem <- function(aoi,
+                    ...,
+                    start_date = NULL,
+                    end_date = NULL,
+                    pixel_x_size = 30,
+                    pixel_y_size = 30,
+                    asset_names = dem_band_mapping$planetary_computer_v1$`cop-dem-glo-30`,
+                    stac_source = attr(asset_names, "stac_source"),
+                    collection = attr(asset_names, "collection_name"),
+                    query_function = attr(asset_names, "query_function"),
+                    rescale_bands = FALSE,
+                    item_filter_function = NULL,
+                    mask_band = NULL,
+                    mask_function = NULL,
+                    output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                    composite_function = "median",
+                    limit = 999,
+                    gdalwarp_options = c(
+                      "-r", "bilinear",
+                      "-multi",
+                      "-overwrite",
+                      "-co", "COMPRESS=DEFLATE",
+                      "-co", "PREDICTOR=2",
+                      "-co", "NUM_THREADS=ALL_CPUS"
+                    )) {
   args <- as.list(rlang::call_match(defaults = TRUE))[-1]
   do.call(get_stac_data, args)
 }
@@ -326,3 +445,100 @@ download_assets <- function(urls, destinations, gdalwarp_options) {
   destinations
 }
 
+rescale_band <- function(downloaded_bands, band_name, out_file) {
+  scale_string <- ""
+  if (!is.null(attr(downloaded_bands[[band_name]], "scaling_factor"))) {
+    scale_string <- paste(
+      scale_string,
+      glue::glue("* {attr(downloaded_bands[[band_name]], 'scaling_factor')}")
+    )
+  }
+  if (!is.null(attr(downloaded_bands[[band_name]], "offset"))) {
+    scale_string <- paste(
+      scale_string,
+      glue::glue("+ {attr(downloaded_bands[[band_name]], 'offset')}")
+    )
+  }
+  if (scale_string != "") {
+    scale_string <- paste("function(x) x", scale_string)
+    rescaled_file <- tempfile(fileext = ".tif")
+    terra::writeRaster(
+      eval(str2lang(scale_string))(terra::rast(out_file)),
+      filename = rescaled_file,
+      overwrite = TRUE
+    )
+    file.rename(rescaled_file, out_file)
+  }
+
+  out_file
+}
+
+remap_band_names <- function(band_names, name_mapping) {
+  ifelse(
+    band_names %in% names(name_mapping),
+    name_mapping[band_names],
+    band_names
+  )
+}
+
+process_gdalwarp_options <- function(gdalwarp_options,
+                                     aoi,
+                                     pixel_x_size = 30,
+                                     pixel_y_size = 30) {
+  if (is.null(gdalwarp_options)) {
+    gdalwarp_options <- character(0)
+  }
+
+  if (!("-t_srs" %in% gdalwarp_options)) {
+    gdalwarp_options <- c(gdalwarp_options, "-t_srs", sf::st_crs(aoi)$wkt)
+  }
+
+  if (!("-te" %in% gdalwarp_options)) {
+    gdalwarp_options <- c(gdalwarp_options, "-te", sf::st_bbox(aoi))
+  }
+
+  if (!("-tr" %in% gdalwarp_options)) {
+    gdalwarp_options <- c(gdalwarp_options, "-tr", pixel_x_size, pixel_y_size)
+  }
+
+  gdalwarp_options
+}
+
+process_dates <- function(date) {
+  if (date == "..") {
+    return(date)
+  } # open intervals
+  date <- as.POSIXct(date, "UTC")
+  date <- strftime(date, "%Y-%m-%dT%H:%M:%S%Z", "UTC")
+  gsub("UTC", "Z", date)
+}
+
+get_items <- function(bbox_wgs84,
+                      stac_source,
+                      collections,
+                      start_date,
+                      end_date,
+                      limit,
+                      download_function) {
+  if (!is.null(start_date)) {
+    start_date <- process_dates(start_date)
+    end_date <- process_dates(end_date)
+    datetime <- paste0(start_date, "/", end_date)
+  } else {
+    datetime <- NULL
+  }
+
+  rstac::stac(stac_source) |>
+    rstac::stac_search(
+      collections = collections,
+      bbox = c(
+        bbox_wgs84["xmin"],
+        bbox_wgs84["ymin"],
+        bbox_wgs84["xmax"],
+        bbox_wgs84["ymax"]
+      ),
+      datetime = datetime,
+      limit = limit
+    ) |>
+    download_function()
+}

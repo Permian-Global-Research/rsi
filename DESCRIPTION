@@ -16,9 +16,10 @@ Imports:
     proceduralnames,
     rlang,
     rstac,
+    sf,
+    terra,
     tibble
 Suggests: 
-    terra,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 LazyData: true

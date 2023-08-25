@@ -98,3 +98,38 @@ sentinel1_band_mapping <- list(
 )
 
 usethis::use_data(sentinel1_band_mapping, overwrite = TRUE)
+
+dem_band_mapping <- list(
+  planetary_computer_v1 = list(
+    nasadem = structure(
+      c("elevation" = "elevation"),
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+      collection_name = "nasadem",
+      query_function = query_planetary_computer,
+      class = "rsi_band_mapping"
+    ),
+    "alos-dem" = structure(
+      c("data" = "elevation"),
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+      collection_name = "alos-dem",
+      query_function = query_planetary_computer,
+      class = "rsi_band_mapping"
+    ),
+    "cop-dem-glo-30" = structure(
+      c("data" = "elevation"),
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+      collection_name = "cop-dem-glo-30",
+      query_function = query_planetary_computer,
+      class = "rsi_band_mapping"
+    ),
+    "cop-dem-glo-90" = structure(
+      c("data" = "elevation"),
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+      collection_name = "cop-dem-glo-30",
+      query_function = query_planetary_computer,
+      class = "rsi_band_mapping"
+    )
+  )
+)
+
+usethis::use_data(dem_band_mapping, overwrite = TRUE)
