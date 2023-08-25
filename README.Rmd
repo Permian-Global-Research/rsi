@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # rsi
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 <!-- badges: end -->
 
 The goal of rsi is to address several **r**epeated **s**patial **i**nfelicities, by providing utility functions that save you typing and help avoid **r**epetitive **s**tress **i**njuries. Specifically, rsi provides:

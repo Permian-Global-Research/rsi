@@ -4,6 +4,12 @@
 # rsi
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 <!-- badges: end -->
 
 The goal of rsi is to address several **r**epeated **s**patial
@@ -1744,7 +1750,7 @@ landsat_band_mapping$planetary_computer_v1
 #> {
 #>     raster == 21824
 #> }
-#> <bytecode: 0x1103fcd70>
+#> <bytecode: 0x13a707600>
 #> <environment: namespace:rsi>
 #> attr(,"stac_source")
 #> [1] "https://planetarycomputer.microsoft.com/api/stac/v1/"
@@ -1760,7 +1766,7 @@ landsat_band_mapping$planetary_computer_v1
 #>         rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer(headers = c(`Ocp-Apim-Subscription-Key` = subscription_key)))
 #>     }
 #> }
-#> <bytecode: 0x1103fd160>
+#> <bytecode: 0x13a707a28>
 #> <environment: namespace:rsi>
 #> attr(,"class")
 #> [1] "rsi_band_mapping"

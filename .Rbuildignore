@@ -7,3 +7,5 @@
 ^pkgdown$
 ^README\.Rmd$
 ^man-roxygen$
+^\.github$
+^codecov\.yml$

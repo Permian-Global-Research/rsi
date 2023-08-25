@@ -1,22 +1,23 @@
-url: ~
-
+url: https://permian-global-research.github.io/rsi/
 template:
   bootstrap: 5
   bootswatch: sandstone
   bslib:
-    primary: "#000"
-    success: "#a40234"
-    base_font: {google: "Libre Franklin"}
-    heading_font: {google: "Libre Franklin"}
+    primary: '#000'
+    success: '#a40234'
+    base_font:
+      google: Libre Franklin
+    heading_font:
+      google: Libre Franklin
 authors:
   Michael Mahoney:
-    href: "https://www.mm218.dev/"
+    href: https://www.mm218.dev/
   Permian Global:
     href: https://permianglobal.com/
-    html: <img src='man/figures/permian-logo.svg' alt='Permian Global' width='72' />
-
+    html: <img src='man/figures/permian-logo.svg' alt='Permian Global' width='72'
+      />
 development:
   mode: auto
-
 figures:
   fig.width: 8
+
