@@ -14,7 +14,8 @@ filter_platforms(
 filter_bands(
   indices = spectral_indices(),
   bands = unique(unlist(spectral_indices()$bands)),
-  operand = c("all", "any")
+  operand = c("all", "any"),
+  type = c("filter", "search")
 )
 }
 \arguments{
@@ -23,10 +24,15 @@ filter_bands(
 \item{platforms, bands}{Names of the instruments (for \code{platforms}) or spectra
 (for \code{bands}) indices must contain.}
 
-\item{`operand`}{A function defining how to apply this filter.
+\item{operand}{A function defining how to apply this filter.
 For instance, \code{operand = all} means that the index must contain all the
 \code{platforms} or \code{bands} provided, while \code{operand = any} means that the index
 must contain at least one of the \code{platforms} or \code{bands} provided.}
+
+\item{type}{What type of query is this? If \code{filter}, then indices are
+returned if all/any the bands they use (depending on \code{operand}) are in
+\code{bands}. If \code{search}, then indices are returned if all/any of \code{bands} are in
+the bands they use.}
 }
 \value{
 A filtered version of \code{indices}.

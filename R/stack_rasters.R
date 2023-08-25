@@ -4,14 +4,14 @@
 #' as though they were loaded one after another into a GIS. The VRT is fast
 #' to create and does not require much space, but does require the input rasters
 #' not be moved or altered. Run
-#' `sf::gdal_utils("warp", raster_path, some_path.tif)` to turn the output VRT
-#' into a standalone TIF file.
+#' `sf::gdal_utils("warp", output_filename, "some_path.tif")` to turn the output
+#' VRT into a standalone TIF file.
 #'
 #' @param rasters A list of rasters to combine into a single multi-band raster,
 #' either as SpatRaster objects from [terra::rast()] or character file paths
 #' to files that can be read by [terra::rast()]. Rasters will be "stacked" upon
 #' one another, preserving values. They must share CRS.
-#' @param raster_path The location to save the final "stacked" raster. Must be
+#' @param output_filename The location to save the final "stacked" raster. Must be
 #' a VRT file.
 #' @inheritParams rlang::args_dots_empty
 #' @param resolution Numeric of length 2, representing the target X and Y
@@ -30,20 +30,20 @@
 #' when given a character vector of band names, returns a character vector of
 #' the same length containing new band names.
 #'
-#' @returns `raster_path`, unchanged.
+#' @returns `output_filename`, unchanged.
 #'
 #' @examples
 #' stack_rasters(
 #'   list(
-#'     system.file("rasters/ta.tif", package = "lignin"),
-#'     system.file("rasters/ta.tif", package = "lignin")
+#'     system.file("rasters/dpdd.tif", package = "rsi"),
+#'     system.file("rasters/example_sentinel1", package = "rsi")
 #'   ),
 #'   tempfile(fileext = ".vrt")
 #' )
 #'
 #' @export
 stack_rasters <- function(rasters,
-                          raster_path,
+                          output_filename,
                           ...,
                           resolution,
                           extent,
@@ -52,7 +52,7 @@ stack_rasters <- function(rasters,
                           band_names) {
   rlang::check_dots_empty()
 
-  out_dir <- dirname(raster_path)
+  out_dir <- dirname(output_filename)
 
   if (!(reference_raster %in% seq_along(rasters) ||
         reference_raster %in% names(rasters))) {
@@ -204,7 +204,7 @@ stack_rasters <- function(rasters,
       unlist(vrt_bands),
       vrt_container[(band_def[[2]] + 1):length(vrt_container)]
     ),
-    raster_path
+    output_filename
   )
-  raster_path
+  output_filename
 }

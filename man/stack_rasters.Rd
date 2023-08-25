@@ -6,7 +6,7 @@
 \usage{
 stack_rasters(
   rasters,
-  raster_path,
+  output_filename,
   ...,
   resolution,
   extent,
@@ -21,7 +21,7 @@ either as SpatRaster objects from \code{\link[terra:rast]{terra::rast()}} or cha
 to files that can be read by \code{\link[terra:rast]{terra::rast()}}. Rasters will be "stacked" upon
 one another, preserving values. They must share CRS.}
 
-\item{raster_path}{The location to save the final "stacked" raster. Must be
+\item{output_filename}{The location to save the final "stacked" raster. Must be
 a VRT file.}
 
 \item{...}{These dots are for future extensions and must be empty.}
@@ -47,21 +47,21 @@ when given a character vector of band names, returns a character vector of
 the same length containing new band names.}
 }
 \value{
-\code{raster_path}, unchanged.
+\code{output_filename}, unchanged.
 }
 \description{
 This function creates a VRT that "stacks" all the bands of its input rasters,
 as though they were loaded one after another into a GIS. The VRT is fast
 to create and does not require much space, but does require the input rasters
 not be moved or altered. Run
-\code{sf::gdal_utils("warp", raster_path, some_path.tif)} to turn the output VRT
-into a standalone TIF file.
+\code{sf::gdal_utils("warp", output_filename, "some_path.tif")} to turn the output
+VRT into a standalone TIF file.
 }
 \examples{
 stack_rasters(
   list(
-    system.file("rasters/ta.tif", package = "lignin"),
-    system.file("rasters/ta.tif", package = "lignin")
+    system.file("rasters/dpdd.tif", package = "rsi"),
+    system.file("rasters/example_sentinel1", package = "rsi")
   ),
   tempfile(fileext = ".vrt")
 )

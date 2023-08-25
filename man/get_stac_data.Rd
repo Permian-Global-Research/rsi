@@ -171,10 +171,10 @@ be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function
 
 \item{output_filename}{The filename to write the output raster to.}
 
-\item{composite_function}{The (quoted) name of a function from
-\code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine downloaded images
-into a single composite (i.e., to aggregate pixel values from multiple images
-into a single value).}
+\item{composite_function}{Character of length 1: The (quoted) name of a
+function from \code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine
+downloaded images into a single composite (i.e., to aggregate pixel values
+from multiple images into a single value).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}
@@ -184,6 +184,11 @@ argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The same set of optio
 downloaded data and the final output images; this means that some common
 options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
 varying data types.}
+
+\item{platforms}{The names of Landsat satellites to download imagery from.
+These do not correspond to the \code{platforms} column in \code{\link[=spectral_indices]{spectral_indices()}};
+the default argument of \code{c("landsat-9", "landsat-8")} corresponds to
+the \code{Landsat-OLI} value in that column.}
 }
 \value{
 \code{output_filename}, unchanged.
@@ -241,21 +246,32 @@ or your \code{.Renviron} file).
 
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-aoi <- sf::st_point(c(-74.912131, 44.080410))
+#' aoi <- sf::st_point(c(-74.912131, 44.080410))
 aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
 aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 
 get_stac_data(aoi,
+              start_date = "2022-06-01",
+              end_date = "2022-06-30",
+              pixel_x_size = 30,
+              pixel_y_size = 30,
+              asset_names = c(
+                "red", "blue", "green"
+              ),
+              stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+              collection = "landsat-c2-l2",
+              query_function = query_planetary_computer,
+              mask_band = "qa_pixel",
+              mask_function = landsat_mask_function,
+              item_filter_function = landsat_platform_filter,
+              platforms = c("landsat-9", "landsat-8")
+)
+
+ # or, mostly equivalently (will download more bands):
+landsat_image <- get_landsat_imagery(
+  aoi,
   start_date = "2022-06-01",
-  end_date = "2022-08-30",
-  pixel_x_size = 30,
-  pixel_y_size = 30,
-  asset_names = sentinel2_band_mapping$planetary_computer_v1,
-  stac_source = attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source"),
-  collection = attr(sentinel2_band_mapping$planetary_computer_v1, "collection"),
-  query_function = download_planetary_computer,
-  mask_band = attr(sentinel2_band_mapping$planetary_computer_v1, "mask_band"),
-  mask_function = sentinel2_mask_function
+  end_date = "2022-08-30"
 )
 \dontshow{\}) # examplesIf}
 }

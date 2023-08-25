@@ -11,8 +11,9 @@ An object of class \code{list} of length 3.
 sentinel2_band_mapping
 }
 \description{
-This object is a named list, with names corresponding to Sentinel-2 band
-names and values corresponding to band names in \code{spectral_indices}.
+This object is a named list of character vectors, with names corresponding to
+Sentinel-2 band names and values corresponding to band names in
+\code{spectral_indices}.
 }
 \details{
 Band mapping objects:
