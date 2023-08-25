@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 library(tibble)
 ```
 
-# rsi
+# rsi <a href="https://permian-global-research.github.io/rsi/"><img src="man/figures/logo.png" align="right" height="138" alt="rsi website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
@@ -27,7 +27,7 @@ library(tibble)
 
 The goal of rsi is to address several **r**epeated **s**patial **i**nfelicities, by providing utility functions that save you typing and help avoid **r**epetitive **s**tress **i**njuries. Specifically, rsi provides:
 
-+ An interface to the **R**some -- excuse, me [_Awesome_ Spectral Indices project](https://github.com/awesome-spectral-indices/awesome-spectral-indices), providing the list of indices directly in R as a friendly tibble,
++ An interface to the **R**some -- excuse me, [_Awesome_ Spectral Indices project](https://github.com/awesome-spectral-indices/awesome-spectral-indices), providing the list of indices directly in R as a friendly tibble,
 + A method for efficiently _calculating_ those awesome spectral indices using local rasters, enabling **r**apid **s**pectral **i**nference,
 + A method for downloading STAC data -- excuse me, **r**etriving **S**TAC **i**nformation -- from any STAC server, with additional helpers for downloading Landsat, Sentinel-1, and Sentinel-2 data from free and public STAC servers providing **r**apid **s**atellite **i**magery, 
 + A **r**aster **s**tack **i**ntegration method for combining multiple rasters containing distinct data sets into a single raster stack.

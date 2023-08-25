@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rsi
+# rsi <a href="https://permian-global-research.github.io/rsi/"><img src="man/figures/logo.png" align="right" height="138" alt="rsi website" /></a>
 
 <!-- badges: start -->
 
@@ -24,7 +24,7 @@ The goal of rsi is to address several **r**epeated **s**patial
 and help avoid **r**epetitive **s**tress **i**njuries. Specifically, rsi
 provides:
 
-- An interface to the **R**some – excuse, me [*Awesome* Spectral Indices
+- An interface to the **R**some – excuse me, [*Awesome* Spectral Indices
   project](https://github.com/awesome-spectral-indices/awesome-spectral-indices),
   providing the list of indices directly in R as a friendly tibble,
 - A method for efficiently *calculating* those awesome spectral indices
@@ -148,7 +148,7 @@ landsat_band_mapping$planetary_computer_v1
 #> {
 #>     raster == 21824
 #> }
-#> <bytecode: 0x116654f80>
+#> <bytecode: 0x10c8e95d0>
 #> <environment: namespace:rsi>
 #> attr(,"stac_source")
 #> [1] "https://planetarycomputer.microsoft.com/api/stac/v1/"
@@ -164,7 +164,7 @@ landsat_band_mapping$planetary_computer_v1
 #>         rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer(headers = c(`Ocp-Apim-Subscription-Key` = subscription_key)))
 #>     }
 #> }
-#> <bytecode: 0x116654bc8>
+#> <bytecode: 0x10c8e91e0>
 #> <environment: namespace:rsi>
 #> attr(,"class")
 #> [1] "rsi_band_mapping"
