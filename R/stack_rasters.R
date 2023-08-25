@@ -36,7 +36,7 @@
 #' stack_rasters(
 #'   list(
 #'     system.file("rasters/dpdd.tif", package = "rsi"),
-#'     system.file("rasters/example_sentinel1", package = "rsi")
+#'     system.file("rasters/example_sentinel1.tif", package = "rsi")
 #'   ),
 #'   tempfile(fileext = ".vrt")
 #' )
@@ -178,24 +178,22 @@ stack_rasters <- function(rasters,
   on.exit(file.remove(intermediate_vrt), add = TRUE)
 
   band_no <- 1
-  vrt_bands <- lapply(
-    intermediate_vrt,
-    function(vrt) {
-      vrt <- readLines(vrt)
-      band_def <- grep("VRTRasterBand", vrt)
-      vrt <- vrt[seq(band_def[[1]], band_def[[2]])]
-      vrt[1] <- gsub("band=\"1\"", paste0("band=\"", band_no, "\""), vrt[1])
-      vrt <- c(
-        vrt[1],
-        paste0("    <Description>", var_names[[band_no]], "</Description>"),
-        vrt[2:length(vrt)]
-      )
+  vrt_bands <- vector("list", length(intermediate_vrt))
+  for (vrt in intermediate_vrt) {
+    vrt <- readLines(vrt)
+    band_def <- grep("VRTRasterBand", vrt)
+    vrt <- vrt[seq(band_def[[1]], band_def[[2]])]
+    vrt[1] <- gsub("band=\"1\"", paste0("band=\"", band_no, "\""), vrt[1])
+    vrt <- c(
+      vrt[1],
+      paste0("    <Description>", var_names[[band_no]], "</Description>"),
+      vrt[2:length(vrt)]
+    )
 
-      band_no <<- band_no + 1
+    vrt_bands[[band_no]] <- vrt
 
-      vrt
-    }
-  )
+    band_no <- band_no + 1
+  }
 
   band_def <- grep("VRTRasterBand", vrt_container)
   writeLines(

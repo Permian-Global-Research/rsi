@@ -98,7 +98,7 @@
 #' @returns `output_filename`, unchanged.
 #'
 #' @examplesIf interactive()
-#' #' aoi <- sf::st_point(c(-74.912131, 44.080410))
+#' aoi <- sf::st_point(c(-74.912131, 44.080410))
 #' aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
 #' aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 #'

@@ -14,6 +14,23 @@ Planetary Computer account. At the time of writing, this is required for
 downloading Sentinel 1 RTC products, as well as NAIP imagery. This key will
 be automatically used if the environment variable \code{rsi_pc_key} is set.}
 }
+\value{
+A STACItemCollection object with signed assets url.
+}
 \description{
 Execute STAC queries against the Planetary Computer
+}
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+aoi <- sf::st_point(c(-74.912131, 44.080410))
+aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
+
+landsat_image <- get_landsat_imagery(
+  aoi,
+  start_date = "2022-06-01",
+  end_date = "2022-08-30",
+  query_function = query_planetary_computer
+)
+\dontshow{\}) # examplesIf}
 }

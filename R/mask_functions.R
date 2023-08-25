@@ -4,6 +4,18 @@
 #'
 #' @returns A boolean raster to be used to mask a Sentinel-2 image
 #'
+#' @examplesIf interactive()
+#' aoi <- sf::st_point(c(-74.912131, 44.080410))
+#' aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+#' aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
+#'
+#' sentinel2_image <- get_sentinel2_imagery(
+#'   aoi,
+#'   start_date = "2022-06-01",
+#'   end_date = "2022-08-30",
+#'   mask_function = sentinel2_mask_function
+#' )
+#'
 #' @export
 sentinel2_mask_function <- function(raster) {
   terra::`%in%`(raster,
@@ -31,6 +43,18 @@ sentinel2_mask_function <- function(raster) {
 #' @param raster The QA band of a Landsat image
 #'
 #' @returns A boolean raster to be used to mask a Landsat image
+#'
+#' @examplesIf interactive()
+#' aoi <- sf::st_point(c(-74.912131, 44.080410))
+#' aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+#' aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
+#'
+#' landsat_image <- get_landsat_imagery(
+#'   aoi,
+#'   start_date = "2022-06-01",
+#'   end_date = "2022-08-30",
+#'   mask_function = landsat_mask_function
+#' )
 #'
 #' @export
 landsat_mask_function <- function(raster) {

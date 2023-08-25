@@ -32,3 +32,12 @@ This function computes any number of indices from an input raster via
 subsets of \code{\link[=spectral_indices]{spectral_indices()}}, but it will work with any data frame with a
 \code{formula} and \code{short_name} column.
 }
+\examples{
+calculate_indices(
+  system.file("rasters/example_sentinel1.tif", package = "rsi"),
+  filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
+  tempfile(fileext = ".tif"),
+  names_suffix = "sentinel1"
+)
+
+}

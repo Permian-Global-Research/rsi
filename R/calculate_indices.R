@@ -19,6 +19,14 @@
 #'
 #' @return `output_filename`, unchanged.
 #'
+#' @examples
+#' calculate_indices(
+#'   system.file("rasters/example_sentinel1.tif", package = "rsi"),
+#'   filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
+#'   tempfile(fileext = ".tif"),
+#'   names_suffix = "sentinel1"
+#' )
+#'
 #' @export
 calculate_indices <- function(raster,
                               indices,

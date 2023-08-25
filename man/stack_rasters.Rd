@@ -61,7 +61,7 @@ VRT into a standalone TIF file.
 stack_rasters(
   list(
     system.file("rasters/dpdd.tif", package = "rsi"),
-    system.file("rasters/example_sentinel1", package = "rsi")
+    system.file("rasters/example_sentinel1.tif", package = "rsi")
   ),
   tempfile(fileext = ".vrt")
 )
