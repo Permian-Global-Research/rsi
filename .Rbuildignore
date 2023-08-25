@@ -9,3 +9,5 @@
 ^man-roxygen$
 ^\.github$
 ^codecov\.yml$
+^codemeta\.json$
+^CITATION\.cff$
