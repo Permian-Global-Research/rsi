@@ -12,17 +12,8 @@
 #' even after accounting for any reprojection needed to compare your AOI to
 #' the data on the STAC server.
 #'
-#' Setting the following GDAL configuration variables via `Sys.setenv()` or in
-#' `.Renviron` might be useful to speed up downloads from cloud services:
-#' + VSI_CACHE = "TRUE"
-#' + GDAL_CACHEMAX = "30%"
-#' + VSI_CACHE_SIZE = "10000000"
-#' + GDAL_HTTP_MULTIPLEX = "YES"
-#' + GDAL_INGESTED_BYTES_AT_OPEN = "32000"
-#' + GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR"
-#' + GDAL_HTTP_VERSION = "2"
-#' + GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES"
-#' + GDAL_NUM_THREADS = "ALL_CPUS"
+#' This function allows for parallelizing downloads via [future::plan()], and
+#' for user-controlled progress updates via [progressr::handlers()].
 #'
 #' @section Rescaling:
 #' If `rescale_bands` is `TRUE`, then this function is able to use the `scale`
@@ -90,6 +81,8 @@
 #' downloaded data and the final output images; this means that some common
 #' options (for instance, `PREDICTOR=3`) may cause errors if bands are of
 #' varying data types.
+#' @param gdal_config_options Options passed to `gdalwarp` through the `config`
+#' argument of [sf::gdal_utils()].
 #' @param platforms The names of Landsat satellites to download imagery from.
 #' These do not correspond to the `platforms` column in [spectral_indices()];
 #' the default argument of `c("landsat-9", "landsat-8")` corresponds to
@@ -151,6 +144,17 @@ get_stac_data <- function(aoi,
                             "-co", "COMPRESS=DEFLATE",
                             "-co", "PREDICTOR=2",
                             "-co", "NUM_THREADS=ALL_CPUS"
+                          ),
+                          gdal_config_options = c(
+                            VSI_CACHE = "TRUE",
+                            GDAL_CACHEMAX = "30%",
+                            VSI_CACHE_SIZE = "10000000",
+                            GDAL_HTTP_MULTIPLEX = "YES",
+                            GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                            GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                            GDAL_HTTP_VERSION = "2",
+                            GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                            GDAL_NUM_THREADS = "ALL_CPUS"
                           )) {
 
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
@@ -206,6 +210,8 @@ get_stac_data <- function(aoi,
 
   items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
 
+  p <- progressr::progressor(along = unlist(items_urls))
+
   downloaded_bands <- lapply(
     names(items_urls),
     function(band_name) {
@@ -244,7 +250,7 @@ get_stac_data <- function(aoi,
       if (!is.na(scales)) attr(downloads, "scaling_factor") <- scales
       if (!is.na(offsets)) attr(downloads, "offset") <- offsets
 
-      download_assets(urls, downloads, gdalwarp_options)
+      download_assets(urls, downloads, gdalwarp_options, gdal_config_options, p)
     }
   )
   on.exit(file.remove(unlist(downloaded_bands)), add = TRUE)
@@ -252,23 +258,28 @@ get_stac_data <- function(aoi,
 
   if (!is.null(mask_band)) {
     mask_urls <- rstac::assets_url(items, mask_band)
+    p <- progressr::progressor(along = mask_urls)
     mask_files <- replicate(length(mask_urls), tempfile(fileext = ".tif"))
-    download_assets(mask_urls, mask_files, gdalwarp_options)
+    download_assets(mask_urls, mask_files, gdalwarp_options, gdal_config_options, p)
     on.exit(file.remove(mask_files), add = TRUE)
 
+    p <- progressr::progressor(along = mask_urls)
     masks <- lapply(
       mask_files,
       function(mask) {
+        p("Running mask function")
         mask_function(terra::rast(mask))
       }
     )
 
+    p <- progressr::progressor(along = unlist(downloaded_bands))
     lapply(
       downloaded_bands,
       function(images) {
         temp_file_masks <- replicate(length(images), tempfile(fileext = ".tif"))
         mapply(
           function(raster, mask, masked_file) {
+            p("Applying masks to downloaded assets")
             terra::mask(
               terra::rast(raster),
               mask,
@@ -289,9 +300,11 @@ get_stac_data <- function(aoi,
   download_dir <- file.path(tempdir(), "composite_dir")
   if (!dir.exists(download_dir)) dir.create(download_dir)
 
+  p <- progressr::progressor(along = downloaded_bands)
   composited_bands <- vapply(
     names(downloaded_bands),
     function(band_name) {
+      p(glue::glue("Compositing {band_name}"))
       out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
       do.call(
@@ -360,6 +373,17 @@ get_sentinel1_imagery <- function(aoi,
                                     "-co", "COMPRESS=DEFLATE",
                                     "-co", "PREDICTOR=2",
                                     "-co", "NUM_THREADS=ALL_CPUS"
+                                  ),
+                                  gdal_config_options = c(
+                                    VSI_CACHE = "TRUE",
+                                    GDAL_CACHEMAX = "30%",
+                                    VSI_CACHE_SIZE = "10000000",
+                                    GDAL_HTTP_MULTIPLEX = "YES",
+                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                    GDAL_HTTP_VERSION = "2",
+                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                    GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
   args <- as.list(rlang::call_match(defaults = TRUE))[-1]
   do.call(get_stac_data, args)
@@ -391,6 +415,17 @@ get_sentinel2_imagery <- function(aoi,
                                     "-co", "COMPRESS=DEFLATE",
                                     "-co", "PREDICTOR=2",
                                     "-co", "NUM_THREADS=ALL_CPUS"
+                                  ),
+                                  gdal_config_options = c(
+                                    VSI_CACHE = "TRUE",
+                                    GDAL_CACHEMAX = "30%",
+                                    VSI_CACHE_SIZE = "10000000",
+                                    GDAL_HTTP_MULTIPLEX = "YES",
+                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                    GDAL_HTTP_VERSION = "2",
+                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                    GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
   args <- as.list(rlang::call_match(defaults = TRUE))[-1]
   do.call(get_stac_data, args)
@@ -423,6 +458,17 @@ get_landsat_imagery <- function(aoi,
                                   "-co", "COMPRESS=DEFLATE",
                                   "-co", "PREDICTOR=2",
                                   "-co", "NUM_THREADS=ALL_CPUS"
+                                ),
+                                gdal_config_options = c(
+                                  VSI_CACHE = "TRUE",
+                                  GDAL_CACHEMAX = "30%",
+                                  VSI_CACHE_SIZE = "10000000",
+                                  GDAL_HTTP_MULTIPLEX = "YES",
+                                  GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                  GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                  GDAL_HTTP_VERSION = "2",
+                                  GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                  GDAL_NUM_THREADS = "ALL_CPUS"
                                 )) {
   args <- as.list(rlang::call_match(defaults = TRUE))[-1]
   do.call(get_stac_data, args)
@@ -454,28 +500,46 @@ get_dem <- function(aoi,
                       "-co", "COMPRESS=DEFLATE",
                       "-co", "PREDICTOR=2",
                       "-co", "NUM_THREADS=ALL_CPUS"
+                    ),
+                    gdal_config_options = c(
+                      VSI_CACHE = "TRUE",
+                      GDAL_CACHEMAX = "30%",
+                      VSI_CACHE_SIZE = "10000000",
+                      GDAL_HTTP_MULTIPLEX = "YES",
+                      GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                      GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                      GDAL_HTTP_VERSION = "2",
+                      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                      GDAL_NUM_THREADS = "ALL_CPUS"
                     )) {
   args <- as.list(rlang::call_match(defaults = TRUE))[-1]
   do.call(get_stac_data, args)
 }
 
-download_assets <- function(urls, destinations, gdalwarp_options) {
+download_assets <- function(urls,
+                            destinations,
+                            gdalwarp_options,
+                            gdal_config_options,
+                            progressor) {
   if (length(urls) != length(destinations)) {
     rlang::abort("`urls` and `destinations` must be the same length.")
   }
 
-  mapply(
+  future.apply::future_mapply(
     function(url, destination) {
+      progressor("Downloading assets")
       sf::gdal_utils(
         "warp",
         paste0("/vsicurl/", url),
         destination,
         options = gdalwarp_options,
-        quiet = TRUE
+        quiet = TRUE,
+        config_options = gdal_config_options
       )
     },
     url = urls,
-    destination = destinations
+    destination = destinations,
+    future.seed = TRUE
   )
 
   destinations

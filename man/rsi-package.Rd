@@ -6,12 +6,15 @@
 \alias{rsi-package}
 \title{rsi: Utilities for Retrieving Satellite Imagery, Calculating Spectral Indices, and Wrangling the Outputs}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Tools for downloading spatial data from spatiotemporal asset catalogs ('STAC') and computing standard spectral indices from raster data.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/Permian-Global-Research/rsi}
+  \item \url{https://permian-global-research.github.io/rsi/}
   \item Report bugs at \url{https://github.com/Permian-Global-Research/rsi/issues}
 }
 

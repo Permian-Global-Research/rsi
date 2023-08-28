@@ -27,7 +27,11 @@ get_stac_data(
   composite_function = "median",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 
 get_sentinel1_imagery(
@@ -49,7 +53,11 @@ get_sentinel1_imagery(
   composite_function = "median",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 
 get_sentinel2_imagery(
@@ -71,7 +79,11 @@ get_sentinel2_imagery(
   composite_function = "median",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 
 get_landsat_imagery(
@@ -94,7 +106,11 @@ get_landsat_imagery(
   composite_function = "median",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 
 get_dem(
@@ -116,7 +132,11 @@ get_dem(
   composite_function = "median",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS")
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 }
 \arguments{
@@ -185,6 +205,9 @@ downloaded data and the final output images; this means that some common
 options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
 varying data types.}
 
+\item{gdal_config_options}{Options passed to \code{gdalwarp} through the \code{config}
+argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
+
 \item{platforms}{The names of Landsat satellites to download imagery from.
 These do not correspond to the \code{platforms} column in \code{\link[=spectral_indices]{spectral_indices()}};
 the default argument of \code{c("landsat-9", "landsat-8")} corresponds to
@@ -207,19 +230,8 @@ cell widths, in order to ensure that data is downloaded for your entire AOI
 even after accounting for any reprojection needed to compare your AOI to
 the data on the STAC server.
 
-Setting the following GDAL configuration variables via \code{Sys.setenv()} or in
-\code{.Renviron} might be useful to speed up downloads from cloud services:
-\itemize{
-\item VSI_CACHE = "TRUE"
-\item GDAL_CACHEMAX = "30\%"
-\item VSI_CACHE_SIZE = "10000000"
-\item GDAL_HTTP_MULTIPLEX = "YES"
-\item GDAL_INGESTED_BYTES_AT_OPEN = "32000"
-\item GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR"
-\item GDAL_HTTP_VERSION = "2"
-\item GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES"
-\item GDAL_NUM_THREADS = "ALL_CPUS"
-}
+This function allows for parallelizing downloads via \code{\link[future:plan]{future::plan()}}, and
+for user-controlled progress updates via \code{\link[progressr:handlers]{progressr::handlers()}}.
 }
 
 \section{Rescaling}{
