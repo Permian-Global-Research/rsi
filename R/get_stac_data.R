@@ -15,6 +15,12 @@
 #' This function allows for parallelizing downloads via [future::plan()], and
 #' for user-controlled progress updates via [progressr::handlers()].
 #'
+#' There are currently some challenges with certain Landsat images in Planetary
+#' Computer; please see
+#' https://github.com/microsoft/PlanetaryComputer/discussions/101
+#' for more information on these images and their current status. These files
+#' may cause data downloads to fail.
+#'
 #' @section Rescaling:
 #' If `rescale_bands` is `TRUE`, then this function is able to use the `scale`
 #' and `offset` values in the `bands` field of the `raster` STAC extension.
