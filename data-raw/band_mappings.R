@@ -1,4 +1,4 @@
-# devtools::install()
+devtools::install()
 library(rsi)
 sentinel2_band_mapping <- list(
   aws_v0 = structure(
@@ -100,36 +100,26 @@ sentinel1_band_mapping <- list(
 
 usethis::use_data(sentinel1_band_mapping, overwrite = TRUE)
 
+pc_dem_mapping <- function(assets, collection_name) {
+  structure(
+    assets,
+    stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+    collection_name = collection_name,
+    query_function = query_planetary_computer,
+    class = "rsi_band_mapping"
+  )
+}
+
 dem_band_mapping <- list(
   planetary_computer_v1 = list(
-    nasadem = structure(
-      c("elevation" = "elevation"),
-      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
-      collection_name = "nasadem",
-      query_function = query_planetary_computer,
-      class = "rsi_band_mapping"
-    ),
-    "alos-dem" = structure(
-      c("data" = "elevation"),
-      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
-      collection_name = "alos-dem",
-      query_function = query_planetary_computer,
-      class = "rsi_band_mapping"
-    ),
-    "cop-dem-glo-30" = structure(
-      c("data" = "elevation"),
-      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
-      collection_name = "cop-dem-glo-30",
-      query_function = query_planetary_computer,
-      class = "rsi_band_mapping"
-    ),
-    "cop-dem-glo-90" = structure(
-      c("data" = "elevation"),
-      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
-      collection_name = "cop-dem-glo-30",
-      query_function = query_planetary_computer,
-      class = "rsi_band_mapping"
-    )
+    nasadem = pc_dem_mapping(c("elevation" = "elevation"), "nasadem"),
+    "alos-dem" = pc_dem_mapping(c("data" = "elevation"), "alos-dem"),
+    "cop-dem-glo-30" = pc_dem_mapping(c("data" = "elevation"), "cop-dem-glo-30"),
+    "cop-dem-glo-90" = pc_dem_mapping(c("data" = "elevation"), "cop-dem-glo-90"),
+    "3dep-lidar-dtm" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dtm"),
+    "3dep-lidar-dsm" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dsm"),
+    "3dep-lidar-dtm-native" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dtm-native"),
+    "3dep-seamless" = pc_dem_mapping(c("data" = "elevation"), "3dep-seamless")
   )
 )
 
