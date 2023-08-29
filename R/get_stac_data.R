@@ -87,8 +87,8 @@
 #' downloaded data and the final output images; this means that some common
 #' options (for instance, `PREDICTOR=3`) may cause errors if bands are of
 #' varying data types.
-#' @param gdal_config_options Options passed to `gdalwarp` through the `config`
-#' argument of [sf::gdal_utils()].
+#' @param gdal_config_options Options passed to `gdalwarp` through the
+#' `config_options` argument of [sf::gdal_utils()].
 #' @param platforms The names of Landsat satellites to download imagery from.
 #' These do not correspond to the `platforms` column in [spectral_indices()];
 #' the default argument of `c("landsat-9", "landsat-8")` corresponds to
@@ -167,6 +167,14 @@ get_stac_data <- function(aoi,
       "`aoi` must be an sf or sfc object.",
       class = "rsi_aoi_not_sf"
     )
+  }
+
+  if (sf::st_is_longlat(aoi) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
+    rlang::warn(c(
+      "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
+      i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
+      i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
+    ))
   }
 
   check_type_and_length(

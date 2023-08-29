@@ -44,7 +44,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
 
   if (is.null(update_cache) && !file.exists(indices_path)) {
-    update_cache <- TRUE
+    update_cache <- TRUE # nocov
   }
 
   if (is.null(update_cache)) {
@@ -55,7 +55,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
   if (update_cache) {
     tryCatch(
       update_cached_indices(url),
-      error = function(e) {
+      error = function(e) { # nocov start
         rlang::warn(
           c(
             "Failed to update the cache of indices.",
@@ -64,13 +64,13 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
           class = "rsi_failed_cache_update"
         )
         spectral_indices_internal
-      }
+      } # nocov end
     )
   }
 
   if (file.exists(indices_path)) {
     readRDS(indices_path)
-  } else {
+  } else { # nocov start
     tryCatch(
       download_indices(url),
       error = function(e) {
@@ -84,7 +84,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
         spectral_indices_internal
       }
     )
-  }
+  } # nocov end
 }
 
 download_indices <- function(url = spectral_indices_url()) {
@@ -106,9 +106,11 @@ download_indices <- function(url = spectral_indices_url()) {
 }
 
 update_cached_indices <- function(url = spectral_indices_url()) {
+  # nocov start
   if (!dir.exists(tools::R_user_dir("rsi"))) {
     dir.create(tools::R_user_dir("rsi"), recursive = TRUE)
   }
+  # nocov end
   indices_path <- file.path(
     tools::R_user_dir("rsi"),
     "indices.rda"

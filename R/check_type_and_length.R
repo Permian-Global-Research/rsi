@@ -7,7 +7,11 @@ check_type_and_length <- function(...,
   }
 
   if (is.null(names(dots)) || any(names(dots) == "")) {
-    rlang::abort("All arguments to `check_type_and_length()` must be named.")
+    rlang::abort(
+      "All arguments to `check_type_and_length()` must be named.",
+      class = "rsi_unnamed_check_args",
+      call = call
+    )
   }
 
   problem_args <- character()
@@ -44,7 +48,8 @@ check_type_and_length <- function(...,
         "Some input arguments weren't the right class or length:",
         problem_args
       ),
-      call = call
+      call = call,
+      class = "rsi_incorrect_type_or_length"
     )
   }
   return(invisible(TRUE))

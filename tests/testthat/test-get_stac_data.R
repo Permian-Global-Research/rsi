@@ -61,7 +61,8 @@ test_that("get_sentinel2_imagery() is stable", {
       aoi,
       "2022-06-01",
       "2022-06-30",
-      output_filename = tempfile(fileext = ".tif")
+      output_filename = tempfile(fileext = ".tif"),
+      mask_function = sentinel2_mask_function
     )
   )
   expect_no_error(terra::rast(out))
@@ -145,6 +146,33 @@ test_that("can download RTC products", {
     all(
       names(terra::rast(out)) %in%
         as.vector(sentinel1_band_mapping$planetary_computer_v1)
+    )
+  )
+})
+
+test_that("hidden arguments work", {
+  skip_on_cran()
+  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
+    sf::st_sfc() |>
+    sf::st_set_crs(4326) |>
+    sf::st_transform(3857) |>
+    sf::st_buffer(1000)
+
+  expect_no_error(
+    out <- get_landsat_imagery(
+      aoi,
+      "2022-06-01",
+      "2022-06-30",
+      output_filename = tempfile(fileext = ".tif"),
+      query_function = query_planetary_computer,
+      mask_function = landsat_mask_function
+    )
+  )
+  expect_no_error(terra::rast(out))
+  expect_true(
+    all(
+      names(terra::rast(out)) %in%
+        as.vector(landsat_band_mapping$planetary_computer_v1)
     )
   )
 })
