@@ -21,3 +21,22 @@ development:
 figures:
   fig.width: 8
 
+reference:
+  - title: Spectral indices
+    contents:
+      - spectral_indices
+      - calculate_indices
+      - starts_with("filter")
+      - spectral_indices_url
+  - title: STAC data
+    contents:
+      - starts_with("get")
+  - title: Band mappings
+    contents:
+      - ends_with("band_mapping")
+  - title: Utilities
+    contents:
+      - ends_with("mask_function")
+      - landsat_platform_filter
+      - query_planetary_computer
+      - stack_rasters
