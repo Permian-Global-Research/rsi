@@ -111,7 +111,7 @@ available_indices <- filter_bands(
 )
 
 indices <- calculate_indices(
-  landsat_image, 
+  landsat_image,
   available_indices,
   output_filename = tempfile(fileext = ".tif")
 )
@@ -124,7 +124,7 @@ And last but not least, rsi includes a utility for efficiently combining rasters
 
 ```{r}
 raster_stack <- stack_rasters(
-  c(landsat_image, indices), 
+  c(landsat_image, indices),
   tempfile(fileext = ".vrt")
 )
 

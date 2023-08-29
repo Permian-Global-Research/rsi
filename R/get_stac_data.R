@@ -102,23 +102,23 @@
 #' aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 #'
 #' get_stac_data(aoi,
-#'               start_date = "2022-06-01",
-#'               end_date = "2022-06-30",
-#'               pixel_x_size = 30,
-#'               pixel_y_size = 30,
-#'               asset_names = c(
-#'                 "red", "blue", "green"
-#'               ),
-#'               stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
-#'               collection = "landsat-c2-l2",
-#'               query_function = query_planetary_computer,
-#'               mask_band = "qa_pixel",
-#'               mask_function = landsat_mask_function,
-#'               item_filter_function = landsat_platform_filter,
-#'               platforms = c("landsat-9", "landsat-8")
+#'   start_date = "2022-06-01",
+#'   end_date = "2022-06-30",
+#'   pixel_x_size = 30,
+#'   pixel_y_size = 30,
+#'   asset_names = c(
+#'     "red", "blue", "green"
+#'   ),
+#'   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+#'   collection = "landsat-c2-l2",
+#'   query_function = query_planetary_computer,
+#'   mask_band = "qa_pixel",
+#'   mask_function = landsat_mask_function,
+#'   item_filter_function = landsat_platform_filter,
+#'   platforms = c("landsat-9", "landsat-8")
 #' )
 #'
-#'  # or, mostly equivalently (will download more bands):
+#' # or, mostly equivalently (will download more bands):
 #' landsat_image <- get_landsat_imagery(
 #'   aoi,
 #'   start_date = "2022-06-01",
@@ -162,7 +162,6 @@ get_stac_data <- function(aoi,
                             GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                             GDAL_NUM_THREADS = "ALL_CPUS"
                           )) {
-
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
       "`aoi` must be an sf or sfc object.",

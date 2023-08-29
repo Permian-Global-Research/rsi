@@ -18,15 +18,17 @@
 #'
 #' @export
 sentinel2_mask_function <- function(raster) {
-  terra::`%in%`(raster,
-                c(
-                  2, # DARK_AREA_PIXELS
-                  4, # VEGETATION
-                  5, # NOT_VEGETATED
-                  6, # WATER
-                  7, # UNCLASSIFIED
-                  11 # SNOW
-                ))
+  terra::`%in%`(
+    raster,
+    c(
+      2, # DARK_AREA_PIXELS
+      4, # VEGETATION
+      5, # NOT_VEGETATED
+      6, # WATER
+      7, # UNCLASSIFIED
+      11 # SNOW
+    )
+  )
   # That means we drop:
   # c(
   # 0, # NO_DATA

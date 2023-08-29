@@ -85,4 +85,3 @@ check_indices <- function(remap_band_names, indices, call = rlang::caller_env())
     )
   }
 }
-

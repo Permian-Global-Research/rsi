@@ -22,15 +22,15 @@
 #'
 #' @export
 query_planetary_computer <- function(q,
-                                        subscription_key = Sys.getenv("rsi_pc_key")) {
+                                     subscription_key = Sys.getenv("rsi_pc_key")) {
   if (subscription_key == "") {
     rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer())
   } else {
-      rstac::items_sign(
-        rstac::get_request(q),
-        rstac::sign_planetary_computer(
-          headers = c("Ocp-Apim-Subscription-Key" = subscription_key)
-        )
+    rstac::items_sign(
+      rstac::get_request(q),
+      rstac::sign_planetary_computer(
+        headers = c("Ocp-Apim-Subscription-Key" = subscription_key)
       )
+    )
   }
 }

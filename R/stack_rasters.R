@@ -55,17 +55,18 @@ stack_rasters <- function(rasters,
   out_dir <- dirname(output_filename)
 
   if (!(reference_raster %in% seq_along(rasters) ||
-        reference_raster %in% names(rasters))) {
+    reference_raster %in% names(rasters))) {
     if (is.numeric(reference_raster)) {
       msg <- glue::glue("`rasters` is of length {length(rasters)}, but `reference_raster` is {reference_raster}.")
     } else {
       msg <- glue::glue("`reference_raster` is '{reference_raster}', but none of the elements in `rasters` are named '{reference_raster}'.")
     }
-    rlang::abort(c(
-      "`reference_raster` must be a valid index for `rasters`",
-      i = msg
-    ),
-    class = "rsi_not_in_vec"
+    rlang::abort(
+      c(
+        "`reference_raster` must be a valid index for `rasters`",
+        i = msg
+      ),
+      class = "rsi_not_in_vec"
     )
   }
 
@@ -77,11 +78,12 @@ stack_rasters <- function(rasters,
     names(extent) <- NULL
   } else {
     if (length(extent) != 4) {
-      rlang::abort(c(
-        "`extent` must be 4 numbers (in xmin ymin xmax ymax order).",
-        i = glue::glue("{length(extent)} values were provided.")
-      ),
-      class = "rsi_bad_extent"
+      rlang::abort(
+        c(
+          "`extent` must be 4 numbers (in xmin ymin xmax ymax order).",
+          i = glue::glue("{length(extent)} values were provided.")
+        ),
+        class = "rsi_bad_extent"
       )
     }
   }
@@ -91,11 +93,12 @@ stack_rasters <- function(rasters,
   } else {
     if (length(resolution) == 1) resolution <- c(resolution, resolution)
     if (length(resolution) != 2) {
-      rlang::abort(c(
-        "`resolution` must be 2 numbers (in xres yres order).",
-        i = glue::glue("{length(resolution)} values were provided.")
-      ),
-      class = "rsi_bad_resolution"
+      rlang::abort(
+        c(
+          "`resolution` must be 2 numbers (in xres yres order).",
+          i = glue::glue("{length(resolution)} values were provided.")
+        ),
+        class = "rsi_bad_resolution"
       )
     }
   }
@@ -110,12 +113,13 @@ stack_rasters <- function(rasters,
         # this is the only place we instantiate these rasters, so may as well
         # check CRS alignment while we're here...
         if (terra::crs(r) != ref_crs) {
-          rlang::abort(c(
-            "Rasters do not all share the reference raster's CRS.",
-            i = "Reproject rasters to all share the same CRS."
-          ),
-          class = "rsi_multiple_crs",
-          call = rlang::caller_env()
+          rlang::abort(
+            c(
+              "Rasters do not all share the reference raster's CRS.",
+              i = "Reproject rasters to all share the same CRS."
+            ),
+            class = "rsi_multiple_crs",
+            call = rlang::caller_env()
           )
         }
         names(r)

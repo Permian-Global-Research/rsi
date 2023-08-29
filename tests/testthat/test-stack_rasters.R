@@ -86,4 +86,3 @@ test_that("stack_rasters fails when rasters don't share a CRS", {
     class = "rsi_multiple_crs"
   )
 })
-

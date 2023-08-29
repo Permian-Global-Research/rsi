@@ -7,8 +7,12 @@
 #'
 #' @export
 spectral_indices_url <- function() {
-  if (!is.null(getOption("rsi_url"))) return(getOption("rsi_url"))
-  if (!(Sys.getenv("rsi_url") == "")) return(Sys.getenv("rsi_url"))
+  if (!is.null(getOption("rsi_url"))) {
+    return(getOption("rsi_url"))
+  }
+  if (!(Sys.getenv("rsi_url") == "")) {
+    return(Sys.getenv("rsi_url"))
+  }
   "https://raw.githubusercontent.com/awesome-spectral-indices/awesome-spectral-indices/main/output/spectral-indices-dict.json"
 }
 
@@ -52,11 +56,13 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
     tryCatch(
       update_cached_indices(url),
       error = function(e) {
-        rlang::warn(c(
-          "Failed to update the cache of indices.",
-          i = "Returning (likely outdated) cached data instead."
-        ),
-        class = "rsi_failed_cache_update")
+        rlang::warn(
+          c(
+            "Failed to update the cache of indices.",
+            i = "Returning (likely outdated) cached data instead."
+          ),
+          class = "rsi_failed_cache_update"
+        )
         spectral_indices_internal
       }
     )
@@ -68,11 +74,13 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
     tryCatch(
       download_indices(url),
       error = function(e) {
-        rlang::warn(c(
-          "Failed to download new indices.",
-          i = "Returning (likely outdated) package data instead."
-        ),
-        class = "rsi_failed_download")
+        rlang::warn(
+          c(
+            "Failed to download new indices.",
+            i = "Returning (likely outdated) package data instead."
+          ),
+          class = "rsi_failed_download"
+        )
         spectral_indices_internal
       }
     )

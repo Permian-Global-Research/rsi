@@ -148,7 +148,7 @@ landsat_band_mapping$planetary_computer_v1
 #> {
 #>     raster == 21824
 #> }
-#> <bytecode: 0x10c8e95d0>
+#> <bytecode: 0x5628eeb434c8>
 #> <environment: namespace:rsi>
 #> attr(,"stac_source")
 #> [1] "https://planetarycomputer.microsoft.com/api/stac/v1/"
@@ -164,7 +164,7 @@ landsat_band_mapping$planetary_computer_v1
 #>         rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer(headers = c(`Ocp-Apim-Subscription-Key` = subscription_key)))
 #>     }
 #> }
-#> <bytecode: 0x10c8e91e0>
+#> <bytecode: 0x5628eeb46e60>
 #> <environment: namespace:rsi>
 #> attr(,"class")
 #> [1] "rsi_band_mapping"
@@ -181,7 +181,7 @@ available_indices <- filter_bands(
 )
 
 indices <- calculate_indices(
-  landsat_image, 
+  landsat_image,
   available_indices,
   output_filename = tempfile(fileext = ".tif")
 )
@@ -200,7 +200,7 @@ instance, we can combine our Landsat imagery with the derived indices:
 
 ``` r
 raster_stack <- stack_rasters(
-  c(landsat_image, indices), 
+  c(landsat_image, indices),
   tempfile(fileext = ".vrt")
 )
 
