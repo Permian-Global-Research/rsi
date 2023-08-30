@@ -224,11 +224,6 @@ get_stac_data <- function(aoi,
     item_filter_function,
     ...
   )
-
-  if (!is.null(sign_function)) {
-    items <- sign_function(items)
-  }
-
   items_urls <- extract_urls(asset_names, items)
 
   p <- progressr::progressor(along = unlist(items_urls))
@@ -237,60 +232,42 @@ get_stac_data <- function(aoi,
     names(items_urls),
     function(band_name) {
 
-      if (!is.null(sign_function)) {
-        items <- sign_function(items)
-      }
+      items <- maybe_sign_items(items, sign_function)
       items_urls <- extract_urls(asset_names, items)
 
       urls <- items_urls[[band_name]]
-      downloads <- replicate(length(urls), tempfile(fileext = ".tif"))
-
-      scales <- vapply(
-        items$features,
-        function(x) x$assets[[band_name]]$`raster:bands`[[1]]$scale %||% NA_real_,
-        numeric(1)
-      )
-      offsets <- vapply(
-        items$features,
-        function(x) x$assets[[band_name]]$`raster:bands`[[1]]$offset %||% NA_real_,
-        numeric(1)
+      downloads <- download_assets(
+        urls,
+        replicate(length(urls), tempfile(fileext = ".tif")),
+        gdalwarp_options,
+        gdal_config_options,
+        p
       )
 
-      if (length(unique(scales)) != 1) {
-        rlang::warn(c(
-          glue::glue("Images in band {band_name} have different scaling factors."),
-          i = "Returning images without rescaling."
-        ))
-        scales <- NA_real_
+      if (rescale_bands) {
+        # Assign scale, offset attributes if they exist
+        downloads <- get_rescaling_formula(downloads, items, band_name, "scale")
+        downloads <- get_rescaling_formula(downloads, items, band_name, "offset")
       }
-      scales <- unique(scales)
 
-      if (length(unique(offsets)) != 1) {
-        rlang::warn(c(
-          glue::glue("Images in band {band_name} have different offsets."),
-          i = "Returning images without adding the offset."
-        ))
-        offsets <- NA_real_
-      }
-      offsets <- unique(offsets)
-
-      if (!is.na(scales)) attr(downloads, "scaling_factor") <- scales
-      if (!is.na(offsets)) attr(downloads, "offset") <- offsets
-
-      download_assets(urls, downloads, gdalwarp_options, gdal_config_options, p)
+      downloads
     }
   )
   on.exit(file.remove(unlist(downloaded_bands)), add = TRUE)
   names(downloaded_bands) <- names(items_urls)
 
   if (!is.null(mask_band)) {
-    if (!is.null(sign_function)) {
-      items <- sign_function(items)
-    }
+    items <- maybe_sign_items(items, sign_function)
     mask_urls <- rstac::assets_url(items, mask_band)
+
     p <- progressr::progressor(along = mask_urls)
-    mask_files <- replicate(length(mask_urls), tempfile(fileext = ".tif"))
-    download_assets(mask_urls, mask_files, gdalwarp_options, gdal_config_options, p)
+    mask_files <- download_assets(
+      mask_urls,
+      replicate(length(mask_urls), tempfile(fileext = ".tif")),
+      gdalwarp_options,
+      gdal_config_options,
+      p
+    )
     on.exit(file.remove(mask_files), add = TRUE)
 
     p <- progressr::progressor(along = mask_urls)
@@ -327,34 +304,7 @@ get_stac_data <- function(aoi,
     )
   }
 
-  download_dir <- file.path(tempdir(), "composite_dir")
-  if (!dir.exists(download_dir)) dir.create(download_dir)
-
-  p <- progressr::progressor(along = downloaded_bands)
-  composited_bands <- vapply(
-    names(downloaded_bands),
-    function(band_name) {
-      p(glue::glue("Compositing {band_name}"))
-      out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
-
-      do.call(
-        utils::getFromNamespace(composite_function, "terra"),
-        list(
-          x = terra::rast(downloaded_bands[[band_name]]),
-          na.rm = TRUE,
-          filename = out_file,
-          overwrite = TRUE
-        )
-      )
-
-      if (rescale_bands) {
-        out_file <- rescale_band(downloaded_bands, band_name, out_file)
-      }
-
-      out_file
-    },
-    character(1)
-  )
+  composited_bands <- make_composite_bands(downloaded_bands, composite_function, rescale_bands)
   on.exit(file.remove(composited_bands), add = TRUE)
 
   out_vrt <- tempfile(fileext = ".vrt")
@@ -581,10 +531,10 @@ download_assets <- function(urls,
 
 rescale_band <- function(downloaded_bands, band_name, out_file) {
   scale_string <- ""
-  if (!is.null(attr(downloaded_bands[[band_name]], "scaling_factor"))) {
+  if (!is.null(attr(downloaded_bands[[band_name]], "scale"))) {
     scale_string <- paste(
       scale_string,
-      glue::glue("* {attr(downloaded_bands[[band_name]], 'scaling_factor')}")
+      glue::glue("* {attr(downloaded_bands[[band_name]], 'scale')}")
     )
   }
   if (!is.null(attr(downloaded_bands[[band_name]], "offset"))) {
@@ -665,17 +615,17 @@ get_items <- function(bbox_wgs84,
   }
 
   items <- rstac::stac_search(
-      rstac::stac(stac_source),
-      collections = collections,
-      bbox = c(
-        bbox_wgs84["xmin"],
-        bbox_wgs84["ymin"],
-        bbox_wgs84["xmax"],
-        bbox_wgs84["ymax"]
-      ),
-      datetime = datetime,
-      limit = limit
-    )
+    rstac::stac(stac_source),
+    collections = collections,
+    bbox = c(
+      bbox_wgs84["xmin"],
+      bbox_wgs84["ymin"],
+      bbox_wgs84["xmax"],
+      bbox_wgs84["ymax"]
+    ),
+    datetime = datetime,
+    limit = limit
+  )
 
   items <- download_function(items)
 
@@ -696,4 +646,65 @@ extract_urls <- function(asset_names, items) {
   items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
 
   items_urls
+}
+
+make_composite_bands <- function(downloaded_bands, composite_function, rescale_bands) {
+  download_dir <- file.path(tempdir(), "composite_dir")
+  if (!dir.exists(download_dir)) dir.create(download_dir)
+
+  p <- progressr::progressor(along = downloaded_bands)
+
+  vapply(
+    names(downloaded_bands),
+    function(band_name) {
+      p(glue::glue("Compositing {band_name}"))
+      out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
+
+      do.call(
+        utils::getFromNamespace(composite_function, "terra"),
+        list(
+          x = terra::rast(downloaded_bands[[band_name]]),
+          na.rm = TRUE,
+          filename = out_file,
+          overwrite = TRUE
+        )
+      )
+
+      if (rescale_bands) {
+        out_file <- rescale_band(downloaded_bands, band_name, out_file)
+      }
+
+      out_file
+    },
+    character(1)
+  )
+}
+
+maybe_sign_items <- function(items, sign_function) {
+  if (!is.null(sign_function)) {
+    items <- sign_function(items)
+  }
+  items
+}
+
+get_rescaling_formula <- function(downloads, items, band_name, element) {
+  elements <- vapply(
+    items$features,
+    function(x) {
+      x <- x$assets[[band_name]]$`raster:bands`[[1]]
+      if (is.null(x)) return(NA_real_)
+      tryCatch(x[[element]], error = function(e) NA_real_)
+    },
+    numeric(1)
+  )
+  if (length(unique(elements)) != 1) {
+    rlang::warn(c(
+      glue::glue("Images in band {band_name} have different {element}s."),
+      i = "Returning images without rescaling."
+    ))
+    elements <- NA_real_
+  }
+  elements <- unique(elements)
+  if (!is.na(elements)) attr(downloads, element) <- elements
+  downloads
 }
