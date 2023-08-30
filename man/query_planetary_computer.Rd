@@ -2,9 +2,12 @@
 % Please edit documentation in R/query_planetary_computer.R
 \name{query_planetary_computer}
 \alias{query_planetary_computer}
-\title{Execute STAC queries against the Planetary Computer}
+\alias{sign_planetary_computer}
+\title{Execute and sign STAC queries against the Planetary Computer}
 \usage{
 query_planetary_computer(q, subscription_key = Sys.getenv("rsi_pc_key"))
+
+sign_planetary_computer(items, subscription_key = Sys.getenv("rsi_pc_key"))
 }
 \arguments{
 \item{q}{The query object from \code{\link[rstac:stac_search]{rstac::stac_search()}}.}
@@ -13,12 +16,14 @@ query_planetary_computer(q, subscription_key = Sys.getenv("rsi_pc_key"))
 Planetary Computer account. At the time of writing, this is required for
 downloading Sentinel 1 RTC products, as well as NAIP imagery. This key will
 be automatically used if the environment variable \code{rsi_pc_key} is set.}
+
+\item{items}{The items returned by \code{query_planetary_computer}.}
 }
 \value{
 A STACItemCollection object with signed assets url.
 }
 \description{
-Execute STAC queries against the Planetary Computer
+Execute and sign STAC queries against the Planetary Computer
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

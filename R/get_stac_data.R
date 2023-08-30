@@ -15,6 +15,14 @@
 #' This function allows for parallelizing downloads via [future::plan()], and
 #' for user-controlled progress updates via [progressr::handlers()].
 #'
+#' A number of the steps involved in creating composites -- rescaling band
+#' values, running the mask function, masking images, and compositing images --
+#' currently rely on the `terra` package for raster calculations. This means
+#' creating larger composites, either in geographic or temporal dimension, may
+#' cause errors. It can be a good idea to tile your `aoi` using
+#' `sf::st_make_grid()` and iterate through the tiles to avoid these errors
+#' (and to make it easier to interrupt and restart a download job).
+#'
 #' There are currently some challenges with certain Landsat images in Planetary
 #' Computer; please see
 #' https://github.com/microsoft/PlanetaryComputer/discussions/101
@@ -60,6 +68,8 @@
 #' [query_planetary_computer()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
+#' @param sign_function A function that takes the output from `query_function`
+#' and signs the item URLs, if necessary.
 #' @param ... Passed to `item_filter_functiion`.
 #' @param rescale_bands Logical of length 1: If the STAC collection implements
 #' the `raster` STAC extension, and that extension includes `scale` and `offset`
@@ -112,6 +122,7 @@
 #'   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
 #'   collection = "landsat-c2-l2",
 #'   query_function = query_planetary_computer,
+#'   sign_function = sign_planetary_computer,
 #'   mask_band = "qa_pixel",
 #'   mask_function = landsat_mask_function,
 #'   item_filter_function = landsat_platform_filter,
@@ -136,6 +147,7 @@ get_stac_data <- function(aoi,
                           collection,
                           query_function,
                           ...,
+                          sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
                           mask_band = NULL,
@@ -199,6 +211,8 @@ get_stac_data <- function(aoi,
     pixel_y_size = pixel_y_size
   )
 
+  if (is.null(names(asset_names))) names(asset_names) <- asset_names
+
   items <- get_items(
     sf::st_bbox(sf::st_transform(aoi, 4326)),
     stac_source,
@@ -206,28 +220,28 @@ get_stac_data <- function(aoi,
     start_date,
     end_date,
     limit,
-    query_function
+    query_function,
+    item_filter_function,
+    ...
   )
 
-  if (!is.null(item_filter_function)) {
-    items <- item_filter_function(items, ...)
+  if (!is.null(sign_function)) {
+    items <- sign_function(items)
   }
 
-  if (is.null(names(asset_names))) names(asset_names) <- asset_names
-
-  items_urls <- lapply(
-    names(asset_names),
-    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
-  )
-  names(items_urls) <- names(asset_names)
-
-  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
+  items_urls <- extract_urls(asset_names, items)
 
   p <- progressr::progressor(along = unlist(items_urls))
 
   downloaded_bands <- lapply(
     names(items_urls),
     function(band_name) {
+
+      if (!is.null(sign_function)) {
+        items <- sign_function(items)
+      }
+      items_urls <- extract_urls(asset_names, items)
+
       urls <- items_urls[[band_name]]
       downloads <- replicate(length(urls), tempfile(fileext = ".tif"))
 
@@ -270,6 +284,9 @@ get_stac_data <- function(aoi,
   names(downloaded_bands) <- names(items_urls)
 
   if (!is.null(mask_band)) {
+    if (!is.null(sign_function)) {
+      items <- sign_function(items)
+    }
     mask_urls <- rstac::assets_url(items, mask_band)
     p <- progressr::progressor(along = mask_urls)
     mask_files <- replicate(length(mask_urls), tempfile(fileext = ".tif"))
@@ -372,6 +389,7 @@ get_sentinel1_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
                                   mask_band = NULL,
@@ -414,6 +432,7 @@ get_sentinel2_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
                                   mask_band = attr(asset_names, "mask_band"),
@@ -457,6 +476,7 @@ get_landsat_imagery <- function(aoi,
                                 stac_source = attr(asset_names, "stac_source"),
                                 collection = attr(asset_names, "collection_name"),
                                 query_function = attr(asset_names, "query_function"),
+                                sign_function = attr(asset_names, "sign_function"),
                                 rescale_bands = TRUE,
                                 item_filter_function = landsat_platform_filter,
                                 mask_band = attr(asset_names, "mask_band"),
@@ -499,6 +519,7 @@ get_dem <- function(aoi,
                     stac_source = attr(asset_names, "stac_source"),
                     collection = attr(asset_names, "collection_name"),
                     query_function = attr(asset_names, "query_function"),
+                    sign_function = attr(asset_names, "sign_function"),
                     rescale_bands = FALSE,
                     item_filter_function = NULL,
                     mask_band = NULL,
@@ -632,7 +653,9 @@ get_items <- function(bbox_wgs84,
                       start_date,
                       end_date,
                       limit,
-                      download_function) {
+                      download_function,
+                      item_filter_function,
+                      ...) {
   if (!is.null(start_date)) {
     start_date <- process_dates(start_date)
     end_date <- process_dates(end_date)
@@ -641,8 +664,8 @@ get_items <- function(bbox_wgs84,
     datetime <- NULL
   }
 
-  rstac::stac(stac_source) |>
-    rstac::stac_search(
+  items <- rstac::stac_search(
+      rstac::stac(stac_source),
       collections = collections,
       bbox = c(
         bbox_wgs84["xmin"],
@@ -652,6 +675,25 @@ get_items <- function(bbox_wgs84,
       ),
       datetime = datetime,
       limit = limit
-    ) |>
-    download_function()
+    )
+
+  items <- download_function(items)
+
+  if (!is.null(item_filter_function)) {
+    items <- item_filter_function(items, ...)
+  }
+
+  items
+}
+
+extract_urls <- function(asset_names, items) {
+  items_urls <- lapply(
+    names(asset_names),
+    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
+  )
+  names(items_urls) <- names(asset_names)
+
+  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
+
+  items_urls
 }

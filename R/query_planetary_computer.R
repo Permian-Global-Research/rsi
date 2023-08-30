@@ -1,6 +1,7 @@
-#' Execute STAC queries against the Planetary Computer
+#' Execute and sign STAC queries against the Planetary Computer
 #'
 #' @param q The query object from [rstac::stac_search()].
+#' @param items The items returned by `query_planetary_computer`.
 #' @param subscription_key Optionally, a subscription key associated with your
 #' Planetary Computer account. At the time of writing, this is required for
 #' downloading Sentinel 1 RTC products, as well as NAIP imagery. This key will
@@ -23,11 +24,18 @@
 #' @export
 query_planetary_computer <- function(q,
                                      subscription_key = Sys.getenv("rsi_pc_key")) {
+  rstac::get_request(q)
+}
+
+#' @rdname query_planetary_computer
+#' @export
+sign_planetary_computer <- function(items,
+                                    subscription_key = Sys.getenv("rsi_pc_key")) {
   if (subscription_key == "") {
-    rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer())
+    rstac::items_sign(items, rstac::sign_planetary_computer())
   } else {
     rstac::items_sign(
-      rstac::get_request(q),
+      items,
       rstac::sign_planetary_computer(
         headers = c("Ocp-Apim-Subscription-Key" = subscription_key)
       )

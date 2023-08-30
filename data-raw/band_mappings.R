@@ -56,6 +56,7 @@ attr(sentinel2_band_mapping$planetary_computer_v1, "scl_name") <- "SCL"
 attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source") <- "https://planetarycomputer.microsoft.com/api/stac/v1/"
 attr(sentinel2_band_mapping$planetary_computer_v1, "collection_name") <- "sentinel-2-l2a"
 attr(sentinel2_band_mapping$planetary_computer_v1, "query_function") <- query_planetary_computer
+attr(sentinel2_band_mapping$planetary_computer_v1, "sign_function") <- sign_planetary_computer
 
 usethis::use_data(sentinel2_band_mapping, overwrite = TRUE)
 
@@ -77,6 +78,7 @@ landsat_band_mapping <- list(
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "landsat-c2-l2",
     query_function = query_planetary_computer,
+    sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
 )
@@ -94,6 +96,7 @@ sentinel1_band_mapping <- list(
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "sentinel-1-grd",
     query_function = query_planetary_computer,
+    sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
 )
@@ -106,6 +109,7 @@ pc_dem_mapping <- function(assets, collection_name) {
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = collection_name,
     query_function = query_planetary_computer,
+    sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
 }

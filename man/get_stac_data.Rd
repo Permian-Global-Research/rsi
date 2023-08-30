@@ -19,6 +19,7 @@ get_stac_data(
   collection,
   query_function,
   ...,
+  sign_function = NULL,
   rescale_bands = TRUE,
   item_filter_function = NULL,
   mask_band = NULL,
@@ -45,6 +46,7 @@ get_sentinel1_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
   mask_band = NULL,
@@ -71,6 +73,7 @@ get_sentinel2_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
   mask_band = attr(asset_names, "mask_band"),
@@ -98,6 +101,7 @@ get_landsat_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  sign_function = attr(asset_names, "sign_function"),
   rescale_bands = TRUE,
   item_filter_function = landsat_platform_filter,
   mask_band = attr(asset_names, "mask_band"),
@@ -124,6 +128,7 @@ get_dem(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
   mask_band = NULL,
@@ -170,6 +175,9 @@ images from.}
 
 \item{...}{Passed to \code{item_filter_functiion}.}
 
+\item{sign_function}{A function that takes the output from \code{query_function}
+and signs the item URLs, if necessary.}
+
 \item{rescale_bands}{Logical of length 1: If the STAC collection implements
 the \code{raster} STAC extension, and that extension includes \code{scale} and \code{offset}
 values, should this function attempt to automatically rescale the downloaded
@@ -205,8 +213,8 @@ downloaded data and the final output images; this means that some common
 options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
 varying data types.}
 
-\item{gdal_config_options}{Options passed to \code{gdalwarp} through the \code{config}
-argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
+\item{gdal_config_options}{Options passed to \code{gdalwarp} through the
+\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
 
 \item{platforms}{The names of Landsat satellites to download imagery from.
 These do not correspond to the \code{platforms} column in \code{\link[=spectral_indices]{spectral_indices()}};
@@ -232,6 +240,14 @@ the data on the STAC server.
 
 This function allows for parallelizing downloads via \code{\link[future:plan]{future::plan()}}, and
 for user-controlled progress updates via \code{\link[progressr:handlers]{progressr::handlers()}}.
+
+A number of the steps involved in creating composites -- rescaling band
+values, running the mask function, masking images, and compositing images --
+currently rely on the \code{terra} package for raster calculations. This means
+creating larger composites, either in geographic or temporal dimension, may
+cause errors. It can be a good idea to tile your \code{aoi} using
+\code{sf::st_make_grid()} and iterate through the tiles to avoid these errors
+(and to make it easier to interrupt and restart a download job).
 
 There are currently some challenges with certain Landsat images in Planetary
 Computer; please see
@@ -279,6 +295,7 @@ get_stac_data(aoi,
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
   query_function = query_planetary_computer,
+  sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
   item_filter_function = landsat_platform_filter,
