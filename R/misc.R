@@ -1,5 +1,8 @@
 `%||%` <- function(lhs, rhs) {
-  ifelse(is.null(lhs), rhs, lhs)
+  if (is.null(lhs)) {
+    return(rhs)
+  }
+  lhs
 }
 
 #' @export

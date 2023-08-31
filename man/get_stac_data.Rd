@@ -202,7 +202,8 @@ be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function
 \item{composite_function}{Character of length 1: The (quoted) name of a
 function from \code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine
 downloaded images into a single composite (i.e., to aggregate pixel values
-from multiple images into a single value).}
+from multiple images into a single value). Set to \code{NULL} to not composite
+(i.e., to rescale and save each individual image independently).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}

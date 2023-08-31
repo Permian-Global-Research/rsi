@@ -17,13 +17,13 @@ Imports:
     glue,
     jsonlite,
     proceduralnames,
-    progressr,
     rlang,
     rstac,
     sf,
     terra,
     tibble
 Suggests: 
+    progressr,
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
