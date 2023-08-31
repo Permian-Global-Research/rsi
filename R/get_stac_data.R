@@ -94,10 +94,11 @@
 #' @param output_filename The filename to write the output raster to. If
 #' `composite_function` is `NULL`, item datetimes will be appended to this
 #' in order to create unique filenames.
-#' @param composite_function Character of length 1: The (quoted) name of a
-#' function from `terra` (for instance, [terra::median]) used to combine
-#' downloaded images into a single composite (i.e., to aggregate pixel values
-#' from multiple images into a single value). Set to `NULL` to not composite
+#' @param composite_function Character of length 1: The name of a
+#' function used to combine downloaded images into a single composite
+#' (i.e., to aggregate pixel values from multiple images into a single value).
+#' Must be one of of "sum", "mean", "median", "min", "max".
+#' Set to `NULL` to not composite
 #' (i.e., to rescale and save each individual image independently).
 #' @inheritParams rstac::stac_search
 #' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
@@ -161,7 +162,7 @@ get_stac_data <- function(aoi,
                           mask_band = NULL,
                           mask_function = NULL,
                           output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                          composite_function = "median",
+                          composite_function = c("median", "mean", "sum", "min", "max"),
                           limit = 999,
                           gdalwarp_options = c(
                             "-r", "bilinear",
@@ -197,6 +198,10 @@ get_stac_data <- function(aoi,
     ))
   }
 
+  if (!is.null(composite_function)) {
+    composite_function <- rlang::arg_match(composite_function)
+  }
+
   check_type_and_length(
     start_date = character(1),
     end_date = character(1),
@@ -218,6 +223,8 @@ get_stac_data <- function(aoi,
     pixel_x_size = pixel_x_size,
     pixel_y_size = pixel_y_size
   )
+
+  aoi_bbox <- sf::st_bbox(aoi)
 
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
 
@@ -321,15 +328,25 @@ get_stac_data <- function(aoi,
       item_urls <- extract_urls(asset_names, item)
       if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
 
-      download_assets(
-        unlist(item_urls),
-        unlist(download_locations[i, ]),
-        gdalwarp_options,
-        gdal_config_options,
-        p
+      item_bbox <- item$bbox
+      current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
+
+      tryCatch(
+        download_assets(
+          unlist(item_urls),
+          unlist(download_locations[i, , drop = FALSE]),
+          current_options,
+          gdal_config_options,
+          p
+        ),
+        error = function(e) {
+          rlang::warn(glue::glue("Failed to download {item$id %||% 'UNKNOWN'} from {item$properties$datetime %||% 'UNKNOWN'}"))
+          download_locations[i, ] <- NA
+        }
       )
     }
   )
+  download_locations <- na.omit(download_locations)
   on.exit(file.remove(unlist(download_locations)))
   names(download_locations) <- names(items_urls)
 
@@ -653,14 +670,32 @@ process_gdalwarp_options <- function(gdalwarp_options,
     gdalwarp_options <- c(gdalwarp_options, "-t_srs", sf::st_crs(aoi)$wkt)
   }
 
-  if (!("-te" %in% gdalwarp_options)) {
-    gdalwarp_options <- c(gdalwarp_options, "-te", sf::st_bbox(aoi))
-  }
-
   if (!("-tr" %in% gdalwarp_options)) {
     gdalwarp_options <- c(gdalwarp_options, "-tr", pixel_x_size, pixel_y_size)
   }
 
+  gdalwarp_options
+}
+
+set_gdalwarp_extent <- function(gdalwarp_options, aoi_bbox, item_bbox = NULL) {
+  if (!("-te" %in% gdalwarp_options)) {
+    if (!is.null(item_bbox)) {
+      class(item_bbox) <- "bbox"
+      item_bbox <- sf::st_as_sfc(item_bbox)
+      item_bbox <- sf::st_set_crs(item_bbox, 4326)
+      item_bbox <- sf::st_transform(item_bbox, sf::st_crs(aoi_bbox))
+      item_bbox <- sf::st_bbox(item_bbox)
+
+      aoi_bbox <- c(
+        xmin = max(aoi_bbox[[1]], item_bbox[[1]]),
+        ymin = max(aoi_bbox[[2]], item_bbox[[2]]),
+        xmax = min(aoi_bbox[[3]], item_bbox[[3]]),
+        ymax = min(aoi_bbox[[4]], item_bbox[[4]])
+      )
+    }
+
+    gdalwarp_options <- c(gdalwarp_options, "-te", aoi_bbox)
+  }
   gdalwarp_options
 }
 
@@ -735,10 +770,10 @@ make_composite_bands <- function(downloaded_bands, composite_function, p) {
       out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
       do.call(
-        utils::getFromNamespace(composite_function, "terra"),
+        terra::mosaic,
         list(
-          x = terra::rast(downloaded_bands[[band_name]]),
-          na.rm = TRUE,
+          x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+          fun = composite_function,
           filename = out_file,
           overwrite = TRUE
         )
