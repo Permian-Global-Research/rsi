@@ -93,20 +93,21 @@ aoi <- sf::st_point(c(-74.912131, 44.080410))
 aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
 aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
 
-landsat_image <- get_stac_data(aoi,
+landsat_image <- get_stac_data(
+  aoi,
   start_date = "2022-06-01",
-  end_date = "2022-08-30",
+  end_date = "2022-06-30",
   pixel_x_size = 30,
   pixel_y_size = 30,
   asset_names = c("red", "blue", "green"),
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
   query_function = query_planetary_computer,
+  sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
   item_filter_function = landsat_platform_filter,
-  platforms = c("landsat-9", "landsat-8"),
-  output_filename = tempfile(fileext = ".tif")
+  platforms = c("landsat-9", "landsat-8")
 )
 
 terra::plot(terra::rast(landsat_image))
@@ -139,35 +140,11 @@ package.
 
 ``` r
 landsat_band_mapping$planetary_computer_v1
+#> An rsi band mapping object with attributes:
+#> names mask_band mask_function stac_source collection_name query_function sign_function class
+#> 
 #> coastal    blue   green     red   nir08  swir16  swir22    lwir  lwir11 
-#>     "A"     "B"     "G"     "R"     "N"    "S1"    "S2"     "T"    "T1" 
-#> attr(,"mask_band")
-#> [1] "qa_pixel"
-#> attr(,"mask_function")
-#> function (raster) 
-#> {
-#>     raster == 21824
-#> }
-#> <bytecode: 0x5628eeb434c8>
-#> <environment: namespace:rsi>
-#> attr(,"stac_source")
-#> [1] "https://planetarycomputer.microsoft.com/api/stac/v1/"
-#> attr(,"collection_name")
-#> [1] "landsat-c2-l2"
-#> attr(,"query_function")
-#> function (q, subscription_key = Sys.getenv("rsi_pc_key")) 
-#> {
-#>     if (subscription_key == "") {
-#>         rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer())
-#>     }
-#>     else {
-#>         rstac::items_sign(rstac::get_request(q), rstac::sign_planetary_computer(headers = c(`Ocp-Apim-Subscription-Key` = subscription_key)))
-#>     }
-#> }
-#> <bytecode: 0x5628eeb46e60>
-#> <environment: namespace:rsi>
-#> attr(,"class")
-#> [1] "rsi_band_mapping"
+#>     "A"     "B"     "G"     "R"     "N"    "S1"    "S2"     "T"    "T1"
 ```
 
 We can put these pieces together and calculate as many spectral indices
@@ -212,3 +189,20 @@ terra::plot(terra::rast(raster_stack))
 
 This can be extremely useful as a way to create predictor bricks and
 other multi-band rasters from various data sources.
+
+## License
+
+Copyright 2023 Permian Global Research, Limited.
+
+Licensed under the Apache License, Version 2.0 (the “License”); you may
+not use this file except in compliance with the License.
+
+You may obtain a copy of the License at:
+
+<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an “AS IS” BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
