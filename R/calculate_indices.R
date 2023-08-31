@@ -103,31 +103,33 @@ calculate_indices <- function(raster,
     )
   )
 
-  local({
-    if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
+  local(
+    {
+      if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
 
-    check_indices(names(raster), indices)
+      check_indices(names(raster), indices)
 
-    terra::predict(
-      raster,
-      indices,
-      fun = function(model, newdata) {
-        out <- lapply(
-          indices[["formula"]],
-          function(calc) {
-            with(newdata, eval(str2lang(calc)))
+      terra::predict(
+        raster,
+        indices,
+        fun = function(model, newdata) {
+          out <- lapply(
+            indices[["formula"]],
+            function(calc) {
+              with(newdata, eval(str2lang(calc)))
+            }
+          )
+          names(out) <- indices[["short_name"]]
+          if (!is.null(names_suffix) && names_suffix != "") {
+            names(out) <- paste(names(out), names_suffix, sep = "_")
           }
-        )
-        names(out) <- indices[["short_name"]]
-        if (!is.null(names_suffix) && names_suffix != "") {
-          names(out) <- paste(names(out), names_suffix, sep = "_")
-        }
-        out
-      },
-      filename = output_filename
-    )
-  },
-  envir = exec_env)
+          out
+        },
+        filename = output_filename
+      )
+    },
+    envir = exec_env
+  )
 
   output_filename
 }
@@ -137,7 +139,7 @@ check_indices <- function(remap_band_names, indices, call = rlang::caller_env())
   if (!is.null(remap_band_names)) {
     good <- vapply(
       indices$bands,
-      function (bands) all(bands %in% unlist(remap_band_names)),
+      function(bands) all(bands %in% unlist(remap_band_names)),
       logical(1)
     )
   }

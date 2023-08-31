@@ -26,4 +26,3 @@ test_that("integer-ish are valid integers", {
   }
   expect_true(f1())
 })
-
