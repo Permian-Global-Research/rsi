@@ -1,10 +1,8 @@
 test_that("get_landsat_imagery() is stable", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_landsat_imagery(
@@ -25,11 +23,9 @@ test_that("get_landsat_imagery() is stable", {
 
 test_that("get_sentinel1_imagery() is stable", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_sentinel1_imagery(
@@ -50,11 +46,9 @@ test_that("get_sentinel1_imagery() is stable", {
 
 test_that("get_sentinel2_imagery() is stable", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_sentinel2_imagery(
@@ -76,11 +70,9 @@ test_that("get_sentinel2_imagery() is stable", {
 
 test_that("get_dem() is stable", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_dem(
@@ -99,11 +91,9 @@ test_that("get_dem() is stable", {
 
 test_that("non-default mappings work", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_sentinel2_imagery(
@@ -126,11 +116,9 @@ test_that("non-default mappings work", {
 test_that("can download RTC products", {
   skip_if(Sys.getenv("rsi_pc_key") == "", "Environment variable `rsi_pc_key` not set")
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_sentinel1_imagery(
@@ -152,11 +140,9 @@ test_that("can download RTC products", {
 
 test_that("hidden arguments work", {
   skip_on_cran()
-  aoi <- sf::st_point(c(-74.912131, 44.080410)) |>
-    sf::st_sfc() |>
-    sf::st_set_crs(4326) |>
-    sf::st_transform(3857) |>
-    sf::st_buffer(1000)
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
 
   expect_no_error(
     out <- get_landsat_imagery(
