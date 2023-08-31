@@ -5,12 +5,17 @@
 #' subsets of [spectral_indices()], but it will work with any data frame with a
 #' `formula`, `bands`, and `short_name` column.
 #'
+#' @section Security:
 #' Note that this function is running code from the `formula` column of the
 #' spectral indices data frame, which is derived from a JSON file downloaded off
 #' the internet. It's not impossible that an attacker could take advantage of
-#' this to run arbitrary code on your computer. Make sure you inspect the
-#' `formula` column to make sure there's nothing nasty hiding in any of the
-#' formulas you're going to run, and consider using pre-saved indices tables or
+#' this to run arbitrary code on your computer. To mitigate this, indices are
+#' calculated in a minimal environment that contains very few functions or
+#' symbols (preventing an attacker from accessing, for example, `system()`).
+#'
+#' Still, it's good practice to inspect your `formula` column to make sure
+#' there's nothing nasty hiding in any of the formulas you're going to run.
+#' Additionally, consider using pre-saved indices tables or
 #' `spectral_indices(download_indices = FALSE)` if using this in an unsupervised
 #' workload.
 #'
@@ -23,7 +28,7 @@
 #' of the necessary bands) and `short_name` (which will be used as the band
 #' name) will work.
 #' @param output_filename The filename to write the computed metrics to.
-#' @param ... Additional arguments passed to [terra::predict()].
+#' @inheritParams rlang::args_dots_empty
 #' @param names_suffix If not `NULL`, will be used (with [paste()]) to add a
 #' suffix to each of the band names returned.
 #'
@@ -35,6 +40,17 @@
 #'   filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
 #'   tempfile(fileext = ".tif"),
 #'   names_suffix = "sentinel1"
+#' )
+#'
+#' # Formulas aren't able to access most R functions or operators:
+#' example_indices <- filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
+#' example_indices$formula <- 'system("echo something bad")'
+#' try(
+#'   calculate_indices(
+#'     system.file("rasters/example_sentinel1.tif", package = "rsi"),
+#'     example_indices,
+#'     tempfile(fileext = ".tif")
+#'   )
 #' )
 #'
 #' @export
@@ -51,29 +67,68 @@ calculate_indices <- function(raster,
       class = "rsi_missing_column"
     )
   }
-  if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
 
-  check_indices(names(raster), indices)
-
-  terra::predict(
-    raster,
-    indices,
-    fun = function(model, newdata) {
-      out <- lapply(
-        indices[["formula"]],
-        \(calc) {
-          with(newdata, eval(str2lang(calc)))
-        }
-      )
-      names(out) <- indices[["short_name"]]
-      if (!is.null(names_suffix) && names_suffix != "") {
-        names(out) <- paste(names(out), names_suffix, sep = "_")
-      }
-      return(out)
-    },
-    filename = output_filename,
-    ...
+  exec_env <- rlang::new_environment(
+    list(
+      `::` = `::`,
+      `-` = `-`,
+      `(` = `(`,
+      `*` = `*`,
+      `/` = `/`,
+      `^` = `^`,
+      `+` = `+`,
+      `[` = `[`,
+      `[[` = `[[`,
+      `<-` = `<-`,
+      `!` = `!`,
+      `&&` = `&&`,
+      `!=` = `!=`,
+      `if` = `if`,
+      `{` = `{`,
+      `function` = `function`,
+      lapply = lapply,
+      with = with,
+      eval = eval,
+      str2lang = str2lang,
+      names = names,
+      `names<-` = `names<-`,
+      is.null = is.null,
+      inherits = inherits,
+      paste = paste,
+      indices = indices,
+      raster = raster,
+      output_filename = output_filename,
+      names_suffix = names_suffix,
+      check_indices = check_indices
+    )
   )
+
+  local({
+    if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
+
+    check_indices(names(raster), indices)
+
+    terra::predict(
+      raster,
+      indices,
+      fun = function(model, newdata) {
+        out <- lapply(
+          indices[["formula"]],
+          function(calc) {
+            with(newdata, eval(str2lang(calc)))
+          }
+        )
+        names(out) <- indices[["short_name"]]
+        if (!is.null(names_suffix) && names_suffix != "") {
+          names(out) <- paste(names(out), names_suffix, sep = "_")
+        }
+        out
+      },
+      filename = output_filename
+    )
+  },
+  envir = exec_env)
+
   output_filename
 }
 
@@ -82,7 +137,7 @@ check_indices <- function(remap_band_names, indices, call = rlang::caller_env())
   if (!is.null(remap_band_names)) {
     good <- vapply(
       indices$bands,
-      \(bands) all(bands %in% unlist(remap_band_names)),
+      function (bands) all(bands %in% unlist(remap_band_names)),
       logical(1)
     )
   }

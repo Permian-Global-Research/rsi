@@ -19,7 +19,7 @@ name) will work.}
 
 \item{output_filename}{The filename to write the computed metrics to.}
 
-\item{...}{Additional arguments passed to \code{\link[terra:predict]{terra::predict()}}.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{names_suffix}{If not \code{NULL}, will be used (with \code{\link[=paste]{paste()}}) to add a
 suffix to each of the band names returned.}
@@ -33,22 +33,39 @@ This function computes any number of indices from an input raster via
 subsets of \code{\link[=spectral_indices]{spectral_indices()}}, but it will work with any data frame with a
 \code{formula}, \code{bands}, and \code{short_name} column.
 }
-\details{
+\section{Security}{
+
 Note that this function is running code from the \code{formula} column of the
 spectral indices data frame, which is derived from a JSON file downloaded off
 the internet. It's not impossible that an attacker could take advantage of
-this to run arbitrary code on your computer. Make sure you inspect the
-\code{formula} column to make sure there's nothing nasty hiding in any of the
-formulas you're going to run, and consider using pre-saved indices tables or
+this to run arbitrary code on your computer. To mitigate this, indices are
+calculated in a minimal environment that contains very few functions or
+symbols (preventing an attacker from accessing, for example, \code{system()}).
+
+Still, it's good practice to inspect your \code{formula} column to make sure
+there's nothing nasty hiding in any of the formulas you're going to run.
+Additionally, consider using pre-saved indices tables or
 \code{spectral_indices(download_indices = FALSE)} if using this in an unsupervised
 workload.
 }
+
 \examples{
 calculate_indices(
   system.file("rasters/example_sentinel1.tif", package = "rsi"),
   filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
   tempfile(fileext = ".tif"),
   names_suffix = "sentinel1"
+)
+
+# Formulas aren't able to access most R functions or operators:
+example_indices <- filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
+example_indices$formula <- 'system("echo something bad")'
+try(
+  calculate_indices(
+    system.file("rasters/example_sentinel1.tif", package = "rsi"),
+    example_indices,
+    tempfile(fileext = ".tif")
+  )
 )
 
 }
