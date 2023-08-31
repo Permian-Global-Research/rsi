@@ -27,6 +27,10 @@ spectral_indices_url <- function() {
 #' `rsi_url` is set, that value will be used; otherwise, the list at
 #' https://github.com/awesome-spectral-indices/awesome-spectral-indices will
 #' be used.
+#' @param download_indices Logical: should this function download indices? If
+#' `NULL`, this function will only download indices if the cache will be
+#' updated. If `TRUE`, this function will attempt to download indices no matter
+#' what. If `FALSE`, either cached or package indices will be used.
 #' @param update_cache Logical: should cached indices be updated? If `NULL`,
 #' cached values will be updated if the cache is older than a day. If `TRUE`,
 #' the cache will be updated, if `FALSE` it will not.

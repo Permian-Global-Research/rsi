@@ -23,6 +23,11 @@ is set, that value will be used; otherwise, if the environment variable
 https://github.com/awesome-spectral-indices/awesome-spectral-indices will
 be used.}
 
+\item{download_indices}{Logical: should this function download indices? If
+\code{NULL}, this function will only download indices if the cache will be
+updated. If \code{TRUE}, this function will attempt to download indices no matter
+what. If \code{FALSE}, either cached or package indices will be used.}
+
 \item{update_cache}{Logical: should cached indices be updated? If \code{NULL},
 cached values will be updated if the cache is older than a day. If \code{TRUE},
 the cache will be updated, if \code{FALSE} it will not.}
