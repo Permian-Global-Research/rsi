@@ -39,9 +39,20 @@ spectral_indices_url <- function() {
 #' @source [https://github.com/awesome-spectral-indices/awesome-spectral-indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices)
 #'
 #' @export
-spectral_indices <- function(..., url = spectral_indices_url(), update_cache = NULL) {
+spectral_indices <- function(..., url = spectral_indices_url(), download_indices = NULL, update_cache = NULL) {
   rlang::check_dots_empty()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
+
+  if (isFALSE(download_indices)) {
+    if (isTRUE(update_cache)) {
+      rlang::abort(
+        "Cannot update the cache if not downloading indices.",
+        class = "rsi_cache_download_conflict"
+      )
+    }
+
+    update_cache <- FALSE
+  }
 
   if (is.null(update_cache) && !file.exists(indices_path)) {
     update_cache <- TRUE # nocov
@@ -52,7 +63,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
     update_cache <- (Sys.time() - file.info(indices_path)[["mtime"]]) > 86400
   }
 
-  if (update_cache) {
+  if (update_cache && isTRUE(download_indices)) {
     tryCatch(
       update_cached_indices(url),
       error = function(e) { # nocov start
@@ -68,12 +79,12 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
     )
   }
 
-  if (file.exists(indices_path)) {
-    readRDS(indices_path)
-  } else { # nocov start
+  if (!isTRUE(download_indices) && file.exists(indices_path)) {
+    tibble::as_tibble(readRDS(indices_path))
+  } else if (isTRUE(download_indices)) {
     tryCatch(
-      download_indices(url),
-      error = function(e) {
+      download_web_indices(url),
+      error = function(e) { # nocov start
         rlang::warn(
           c(
             "Failed to download new indices.",
@@ -83,11 +94,20 @@ spectral_indices <- function(..., url = spectral_indices_url(), update_cache = N
         )
         spectral_indices_internal
       }
+    ) # nocov end
+  } else {
+    rlang::warn(
+      c(
+        "Failed to download new indices.",
+        i = "Returning (likely outdated) package data instead."
+      ),
+      class = "rsi_failed_download"
     )
-  } # nocov end
+    spectral_indices_internal
+  }
 }
 
-download_indices <- function(url = spectral_indices_url()) {
+download_web_indices <- function(url = spectral_indices_url()) {
   spectral_indices <- lapply(
     jsonlite::read_json(url)[[1]],
     function(index) {
@@ -116,7 +136,7 @@ update_cached_indices <- function(url = spectral_indices_url()) {
     "indices.rda"
   )
   saveRDS(
-    download_indices(url),
+    download_web_indices(url),
     indices_path
   )
 }

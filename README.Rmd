@@ -43,7 +43,7 @@ pak::pak("Permian-Global-Research/rsi")
 
 ## Example
 
-The `spectral_indices()` function provides a tibble with data from the [_Awesome_ Spectral Indices project](https://github.com/awesome-spectral-indices/awesome-spectral-indices):
+The `spectral_indices()` function provides a tibble with data from the [Awesome Spectral Indices project](https://github.com/awesome-spectral-indices/awesome-spectral-indices):
 
 ```{r}
 library(rsi)

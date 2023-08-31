@@ -13,7 +13,8 @@ calculate_indices(raster, indices, output_filename, ..., names_suffix = NULL)
 \item{indices}{A data frame of indices to compute. The intent is for this
 function to work with subsets of \link{spectral_indices}, but any data frame with
 columns \code{formula} (containing a string representation of the equation used
-to calculate the index) and \code{short_name} (which will be used as the band
+to calculate the index), \code{bands} (a list column containing character vectors
+of the necessary bands) and \code{short_name} (which will be used as the band
 name) will work.}
 
 \item{output_filename}{The filename to write the computed metrics to.}
@@ -30,7 +31,17 @@ suffix to each of the band names returned.}
 This function computes any number of indices from an input raster via
 \code{\link[terra:predict]{terra::predict()}}. By default, this function is designed to work with
 subsets of \code{\link[=spectral_indices]{spectral_indices()}}, but it will work with any data frame with a
-\code{formula} and \code{short_name} column.
+\code{formula}, \code{bands}, and \code{short_name} column.
+}
+\details{
+Note that this function is running code from the \code{formula} column of the
+spectral indices data frame, which is derived from a JSON file downloaded off
+the internet. It's not impossible that an attacker could take advantage of
+this to run arbitrary code on your computer. Make sure you inspect the
+\code{formula} column to make sure there's nothing nasty hiding in any of the
+formulas you're going to run, and consider using pre-saved indices tables or
+\code{spectral_indices(download_indices = FALSE)} if using this in an unsupervised
+workload.
 }
 \examples{
 calculate_indices(

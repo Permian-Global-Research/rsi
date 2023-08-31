@@ -7,7 +7,12 @@
 \url{https://github.com/awesome-spectral-indices/awesome-spectral-indices}
 }
 \usage{
-spectral_indices(..., url = spectral_indices_url(), update_cache = NULL)
+spectral_indices(
+  ...,
+  url = spectral_indices_url(),
+  download_indices = NULL,
+  update_cache = NULL
+)
 }
 \arguments{
 \item{...}{These dots are for future extensions and must be empty.}

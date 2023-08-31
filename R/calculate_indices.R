@@ -3,14 +3,24 @@
 #' This function computes any number of indices from an input raster via
 #' [terra::predict()]. By default, this function is designed to work with
 #' subsets of [spectral_indices()], but it will work with any data frame with a
-#' `formula` and `short_name` column.
+#' `formula`, `bands`, and `short_name` column.
+#'
+#' Note that this function is running code from the `formula` column of the
+#' spectral indices data frame, which is derived from a JSON file downloaded off
+#' the internet. It's not impossible that an attacker could take advantage of
+#' this to run arbitrary code on your computer. Make sure you inspect the
+#' `formula` column to make sure there's nothing nasty hiding in any of the
+#' formulas you're going to run, and consider using pre-saved indices tables or
+#' `spectral_indices(download_indices = FALSE)` if using this in an unsupervised
+#' workload.
 #'
 #' @param raster The raster (either as a SpatRaster or object readable by
 #' [terra::rast()]) to compute indices from.
 #' @param indices A data frame of indices to compute. The intent is for this
 #' function to work with subsets of [spectral_indices], but any data frame with
 #' columns `formula` (containing a string representation of the equation used
-#' to calculate the index) and `short_name` (which will be used as the band
+#' to calculate the index), `bands` (a list column containing character vectors
+#' of the necessary bands) and `short_name` (which will be used as the band
 #' name) will work.
 #' @param output_filename The filename to write the computed metrics to.
 #' @param ... Additional arguments passed to [terra::predict()].
