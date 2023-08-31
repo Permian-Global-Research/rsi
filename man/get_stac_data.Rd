@@ -197,7 +197,9 @@ STAC source to use to mask the data. Set to \code{NULL} to not mask. See the
 raster, where \code{TRUE} pixels will be preserved and \code{FALSE} or \code{NA} pixels will
 be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function()}}.}
 
-\item{output_filename}{The filename to write the output raster to.}
+\item{output_filename}{The filename to write the output raster to. If
+\code{composite_function} is \code{NULL}, item datetimes will be appended to this
+in order to create unique filenames.}
 
 \item{composite_function}{Character of length 1: The (quoted) name of a
 function from \code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine
@@ -240,7 +242,12 @@ even after accounting for any reprojection needed to compare your AOI to
 the data on the STAC server.
 
 This function allows for parallelizing downloads via \code{\link[future:plan]{future::plan()}}, and
-for user-controlled progress updates via \code{\link[progressr:handlers]{progressr::handlers()}}.
+for user-controlled progress updates via \code{\link[progressr:handlers]{progressr::handlers()}}. If
+there are fewer images to download than \code{asset_names}, then this function
+uses \code{\link[=lapply]{lapply()}} to iterate through images and \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}}
+to iterate through downloading each asset. If there are more images than
+assets, this function uses \code{\link[future.apply:future_lapply]{future.apply::future_lapply()}} to iterate through
+images.
 
 A number of the steps involved in creating composites -- rescaling band
 values, running the mask function, masking images, and compositing images --

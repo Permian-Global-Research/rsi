@@ -13,7 +13,12 @@
 #' the data on the STAC server.
 #'
 #' This function allows for parallelizing downloads via [future::plan()], and
-#' for user-controlled progress updates via [progressr::handlers()].
+#' for user-controlled progress updates via [progressr::handlers()]. If
+#' there are fewer images to download than `asset_names`, then this function
+#' uses [lapply()] to iterate through images and [future.apply::future_mapply()]
+#' to iterate through downloading each asset. If there are more images than
+#' assets, this function uses [future.apply::future_lapply()] to iterate through
+#' images.
 #'
 #' A number of the steps involved in creating composites -- rescaling band
 #' values, running the mask function, masking images, and compositing images --
@@ -86,7 +91,9 @@
 #' @param mask_function A function that takes a raster and returns a boolean
 #' raster, where `TRUE` pixels will be preserved and `FALSE` or `NA` pixels will
 #' be masked out. See [sentinel2_mask_function()].
-#' @param output_filename The filename to write the output raster to.
+#' @param output_filename The filename to write the output raster to. If
+#' `composite_function` is `NULL`, item datetimes will be appended to this
+#' in order to create unique filenames.
 #' @param composite_function Character of length 1: The (quoted) name of a
 #' function from `terra` (for instance, [terra::median]) used to combine
 #' downloaded images into a single composite (i.e., to aggregate pixel values
@@ -258,24 +265,24 @@ get_stac_data <- function(aoi,
       numeric(1)
     )
 
-    scale_strings <- vector("character", length(scales))
+    scale_strings <- vapply(
+      names(scales),
+      function(band) {
+        out <- ""
+
+        if (band %in% names(scales) && !is.na(scales[[band]])) {
+          out <- paste(out, glue::glue("* {scales[[band]]}"))
+        }
+
+        if (band %in% names(offsets) && !is.na(offsets[[band]])) {
+          out <- paste(out, glue::glue("+ {offsets[[band]]}"))
+        }
+
+        out
+      },
+      character(1)
+    )
     names(scale_strings) <- names(scales)
-
-    for (band in names(scale_strings)) {
-      if (band %in% names(scales) && !is.na(scales[[band]])) {
-        scale_strings[[band]] <- paste(
-          scale_strings[[band]],
-          glue::glue("* {scales[[band]]}")
-        )
-      }
-
-      if (band %in% names(offsets) && !is.na(offsets[[band]])) {
-        scale_strings[[band]] <- paste(
-          scale_strings[[band]],
-          glue::glue("+ {offsets[[band]]}")
-        )
-      }
-    }
 
     scale_strings <- scale_strings[scale_strings != ""]
     scale_strings <- stats::setNames(
@@ -285,48 +292,44 @@ get_stac_data <- function(aoi,
   }
 
   if (rlang::is_installed("progressr")) {
-    # How many steps do we walk through:
-    # 1. Must download all items, including the masks
-    length_progress <- length(unlist(items_urls))
-    # 2. If masking, we are going to either run a mask function or actually mask
-    # all downloads (*2)
-    if (!is.null(mask_band)) length_progress <- length_progress * 2
-    # 3. Compositing complicates things:
-    if (!is.null(composite_function)) {
-      # 3.1 We'll add 1x the number of bands:
-      composite_multiplier <- 1
-      length_progress <- length_progress + (length(items_urls) * composite_multiplier)
-      # 4. But not the mask band if it exists:
-      if (!is.null(mask_function)) length_progress <- length_progress - 1
-    } else {
-      # If rescaling, we'll need to scale each image separately:
-      composite_multiplier <- nrow(download_locations)
-    }
-    # 5. If rescaling, add one step for each rescale:
-    if (rescale_bands) {
-      length_progress <- length_progress + (length(scale_strings) * composite_multiplier)
-    }
+    length_progress <- figure_out_progress_length(
+      items_urls,
+      mask_band,
+      composite_function,
+      mask_function,
+      download_locations,
+      rescale_bands,
+      scale_strings
+    )
     p <- progressr::progressor(length_progress)
   } else {
     p <- function(...) NULL
   }
 
-  for (i in seq_along(items$features)) {
-    item <- items$features[[i]]
+  feature_iterator <- ifelse(
+    length(items$features) > ncol(download_locations),
+    function(...) future.apply::future_lapply(..., future.seed = TRUE),
+    lapply
+  )
+  feature_iterator(
+    seq_along(items$features),
+    function(i) {
+      item <- items$features[[i]]
 
-    item <- maybe_sign_items(item, sign_function)
+      item <- maybe_sign_items(item, sign_function)
 
-    item_urls <- extract_urls(asset_names, item)
-    if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
+      item_urls <- extract_urls(asset_names, item)
+      if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
 
-    download_assets(
-      unlist(item_urls),
-      unlist(download_locations[i, ]),
-      gdalwarp_options,
-      gdal_config_options,
-      p
-    )
-  }
+      download_assets(
+        unlist(item_urls),
+        unlist(download_locations[i, ]),
+        gdalwarp_options,
+        gdal_config_options,
+        p
+      )
+    }
+  )
   on.exit(file.remove(unlist(download_locations)))
   names(download_locations) <- names(items_urls)
 
@@ -387,12 +390,10 @@ get_stac_data <- function(aoi,
 
   mapply(
     function(in_bands, vrt) {
-      invisible(
-        stack_rasters(
-          in_bands,
-          vrt,
-          band_names = remap_band_names(names(items_urls), asset_names)
-        )
+      stack_rasters(
+        in_bands,
+        vrt,
+        band_names = remap_band_names(names(items_urls), asset_names)
       )
     },
     in_bands = final_bands,
@@ -775,4 +776,31 @@ get_rescaling_formula <- function(items, band_name, element) {
   }
   elements <- unique(elements)
   elements
+}
+
+figure_out_progress_length <- function(items_urls, mask_band, composite_function, mask_function, download_locations, rescale_bands, scale_strings) {
+  # this is frankly ridiculous
+
+  # How many steps do we walk through:
+  # 1. Must download all items, including the masks
+  length_progress <- length(unlist(items_urls))
+  # 2. If masking, we are going to either run a mask function or actually mask
+  # all downloads (*2)
+  if (!is.null(mask_band)) length_progress <- length_progress * 2
+  # 3. Compositing complicates things:
+  if (!is.null(composite_function)) {
+    # 3.1 We'll add 1x the number of bands:
+    composite_multiplier <- 1
+    length_progress <- length_progress + (length(items_urls) * composite_multiplier)
+    # 4. But not the mask band if it exists:
+    if (!is.null(mask_function)) length_progress <- length_progress - 1
+  } else {
+    # If rescaling, we'll need to scale each image separately:
+    composite_multiplier <- nrow(download_locations)
+  }
+  # 5. If rescaling, add one step for each rescale:
+  if (rescale_bands) {
+    length_progress <- length_progress + (length(scale_strings) * composite_multiplier)
+  }
+  length_progress
 }
