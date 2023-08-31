@@ -19,6 +19,7 @@ test_that("Index calculation is stable", {
 })
 
 test_that("Index calculations fail when missing a column", {
+  index_out <- tempfile(fileext = ".tif")
   expect_error(
     calculate_indices(
       system.file("rasters/example_sentinel1.tif", package = "rsi"),
@@ -30,15 +31,13 @@ test_that("Index calculations fail when missing a column", {
 })
 
 test_that("Index calculations fail when missing bands", {
-  x <- tryCatch(
+  index_out <- tempfile(fileext = ".tif")
+  expect_error(
     calculate_indices(
       system.file("rasters/example_sentinel1.tif", package = "rsi"),
       filter_platforms(platforms = "Landsat-OLI"),
       index_out
     ),
-    error = function(e) class(e)
+    class = "rsi_missing_indices"
   )
-  print(x)
-
-  expect_true("rsi_missing_indices" %in% x)
 })

@@ -1,7 +1,7 @@
 test_that("stack_rasters works", {
   expect_equal(
-    terra::rast(
-      terra::values(
+    terra::values(
+      terra::rast(
         stack_rasters(
           list(
             system.file("rasters/example_sentinel1.tif", package = "rsi")
