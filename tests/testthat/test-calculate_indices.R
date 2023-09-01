@@ -41,3 +41,13 @@ test_that("Index calculations fail when missing bands", {
     class = "rsi_missing_indices"
   )
 })
+
+test_that("Index calculations stop obvious security issues", {
+  example_indices <- filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
+  example_indices$formula <- 'system("echo something bad")'
+  expect_error(calculate_indices(
+    system.file("rasters/example_sentinel1.tif", package = "rsi"),
+    example_indices,
+    tempfile(fileext = ".tif")
+  ))
+})
