@@ -68,6 +68,11 @@ calculate_indices <- function(raster,
     )
   }
 
+  if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
+  check_indices(names(raster), indices)
+
+  formulas <- lapply(indices[["formula"]], str2lang)
+
   exec_env <- rlang::new_environment(
     list(
       `::` = `::`,
@@ -85,17 +90,18 @@ calculate_indices <- function(raster,
       `!=` = `!=`,
       `if` = `if`,
       `{` = `{`,
+      `list` = `list`,
       `function` = `function`,
       lapply = lapply,
       with = with,
       eval = eval,
-      str2lang = str2lang,
       names = names,
       `names<-` = `names<-`,
       is.null = is.null,
       inherits = inherits,
       paste = paste,
-      indices = indices,
+      formulas = formulas,
+      short_names = indices[["short_name"]],
       raster = raster,
       output_filename = output_filename,
       names_suffix = names_suffix,
@@ -105,21 +111,17 @@ calculate_indices <- function(raster,
 
   local(
     {
-      if (!inherits(raster, "SpatRaster")) raster <- terra::rast(raster)
-
-      check_indices(names(raster), indices)
-
       terra::predict(
         raster,
-        indices,
+        list(),
         fun = function(model, newdata) {
           out <- lapply(
-            indices[["formula"]],
+            formulas,
             function(calc) {
-              with(newdata, eval(str2lang(calc)))
+              with(newdata, eval(calc))
             }
           )
-          names(out) <- indices[["short_name"]]
+          names(out) <- short_names
           if (!is.null(names_suffix) && names_suffix != "") {
             names(out) <- paste(names(out), names_suffix, sep = "_")
           }

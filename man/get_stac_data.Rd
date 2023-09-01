@@ -25,7 +25,7 @@ get_stac_data(
   mask_band = NULL,
   mask_function = NULL,
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-  composite_function = "median",
+  composite_function = c("median", "mean", "sum", "min", "max"),
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
     "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
@@ -201,10 +201,11 @@ be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function
 \code{composite_function} is \code{NULL}, item datetimes will be appended to this
 in order to create unique filenames.}
 
-\item{composite_function}{Character of length 1: The (quoted) name of a
-function from \code{terra} (for instance, \link[terra:summarize-generics]{terra::median}) used to combine
-downloaded images into a single composite (i.e., to aggregate pixel values
-from multiple images into a single value). Set to \code{NULL} to not composite
+\item{composite_function}{Character of length 1: The name of a
+function used to combine downloaded images into a single composite
+(i.e., to aggregate pixel values from multiple images into a single value).
+Must be one of of "sum", "mean", "median", "min", "max".
+Set to \code{NULL} to not composite
 (i.e., to rescale and save each individual image independently).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
