@@ -419,7 +419,7 @@ get_stac_data <- function(aoi,
 
   on.exit(file.remove(out_vrt), add = TRUE)
 
-  mapply(
+  out <- mapply(
     function(vrt, out) {
       sf::gdal_utils(
         "warp",
@@ -432,6 +432,9 @@ get_stac_data <- function(aoi,
     vrt = out_vrt,
     out = output_filename
   )
+
+  # drop VRT filenames from vector
+  as.vector(out)
 }
 
 #' @rdname get_stac_data
@@ -769,15 +772,19 @@ make_composite_bands <- function(downloaded_bands, composite_function, p) {
       p(glue::glue("Compositing {band_name}"))
       out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
-      do.call(
-        terra::mosaic,
-        list(
-          x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
-          fun = composite_function,
-          filename = out_file,
-          overwrite = TRUE
+      if (length(downloaded_bands[[band_name]]) == 1) {
+        file.copy(downloaded_bands[[band_name]], out_file)
+      } else {
+        do.call(
+          terra::mosaic,
+          list(
+            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            fun = composite_function,
+            filename = out_file,
+            overwrite = TRUE
+          )
         )
-      )
+      }
 
       out_file
     },
