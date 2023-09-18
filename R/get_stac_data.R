@@ -585,7 +585,7 @@ get_dem <- function(aoi,
                     mask_band = NULL,
                     mask_function = NULL,
                     output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                    composite_function = "median",
+                    composite_function = "max",
                     limit = 999,
                     gdalwarp_options = c(
                       "-r", "bilinear",
