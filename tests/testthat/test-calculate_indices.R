@@ -1,5 +1,7 @@
 test_that("Index calculation is stable", {
   skip_if_not_installed("terra")
+  # covr can't instrument the local block properly
+  skip_if(nzchar(Sys.getenv("is_covr")))
   index_out <- tempfile(fileext = ".tif")
   expect_no_error(
     out <- calculate_indices(
