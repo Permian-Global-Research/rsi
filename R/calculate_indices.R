@@ -109,6 +109,10 @@ calculate_indices <- function(raster,
     )
   )
 
+  # covr can't instrument inside of our locked-down environment
+  # so either we widen the environment (which seems like the wrong thing to do)
+  # or we ignore this chunk wrt coverage
+  # nocov start
   local(
     {
       terra::predict(
@@ -132,6 +136,7 @@ calculate_indices <- function(raster,
     },
     envir = exec_env
   )
+  # nocov end
 
   output_filename
 }
