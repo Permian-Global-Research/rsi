@@ -347,7 +347,7 @@ get_stac_data <- function(aoi,
       )
     }
   )
-  download_locations <- na.omit(download_locations)
+  download_locations <- stats::na.omit(download_locations)
   on.exit(file.remove(unlist(download_locations)))
   names(download_locations) <- names(items_urls)
 
