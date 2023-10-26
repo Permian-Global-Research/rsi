@@ -7,13 +7,15 @@
 \usage{
 filter_platforms(
   indices = spectral_indices(),
-  platforms = unique(unlist(spectral_indices()$platforms)),
+  platforms = unique(unlist(spectral_indices(download_indices = FALSE, update_cache =
+    FALSE)$platforms)),
   operand = c("all", "any")
 )
 
 filter_bands(
   indices = spectral_indices(),
-  bands = unique(unlist(spectral_indices()$bands)),
+  bands = unique(unlist(spectral_indices(download_indices = FALSE, update_cache =
+    FALSE)$bands)),
   operand = c("all", "any"),
   type = c("filter", "search")
 )
