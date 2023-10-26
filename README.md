@@ -11,7 +11,7 @@ coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/ba
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 [![License: Apache
-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0/)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![Project Status: Active – The project has reached a stable, usable
@@ -106,6 +106,7 @@ landsat_image <- get_stac_data(
   sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
+  output_filename = tempfile(fileext = ".tif"),
   item_filter_function = landsat_platform_filter,
   platforms = c("landsat-9", "landsat-8")
 )
@@ -199,7 +200,7 @@ not use this file except in compliance with the License.
 
 You may obtain a copy of the License at:
 
-<http://www.apache.org/licenses/LICENSE-2.0>
+<https://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an “AS IS” BASIS,
