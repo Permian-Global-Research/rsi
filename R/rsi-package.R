@@ -5,6 +5,8 @@
 ## usethis namespace: end
 NULL
 
+#' @importFrom rlang %||%
+
 utils::globalVariables(c(
   "dem_band_mapping",
   "landsat_band_mapping",

@@ -1,10 +1,3 @@
-`%||%` <- function(lhs, rhs) {
-  if (is.null(lhs)) {
-    return(rhs)
-  }
-  lhs
-}
-
 #' @export
 `[.rsi_band_mapping` <- function(x, i) {
   out <- x
