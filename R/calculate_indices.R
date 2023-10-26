@@ -72,36 +72,36 @@ calculate_indices <- function(raster,
   check_indices(names(raster), indices)
 
   formulas <- lapply(indices[["formula"]], str2lang)
+  paste_names <- !is.null(names_suffix) && names_suffix != ""
 
   exec_env <- rlang::new_environment(
     list(
-      `::` = `::`,
+      # math functions
       `-` = `-`,
       `(` = `(`,
       `*` = `*`,
       `/` = `/`,
       `^` = `^`,
       `+` = `+`,
-      `[` = `[`,
-      `[[` = `[[`,
+      # necessary syntax
       `<-` = `<-`,
-      `!` = `!`,
-      `&&` = `&&`,
-      `!=` = `!=`,
       `if` = `if`,
       `{` = `{`,
-      `list` = `list`,
       `function` = `function`,
+      # renaming
+      names = names,
+      `names<-` = `names<-`,
+      paste = paste,
+      # pieces for predicting
+      p = terra::predict,
+      l = list(),
       lapply = lapply,
       with = with,
       eval = eval,
-      names = names,
-      `names<-` = `names<-`,
-      is.null = is.null,
-      inherits = inherits,
-      paste = paste,
+      # user-provided variables
       formulas = formulas,
       short_names = indices[["short_name"]],
+      paste_names = paste_names,
       raster = raster,
       output_filename = output_filename,
       names_suffix = names_suffix
@@ -114,9 +114,9 @@ calculate_indices <- function(raster,
   # nocov start
   local(
     {
-      terra::predict(
+      p(
         raster,
-        list(),
+        l,
         fun = function(model, newdata) {
           out <- lapply(
             formulas,
@@ -125,7 +125,7 @@ calculate_indices <- function(raster,
             }
           )
           names(out) <- short_names
-          if (!is.null(names_suffix) && names_suffix != "") {
+          if (paste_names) {
             names(out) <- paste(names(out), names_suffix, sep = "_")
           }
           out
