@@ -14,8 +14,7 @@ authors:
     href: https://www.mm218.dev/
   Permian Global:
     href: https://permianglobal.com/
-    html: <img src='man/figures/permian-logo.svg' alt='Permian Global' width='72'
-      />
+    html: <img src='man/figures/permian-logo.svg' alt='Permian Global' width='72'/>
 development:
   mode: auto
 figures:

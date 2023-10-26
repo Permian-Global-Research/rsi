@@ -226,8 +226,6 @@ get_stac_data <- function(aoi,
 
   aoi_bbox <- sf::st_bbox(aoi)
 
-  if (is.null(names(asset_names))) names(asset_names) <- asset_names
-
   items <- get_items(
     sf::st_bbox(sf::st_transform(aoi, 4326)),
     stac_source,
@@ -239,6 +237,9 @@ get_stac_data <- function(aoi,
     item_filter_function,
     ...
   )
+  if (missing(asset_names)) asset_names <- NULL
+  if (is.null(asset_names)) asset_names <- rstac::items_assets(items)
+  if (is.null(names(asset_names))) names(asset_names) <- asset_names
 
   items_urls <- extract_urls(asset_names, items)
   if (!is.null(mask_band)) items_urls[[mask_band]] <- rstac::assets_url(items, mask_band)
