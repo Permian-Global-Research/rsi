@@ -7,7 +7,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-2402-304X")),
     person("Permian Global", role = c("cph", "fnd"))
   )
-Description: Tools for downloading spatial data from spatiotemporal asset 
+Description: Tools for downloading spatial data from 'spatiotemporal' asset 
     catalogs ('STAC') and computing standard spectral indices from raster data.
 License: Apache License (>= 2)
 Depends: 
@@ -23,7 +23,10 @@ Imports:
     terra,
     tibble
 Suggests: 
+    curl,
+    knitr,
     progressr,
+    rmarkdown,
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
@@ -33,3 +36,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 URL: https://github.com/Permian-Global-Research/rsi, https://permian-global-research.github.io/rsi/
 BugReports: https://github.com/Permian-Global-Research/rsi/issues
+VignetteBuilder: knitr

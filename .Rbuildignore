@@ -11,3 +11,5 @@
 ^codecov\.yml$
 ^codemeta\.json$
 ^CITATION\.cff$
+^doc$
+^Meta$
