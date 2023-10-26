@@ -10,6 +10,9 @@ test_that("spectral_indices() works", {
     )
   )
 
+  # github actions seems to not like reading from a github URL
+  skip_on_ci()
+
   # Second, if we're online, we should be able to download the current indices:
   skip_if_offline()
   expect_no_warning(spectral_indices(update_cache = FALSE))
