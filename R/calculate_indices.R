@@ -104,8 +104,7 @@ calculate_indices <- function(raster,
       short_names = indices[["short_name"]],
       raster = raster,
       output_filename = output_filename,
-      names_suffix = names_suffix,
-      check_indices = check_indices
+      names_suffix = names_suffix
     )
   )
 
