@@ -293,10 +293,14 @@ get_stac_data <- function(aoi,
     names(scale_strings) <- names(scales)
 
     scale_strings <- scale_strings[scale_strings != ""]
-    scale_strings <- stats::setNames(
-      paste("function(x) x", scale_strings),
-      names(scale_strings)
-    )
+    if (length(scale_strings)) {
+      scale_strings <- stats::setNames(
+        paste("function(x) x", scale_strings),
+        names(scale_strings)
+      )
+    } else {
+      rescale_bands <- FALSE
+    }
   }
 
   if (rlang::is_installed("progressr")) {
