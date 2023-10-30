@@ -149,8 +149,8 @@
 get_stac_data <- function(aoi,
                           start_date,
                           end_date,
-                          pixel_x_size = 30,
-                          pixel_y_size = 30,
+                          pixel_x_size = NULL,
+                          pixel_y_size = NULL,
                           asset_names,
                           stac_source,
                           collection,
@@ -162,7 +162,7 @@ get_stac_data <- function(aoi,
                           mask_band = NULL,
                           mask_function = NULL,
                           output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                          composite_function = c("median", "mean", "sum", "min", "max"),
+                          composite_function = c("merge", "median", "mean", "sum", "min", "max"),
                           limit = 999,
                           gdalwarp_options = c(
                             "-r", "bilinear",
@@ -190,7 +190,7 @@ get_stac_data <- function(aoi,
     )
   }
 
-  if (sf::st_is_longlat(aoi) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
+  if (sf::st_is_longlat(aoi) && !(is.null(pixel_x_size) || is.null(pixel_y_size)) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
     rlang::warn(c(
       "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
       i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
@@ -256,51 +256,17 @@ get_stac_data <- function(aoi,
   )
   names(download_locations) <- names(items_urls)
 
+  scale_strings <- character()
   if (rescale_bands) {
-    # Assign scale, offset attributes if they exist
-    scales <- vapply(
-      names(download_locations),
-      get_rescaling_formula,
-      items = items,
-      element = "scale",
-      numeric(1)
+    scale_strings <- calc_scale_strings(download_locations, items)
+  }
+  if (length(scale_strings)) {
+    scale_strings <- stats::setNames(
+      paste("function(x) x", scale_strings),
+      names(scale_strings)
     )
-    offsets <- vapply(
-      names(download_locations),
-      get_rescaling_formula,
-      items = items,
-      element = "offset",
-      numeric(1)
-    )
-
-    scale_strings <- vapply(
-      names(scales),
-      function(band) {
-        out <- ""
-
-        if (band %in% names(scales) && !is.na(scales[[band]])) {
-          out <- paste(out, glue::glue("* {scales[[band]]}"))
-        }
-
-        if (band %in% names(offsets) && !is.na(offsets[[band]])) {
-          out <- paste(out, glue::glue("+ {offsets[[band]]}"))
-        }
-
-        out
-      },
-      character(1)
-    )
-    names(scale_strings) <- names(scales)
-
-    scale_strings <- scale_strings[scale_strings != ""]
-    if (length(scale_strings)) {
-      scale_strings <- stats::setNames(
-        paste("function(x) x", scale_strings),
-        names(scale_strings)
-      )
-    } else {
-      rescale_bands <- FALSE
-    }
+  } else {
+    rescale_bands <- FALSE
   }
 
   if (rlang::is_installed("progressr")) {
@@ -318,6 +284,144 @@ get_stac_data <- function(aoi,
     p <- function(...) NULL
   }
 
+  if (is.null(mask_function) && !rescale_bands && composite_function == "merge") {
+    download_results <- simple_download(
+      items,
+      sign_function,
+      asset_names,
+      gdalwarp_options,
+      aoi_bbox,
+      gdal_config_options,
+      p
+    )
+  } else {
+    download_results <- complex_download(
+      items,
+      items_urls,
+      download_locations,
+      sign_function,
+      asset_names,
+      mask_band,
+      gdalwarp_options,
+      aoi_bbox,
+      gdal_config_options,
+      p,
+      mask_function,
+      composite_function,
+      output_filename,
+      rescale_bands,
+      scale_strings
+    )
+    on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
+  }
+
+
+  mapply(
+    function(in_bands, vrt) {
+      stack_rasters(
+        in_bands,
+        vrt,
+        band_names = remap_band_names(names(items_urls), asset_names)
+      )
+    },
+    in_bands = download_results[["final_bands"]],
+    vrt = download_results[["out_vrt"]]
+  )
+
+  on.exit(file.remove(download_results[["out_vrt"]]), add = TRUE)
+
+  out <- mapply(
+    function(vrt, out) {
+      sf::gdal_utils(
+        "warp",
+        vrt,
+        out,
+        options = gdalwarp_options
+      )
+      out
+    },
+    vrt = download_results[["out_vrt"]],
+    out = output_filename
+  )
+
+  # drop VRT filenames from vector
+  as.vector(out)
+}
+
+apply_masks <- function(mask_band, mask_function, download_locations, p) {
+  apply(
+    download_locations,
+    1,
+    function(files) {
+      p("Running mask function")
+      mask <- mask_function(terra::rast(files[[mask_band]]))
+
+      lapply(
+        files[setdiff(names(files), mask_band)],
+        function(raster) {
+          masked_file <- tempfile(fileext = ".tif")
+          p("Applying mask to downloaded assets")
+          terra::mask(
+            terra::rast(raster),
+            mask,
+            maskvalues = c(NA, FALSE),
+            filename = masked_file
+          )
+          file.rename(masked_file, raster)
+          raster
+        }
+      )
+    }
+  )
+}
+
+simple_download <- function(items,
+                            sign_function,
+                            asset_names,
+                            gdalwarp_options,
+                            aoi_bbox,
+                            gdal_config_options,
+                            p) {
+  gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
+  out <- future.apply::future_lapply(
+    asset_names,
+    function(asset) {
+      p(glue::glue("Downloading {asset}"))
+      signed_items <- maybe_sign_items(items, sign_function)
+      item_urls <- rstac::assets_url(signed_items, asset)
+      out_file <- tempfile(fileext = ".tif")
+      sf::gdal_utils(
+        "warp",
+        source = item_urls,
+        destination = out_file,
+        options = gdalwarp_options,
+        config_options = gdal_config_options
+      )
+      out_file
+    },
+    future.seed = TRUE
+  )
+  list(
+    final_bands = out,
+    out_vrt = tempfile(fileext = ".vrt")
+  )
+}
+
+complex_download <- function(items,
+                             items_urls,
+                             download_locations,
+                             sign_function,
+                             asset_names,
+                             mask_band,
+                             gdalwarp_options,
+                             aoi_bbox,
+                             gdal_config_options,
+                             p,
+                             mask_function,
+                             composite_function,
+                             output_filename,
+                             rescale_bands,
+                             scale_strings) {
   feature_iterator <- ifelse(
     length(items$features) > ncol(download_locations),
     function(...) future.apply::future_lapply(..., future.seed = TRUE),
@@ -355,44 +459,9 @@ get_stac_data <- function(aoi,
   on.exit(file.remove(unlist(download_locations)))
   names(download_locations) <- names(items_urls)
 
-  if (!is.null(mask_band)) {
-    apply(
-      download_locations,
-      1,
-      function(files) {
-        p("Running mask function")
-        mask <- mask_function(terra::rast(files[[mask_band]]))
+  if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_locations, p)
 
-        lapply(
-          files[setdiff(names(files), mask_band)],
-          function(raster) {
-            masked_file <- tempfile(fileext = ".tif")
-            p("Applying mask to downloaded assets")
-            terra::mask(
-              terra::rast(raster),
-              mask,
-              maskvalues = c(NA, FALSE),
-              filename = masked_file
-            )
-            file.rename(masked_file, raster)
-            raster
-          }
-        )
-      }
-    )
-  }
-
-  if (!is.null(composite_function)) {
-    out_vrt <- tempfile(fileext = ".vrt")
-    final_bands <- list(
-      make_composite_bands(
-        download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
-        composite_function,
-        p
-      )
-    )
-    on.exit(file.remove(unlist(final_bands)), add = TRUE)
-  } else {
+  if (is.null(composite_function)) {
     out_vrt <- replicate(nrow(download_locations), tempfile(fileext = ".tif"))
 
     app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
@@ -407,39 +476,61 @@ get_stac_data <- function(aoi,
       tools::file_ext(output_filename)
     )
     final_bands <- apply(download_locations, 1, identity, simplify = FALSE)
+  } else {
+    out_vrt <- tempfile(fileext = ".vrt")
+    final_bands <- list(
+      make_composite_bands(
+        download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
+        composite_function,
+        p
+      )
+    )
   }
   if (rescale_bands) lapply(final_bands, rescale_band, scale_strings, p)
+  list(
+    final_bands = final_bands,
+    out_vrt = out_vrt
+  )
+}
 
-  mapply(
-    function(in_bands, vrt) {
-      stack_rasters(
-        in_bands,
-        vrt,
-        band_names = remap_band_names(names(items_urls), asset_names)
-      )
-    },
-    in_bands = final_bands,
-    vrt = out_vrt
+calc_scale_strings <- function(download_locations, items) {
+  # Assign scale, offset attributes if they exist
+  scales <- vapply(
+    names(download_locations),
+    get_rescaling_formula,
+    items = items,
+    element = "scale",
+    numeric(1)
+  )
+  offsets <- vapply(
+    names(download_locations),
+    get_rescaling_formula,
+    items = items,
+    element = "offset",
+    numeric(1)
   )
 
-  on.exit(file.remove(out_vrt), add = TRUE)
+  scale_strings <- vapply(
+    names(scales),
+    function(band) {
+      out <- ""
 
-  out <- mapply(
-    function(vrt, out) {
-      sf::gdal_utils(
-        "warp",
-        vrt,
-        out,
-        options = gdalwarp_options
-      )
+      if (band %in% names(scales) && !is.na(scales[[band]])) {
+        out <- paste(out, glue::glue("* {scales[[band]]}"))
+      }
+
+      if (band %in% names(offsets) && !is.na(offsets[[band]])) {
+        out <- paste(out, glue::glue("+ {offsets[[band]]}"))
+      }
+
       out
     },
-    vrt = out_vrt,
-    out = output_filename
+    character(1)
   )
+  names(scale_strings) <- names(scales)
 
-  # drop VRT filenames from vector
-  as.vector(out)
+  scale_strings <- scale_strings[scale_strings != ""]
+  scale_strings
 }
 
 #' @rdname get_stac_data
@@ -678,7 +769,7 @@ process_gdalwarp_options <- function(gdalwarp_options,
     gdalwarp_options <- c(gdalwarp_options, "-t_srs", sf::st_crs(aoi)$wkt)
   }
 
-  if (!("-tr" %in% gdalwarp_options)) {
+  if (!("-tr" %in% gdalwarp_options) && !is.null(pixel_x_size) && !is.null(pixel_y_size)) {
     gdalwarp_options <- c(gdalwarp_options, "-tr", pixel_x_size, pixel_y_size)
   }
 
@@ -779,6 +870,15 @@ make_composite_bands <- function(downloaded_bands, composite_function, p) {
 
       if (length(downloaded_bands[[band_name]]) == 1) {
         file.copy(downloaded_bands[[band_name]], out_file)
+      } else if (composite_function == "merge") {
+        do.call(
+          terra::merge,
+          list(
+            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            filename = out_file,
+            overwrite = TRUE
+          )
+        )
       } else {
         do.call(
           terra::mosaic,
