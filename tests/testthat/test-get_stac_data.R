@@ -162,3 +162,25 @@ test_that("hidden arguments work", {
     )
   )
 })
+
+test_that("simple merge method works", {
+  skip_on_cran()
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+
+  expect_no_error(
+    out <- get_stac_data(
+      aoi,
+      "2021-01-01",
+      "2021-12-31",
+      asset_names = "lcpri",
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
+      collection = "usgs-lcmap-conus-v13",
+      query_function = rsi::query_planetary_computer,
+      sign_function = rsi::sign_planetary_computer
+    )
+  )
+  expect_no_error(terra::rast(out))
+})
+
