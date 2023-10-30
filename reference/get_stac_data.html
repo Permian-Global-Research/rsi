@@ -70,8 +70,8 @@ STAC sources.</p>
 <span>  <span class="va">aoi</span>,</span>
 <span>  <span class="va">start_date</span>,</span>
 <span>  <span class="va">end_date</span>,</span>
-<span>  pixel_x_size <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>  pixel_y_size <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  pixel_x_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pixel_y_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">asset_names</span>,</span>
 <span>  <span class="va">stac_source</span>,</span>
 <span>  <span class="va">collection</span>,</span>
@@ -83,7 +83,7 @@ STAC sources.</p>
 <span>  mask_band <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mask_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">proceduralnames</span><span class="fu">::</span><span class="fu"><a href="https://mikemahoney218.github.io/proceduralnames/reference/make_english_names.html" class="external-link">make_english_names</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
-<span>  composite_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"mean"</span>, <span class="st">"sum"</span>, <span class="st">"min"</span>, <span class="st">"max"</span><span class="op">)</span>,</span>
+<span>  composite_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"merge"</span>, <span class="st">"median"</span>, <span class="st">"mean"</span>, <span class="st">"sum"</span>, <span class="st">"min"</span>, <span class="st">"max"</span><span class="op">)</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">999</span>,</span>
 <span>  gdalwarp_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-r"</span>, <span class="st">"bilinear"</span>, <span class="st">"-multi"</span>, <span class="st">"-overwrite"</span>, <span class="st">"-co"</span>,</span>
 <span>    <span class="st">"COMPRESS=DEFLATE"</span>, <span class="st">"-co"</span>, <span class="st">"PREDICTOR=2"</span>, <span class="st">"-co"</span>, <span class="st">"NUM_THREADS=ALL_CPUS"</span><span class="op">)</span>,</span>
