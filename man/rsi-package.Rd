@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for downloading spatial data from spatiotemporal asset catalogs ('STAC') and computing standard spectral indices from raster data.
+Tools for downloading spatial data from 'spatiotemporal' asset catalogs ('STAC') and computing standard spectral indices from raster data.
 }
 \seealso{
 Useful links:

@@ -93,8 +93,8 @@ calculate_indices <- function(raster,
       `names<-` = `names<-`,
       paste = paste,
       # pieces for predicting
-      p = terra::predict,
-      l = list(),
+      predict = terra::predict,
+      list = list(),
       lapply = lapply,
       with = with,
       eval = eval,
@@ -114,9 +114,9 @@ calculate_indices <- function(raster,
   # nocov start
   local(
     {
-      p(
+      predict(
         raster,
-        l,
+        list,
         fun = function(model, newdata) {
           out <- lapply(
             formulas,
