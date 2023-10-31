@@ -384,7 +384,7 @@ simple_download <- function(items,
                             p) {
   gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
   out <- future.apply::future_lapply(
-    asset_names,
+    names(asset_names),
     function(asset) {
       p(glue::glue("Downloading {asset}"))
       signed_items <- maybe_sign_items(items, sign_function)
