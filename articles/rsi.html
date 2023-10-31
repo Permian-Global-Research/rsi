@@ -122,7 +122,7 @@ imagery from September 2023:</p>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpCmxDdy/file1f4c40d53300.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpFAwGcc/file1f723056b530.tif"</span></span></code></pre></div>
 <p>If we wanted to, we could use <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> here to
 specify a parallelization methodology to speed up downloads by using
 multiple threads. We could also use <code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>
@@ -147,14 +147,15 @@ Computer, using the <code><a href="../reference/get_stac_data.html">get_dem()</a
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Under the hood, both of these functions (and their friends,
-<code>get_sentinel2_data()</code> and <code>get_sentinel1_data()</code>)
-are powered by a lower-level <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> function,
-which should theoretically work with any imagery provided by any STAC
-API, anywhere. These functions simply provide user-friendly defaults to
-make it faster to get the data you care about.</p>
+<code><a href="../reference/get_stac_data.html">get_sentinel2_imagery()</a></code> and
+<code><a href="../reference/get_stac_data.html">get_sentinel1_imagery()</a></code>) are powered by a lower-level
+<code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> function, which should theoretically work
+with any imagery provided by any STAC API, anywhere. These functions
+simply provide user-friendly defaults to make it faster to get the data
+you care about.</p>
 <p>In addition to these STAC-focused data-downloading functions, rsi
 also has an interface to the <a href="https://github.com/awesome-spectral-indices/awesome-spectral-indices" class="external-link">Awesome
-Spectral Indices</a> project, via the <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>
+Spectral Indices</a> project via the <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>
 function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -333,7 +334,7 @@ could do:</p>
 <code class="sourceCode R"><span><span class="va">evil_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt; Warning: Failed to download new indices.</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> Returning (likely outdated) package data instead.</span></span>
-<span><span class="va">evil_index</span><span class="op">$</span><span class="va">formula</span> <span class="op">&lt;-</span> <span class="st">"system('echo OHNO')"</span></span>
+<span><span class="va">evil_index</span><span class="op">$</span><span class="va">formula</span> <span class="op">&lt;-</span> <span class="st">"base::system('echo OHNO')"</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
 <span>    <span class="va">our_imagery</span>,</span>
@@ -341,7 +342,7 @@ could do:</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in system("echo OHNO") : could not find function "system"</span></span></code></pre></div>
+<span><span class="co">#&gt; Error in base::system : could not find function "::"</span></span></code></pre></div>
 <p>But it’s worth scanning your formulas before running
 <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code>, just to make sure you aren’t going to
 be accidentally running something surprising!</p>
