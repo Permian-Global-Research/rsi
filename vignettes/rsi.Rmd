@@ -66,9 +66,9 @@ terra::rast(our_dem) |>
   terra::plot()
 ```
 
-Under the hood, both of these functions (and their friends, `get_sentinel2_data()` and `get_sentinel1_data()`) are powered by a lower-level `get_stac_data()` function, which should theoretically work with any imagery provided by any STAC API, anywhere. These functions simply provide user-friendly defaults to make it faster to get the data you care about.
+Under the hood, both of these functions (and their friends, `get_sentinel2_imagery()` and `get_sentinel1_imagery()`) are powered by a lower-level `get_stac_data()` function, which should theoretically work with any imagery provided by any STAC API, anywhere. These functions simply provide user-friendly defaults to make it faster to get the data you care about.
 
-In addition to these STAC-focused data-downloading functions, rsi also has an interface to the [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices) project, via the `spectral_indices()` function:
+In addition to these STAC-focused data-downloading functions, rsi also has an interface to the [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices) project via the `spectral_indices()` function:
 
 ```{r}
 spectral_indices() |> 
@@ -109,7 +109,7 @@ Note that `calculate_indices()` is evaluating the formulas in the `formula` colu
 
 ```{r}
 evil_index <- spectral_indices()[1, ]
-evil_index$formula <- "system('echo OHNO')"
+evil_index$formula <- "base::system('echo OHNO')"
 try(
   calculate_indices(
     our_imagery,
