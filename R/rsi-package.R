@@ -6,6 +6,7 @@
 NULL
 
 #' @importFrom rlang %||%
+#' @importFrom stats predict
 
 utils::globalVariables(c(
   "dem_band_mapping",
