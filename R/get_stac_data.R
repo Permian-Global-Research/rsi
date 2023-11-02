@@ -284,7 +284,7 @@ get_stac_data <- function(aoi,
     p <- function(...) NULL
   }
 
-  if (is.null(mask_function) && !rescale_bands && composite_function == "merge") {
+  if (is.null(mask_function) && !rescale_bands && !is.null(composite_function) && composite_function == "merge") {
     download_results <- simple_download(
       items,
       sign_function,
@@ -315,7 +315,6 @@ get_stac_data <- function(aoi,
     on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
 
-
   mapply(
     function(in_bands, vrt) {
       stack_rasters(
@@ -329,6 +328,20 @@ get_stac_data <- function(aoi,
   )
 
   on.exit(file.remove(download_results[["out_vrt"]]), add = TRUE)
+
+  if (is.null(composite_function)) {
+    app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
+    if (any(is.na(app))) app <- NULL
+    app <- app %||% seq_along(download_results[["final_bands"]])
+
+    output_filename <- paste0(
+      tools::file_path_sans_ext(output_filename),
+      "_",
+      app,
+      ".",
+      tools::file_ext(output_filename)
+    )
+  }
 
   out <- mapply(
     function(vrt, out) {
@@ -402,7 +415,7 @@ simple_download <- function(items,
     future.seed = TRUE
   )
   list(
-    final_bands = out,
+    final_bands = list(out),
     out_vrt = tempfile(fileext = ".vrt")
   )
 }
@@ -456,25 +469,12 @@ complex_download <- function(items,
     }
   )
   download_locations <- stats::na.omit(download_locations)
-  on.exit(file.remove(unlist(download_locations)))
   names(download_locations) <- names(items_urls)
 
   if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_locations, p)
 
   if (is.null(composite_function)) {
     out_vrt <- replicate(nrow(download_locations), tempfile(fileext = ".tif"))
-
-    app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
-    if (any(is.na(app))) app <- NULL
-    app <- app %||% seq_along(out_vrt)
-
-    output_filename <- paste0(
-      tools::file_path_sans_ext(output_filename),
-      "_",
-      app,
-      ".",
-      tools::file_ext(output_filename)
-    )
     final_bands <- apply(download_locations, 1, identity, simplify = FALSE)
   } else {
     out_vrt <- tempfile(fileext = ".vrt")
