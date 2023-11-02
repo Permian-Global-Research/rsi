@@ -388,7 +388,7 @@ simple_download <- function(items,
     function(asset) {
       p(glue::glue("Downloading {asset}"))
       signed_items <- maybe_sign_items(items, sign_function)
-      item_urls <- rstac::assets_url(signed_items, asset)
+      item_urls <- paste0("/vsicurl/", rstac::assets_url(signed_items, asset))
       out_file <- tempfile(fileext = ".tif")
       sf::gdal_utils(
         "warp",
