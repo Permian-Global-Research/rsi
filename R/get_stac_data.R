@@ -1,9 +1,10 @@
-#' Retrieve and composite images from STAC endpoints
+#' Retrieve raster data from STAC endpoints
 #'
-#' These function retrieves composites of satellite images from STAC endpoints.
+#' These functions retrieve raster data from STAC endpoints and optionally
+#' create composite data sets from multiple files.
 #' `get_stac_data()` is a generic function which should be able to download and
-#' composite images from a variety of data sources, while the other helper
-#' functions have useful defaults for downloading common data sets from standard
+#' raster data from a variety of data sources, while the other helper functions
+#' have useful defaults for downloading common data sets from standard
 #' STAC sources.
 #'
 #' @section Usage Tips:
@@ -12,13 +13,30 @@
 #' even after accounting for any reprojection needed to compare your AOI to
 #' the data on the STAC server.
 #'
-#' This function allows for parallelizing downloads via [future::plan()], and
+#' These functions allow for parallelizing downloads via [future::plan()], and
 #' for user-controlled progress updates via [progressr::handlers()]. If
 #' there are fewer images to download than `asset_names`, then this function
 #' uses [lapply()] to iterate through images and [future.apply::future_mapply()]
 #' to iterate through downloading each asset. If there are more images than
 #' assets, this function uses [future.apply::future_lapply()] to iterate through
 #' images.
+#'
+#' There are currently some challenges with certain Landsat images in Planetary
+#' Computer; please see
+#' https://github.com/microsoft/PlanetaryComputer/discussions/101
+#' for more information on these images and their current status. These files
+#' may cause data downloads to fail.
+#'
+#' @section Compositing:
+#'
+#' This function can either download all data that intersects with your
+#' spatiotemporal AOI as multiple files (if `composite_function = NULL`),
+#' or can be used to rescale band values, apply a mask function, and create a
+#' composite from the resulting files in a single function call. Each of these
+#' steps can be skipped by passing `NULL` to the corresponding argument.
+#'
+#' Masks are applied to each downloaded asset separately. Rescaling is applied
+#' to the final composite after images are combined.
 #'
 #' A number of the steps involved in creating composites -- rescaling band
 #' values, running the mask function, masking images, and compositing images --
@@ -27,12 +45,6 @@
 #' cause errors. It can be a good idea to tile your `aoi` using
 #' `sf::st_make_grid()` and iterate through the tiles to avoid these errors
 #' (and to make it easier to interrupt and restart a download job).
-#'
-#' There are currently some challenges with certain Landsat images in Planetary
-#' Computer; please see
-#' https://github.com/microsoft/PlanetaryComputer/discussions/101
-#' for more information on these images and their current status. These files
-#' may cause data downloads to fail.
 #'
 #' @section Rescaling:
 #' If `rescale_bands` is `TRUE`, then this function is able to use the `scale`
@@ -93,13 +105,14 @@
 #' be masked out. See [sentinel2_mask_function()].
 #' @param output_filename The filename to write the output raster to. If
 #' `composite_function` is `NULL`, item datetimes will be appended to this
-#' in order to create unique filenames.
+#' in order to create unique filenames. If items do not have datetimes, a
+#' sequential ID will be appended instead.
 #' @param composite_function Character of length 1: The name of a
 #' function used to combine downloaded images into a single composite
 #' (i.e., to aggregate pixel values from multiple images into a single value).
 #' Must be one of of "sum", "mean", "median", "min", "max".
 #' Set to `NULL` to not composite
-#' (i.e., to rescale and save each individual image independently).
+#' (i.e., to rescale and save each individual file independently).
 #' @inheritParams rstac::stac_search
 #' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
 #' argument of [sf::gdal_utils()]. The same set of options are used for all
@@ -284,7 +297,12 @@ get_stac_data <- function(aoi,
     p <- function(...) NULL
   }
 
-  if (is.null(mask_function) && !rescale_bands && !is.null(composite_function) && composite_function == "merge") {
+  use_simple_download <- is.null(mask_function) &&
+    !rescale_bands &&
+    !is.null(composite_function) &&
+    composite_function == "merge"
+
+  if (use_simple_download) {
     download_results <- simple_download(
       items,
       sign_function,
