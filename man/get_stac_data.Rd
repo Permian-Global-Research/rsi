@@ -232,7 +232,7 @@ the \code{Landsat-OLI} value in that column.}
 \description{
 These functions retrieve raster data from STAC endpoints and optionally
 create composite data sets from multiple files.
-\code{get_stac_data()} is a generic function which should be able to download and
+\code{get_stac_data()} is a generic function which should be able to download
 raster data from a variety of data sources, while the other helper functions
 have useful defaults for downloading common data sets from standard
 STAC sources.
