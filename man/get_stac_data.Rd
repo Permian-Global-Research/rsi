@@ -6,7 +6,7 @@
 \alias{get_sentinel2_imagery}
 \alias{get_landsat_imagery}
 \alias{get_dem}
-\title{Retrieve and composite images from STAC endpoints}
+\title{Retrieve raster data from STAC endpoints}
 \usage{
 get_stac_data(
   aoi,
@@ -199,14 +199,15 @@ be masked out. See \code{\link[=sentinel2_mask_function]{sentinel2_mask_function
 
 \item{output_filename}{The filename to write the output raster to. If
 \code{composite_function} is \code{NULL}, item datetimes will be appended to this
-in order to create unique filenames.}
+in order to create unique filenames. If items do not have datetimes, a
+sequential ID will be appended instead.}
 
 \item{composite_function}{Character of length 1: The name of a
 function used to combine downloaded images into a single composite
 (i.e., to aggregate pixel values from multiple images into a single value).
 Must be one of of "sum", "mean", "median", "min", "max".
 Set to \code{NULL} to not composite
-(i.e., to rescale and save each individual image independently).}
+(i.e., to rescale and save each individual file independently).}
 
 \item{limit}{an \code{integer} defining the maximum number of results
 to return. If not informed, it defaults to the service implementation.}
@@ -229,10 +230,11 @@ the \code{Landsat-OLI} value in that column.}
 \code{output_filename}, unchanged.
 }
 \description{
-These function retrieves composites of satellite images from STAC endpoints.
-\code{get_stac_data()} is a generic function which should be able to download and
-composite images from a variety of data sources, while the other helper
-functions have useful defaults for downloading common data sets from standard
+These functions retrieve raster data from STAC endpoints and optionally
+create composite data sets from multiple files.
+\code{get_stac_data()} is a generic function which should be able to download
+raster data from a variety of data sources, while the other helper functions
+have useful defaults for downloading common data sets from standard
 STAC sources.
 }
 \section{Usage Tips}{
@@ -242,13 +244,32 @@ cell widths, in order to ensure that data is downloaded for your entire AOI
 even after accounting for any reprojection needed to compare your AOI to
 the data on the STAC server.
 
-This function allows for parallelizing downloads via \code{\link[future:plan]{future::plan()}}, and
+These functions allow for parallelizing downloads via \code{\link[future:plan]{future::plan()}}, and
 for user-controlled progress updates via \code{\link[progressr:handlers]{progressr::handlers()}}. If
 there are fewer images to download than \code{asset_names}, then this function
 uses \code{\link[=lapply]{lapply()}} to iterate through images and \code{\link[future.apply:future_mapply]{future.apply::future_mapply()}}
 to iterate through downloading each asset. If there are more images than
 assets, this function uses \code{\link[future.apply:future_lapply]{future.apply::future_lapply()}} to iterate through
 images.
+
+There are currently some challenges with certain Landsat images in Planetary
+Computer; please see
+https://github.com/microsoft/PlanetaryComputer/discussions/101
+for more information on these images and their current status. These files
+may cause data downloads to fail.
+}
+
+\section{Compositing}{
+
+
+This function can either download all data that intersects with your
+spatiotemporal AOI as multiple files (if \code{composite_function = NULL}),
+or can be used to rescale band values, apply a mask function, and create a
+composite from the resulting files in a single function call. Each of these
+steps can be skipped by passing \code{NULL} to the corresponding argument.
+
+Masks are applied to each downloaded asset separately. Rescaling is applied
+to the final composite after images are combined.
 
 A number of the steps involved in creating composites -- rescaling band
 values, running the mask function, masking images, and compositing images --
@@ -257,12 +278,6 @@ creating larger composites, either in geographic or temporal dimension, may
 cause errors. It can be a good idea to tile your \code{aoi} using
 \code{sf::st_make_grid()} and iterate through the tiles to avoid these errors
 (and to make it easier to interrupt and restart a download job).
-
-There are currently some challenges with certain Landsat images in Planetary
-Computer; please see
-https://github.com/microsoft/PlanetaryComputer/discussions/101
-for more information on these images and their current status. These files
-may cause data downloads to fail.
 }
 
 \section{Rescaling}{
