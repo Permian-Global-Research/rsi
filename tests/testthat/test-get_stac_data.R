@@ -178,7 +178,8 @@ test_that("simple merge method works", {
       stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
       collection = "usgs-lcmap-conus-v13",
       query_function = rsi::query_planetary_computer,
-      sign_function = rsi::sign_planetary_computer
+      sign_function = rsi::sign_planetary_computer,
+      output_filename = tempfile(fileext = ".tif")
     )
   )
   expect_no_error(terra::rast(out))
@@ -195,7 +196,8 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
       start_date = "2022-06-01",
       end_date = "2022-08-01",
       mask_function = NULL,
-      rescale_bands = FALSE
+      rescale_bands = FALSE,
+      output_filename = tempfile(fileext = ".tif")
     )
   )
 })

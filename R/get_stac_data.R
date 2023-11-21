@@ -216,11 +216,11 @@ get_stac_data <- function(aoi,
   }
 
   if (is.null(mask_function)) {
-    if (!missing(mask_band)) {
+    if (!is.null(mask_band)) {
       rlang::warn(
         c(
-          "`mask_function` was NULL, but `mask_band` was not `NULL`",
-          i = "`mask_band` will be ignored (not downloaded or used)"
+          "`mask_function` was NULL, but `mask_band` was not `NULL`.",
+          i = "`mask_band` will be ignored (not downloaded or used)."
         )
       )
     }
