@@ -178,9 +178,26 @@ test_that("simple merge method works", {
       stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
       collection = "usgs-lcmap-conus-v13",
       query_function = rsi::query_planetary_computer,
-      sign_function = rsi::sign_planetary_computer
+      sign_function = rsi::sign_planetary_computer,
+      output_filename = tempfile(fileext = ".tif")
     )
   )
   expect_no_error(terra::rast(out))
 })
 
+test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `mask_function`", {
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+
+  expect_snapshot(
+    x <- get_landsat_imagery(
+      aoi = aoi,
+      start_date = "2022-06-01",
+      end_date = "2022-08-01",
+      mask_function = NULL,
+      rescale_bands = FALSE,
+      output_filename = tempfile(fileext = ".tif")
+    )
+  )
+})
