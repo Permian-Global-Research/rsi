@@ -58,14 +58,15 @@ spectral_indices <- function(..., url = spectral_indices_url(), download_indices
     update_cache <- FALSE
   }
 
-  if (is.null(update_cache) && !file.exists(indices_path)) {
-    update_cache <- TRUE # nocov
+  if (is.null(update_cache)) {
+    if (file.exists(indices_path)) {
+      update_cache <- (Sys.time() - file.info(indices_path)[["mtime"]]) > 86400
+    } else {
+      update_cache <- TRUE
+    }
   }
 
-  if (is.null(update_cache)) {
-    # is the cache older than a day?
-    update_cache <- (Sys.time() - file.info(indices_path)[["mtime"]]) > 86400
-  }
+  if (is.null(download_indices)) download_indices <- update_cache
 
   if (update_cache && isTRUE(download_indices)) {
     tryCatch(
@@ -102,7 +103,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), download_indices
   } else {
     rlang::warn(
       c(
-        "Failed to download new indices.",
+        "No cache file present and `download_indices` set to `FALSE`.",
         i = "Returning (likely outdated) package data instead."
       ),
       class = "rsi_failed_download"
