@@ -103,7 +103,7 @@ spectral_indices <- function(..., url = spectral_indices_url(), download_indices
   } else {
     rlang::warn(
       c(
-        "Failed to download new indices.",
+        "No cache file present and `download_indices` set to `FALSE`.",
         i = "Returning (likely outdated) package data instead."
       ),
       class = "rsi_failed_download"
