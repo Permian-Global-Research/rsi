@@ -14,6 +14,29 @@ test_that("stack_rasters works", {
   )
 })
 
+test_that("stack_rasters works with non-VRT outputs", {
+  expect_no_error(
+    out <- stack_rasters(
+      list(
+        system.file("rasters/example_sentinel1.tif", package = "rsi")
+      ),
+      tempfile(fileext = ".tif")
+    )
+  )
+
+  # the re-compression means we don't expect this to necessarily be the same size
+  # but it should still be a decent sized file, not just a text file
+  expect_true(
+    file.info(out)$size >
+      (file.info(system.file("rasters/example_sentinel1.tif", package = "rsi"))$size / 2)
+  )
+
+  expect_equal(
+    terra::values(terra::rast(out)),
+    terra::values(terra::rast(system.file("rasters/example_sentinel1.tif", package = "rsi")))
+  )
+})
+
 test_that("stack_rasters fails when reference_raster isn't in the vector", {
   expect_error(
     stack_rasters(

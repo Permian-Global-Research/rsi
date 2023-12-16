@@ -1,18 +1,22 @@
-#' Create and save a multi-band VRT by combining input rasters
+#' Create and save a multi-band output raster by combining input rasters
 #'
-#' This function creates a VRT that "stacks" all the bands of its input rasters,
-#' as though they were loaded one after another into a GIS. The VRT is fast
-#' to create and does not require much space, but does require the input rasters
-#' not be moved or altered. Run
-#' `sf::gdal_utils("warp", output_filename, "some_path.tif")` to turn the output
-#' VRT into a standalone TIF file.
+#' This function creates an output raster that "stacks" all the bands of its
+#' input rasters, as though they were loaded one after another into a GIS. It
+#' does this by first constructing a GDAL virtual raster, or "VRT", and then
+#' optionally uses GDAL's warper to convert this VRT into a standalone file.
+#' The VRT is fast to create and does not require much space, but does require
+#' the input rasters not be moved or altered. Creating a standalone raster from
+#' this file may take a long time and a large amount of disk space.
 #'
 #' @param rasters A list of rasters to combine into a single multi-band raster,
 #' either as SpatRaster objects from [terra::rast()] or character file paths
 #' to files that can be read by [terra::rast()]. Rasters will be "stacked" upon
 #' one another, preserving values. They must share CRS.
-#' @param output_filename The location to save the final "stacked" raster. Must be
-#' a VRT file.
+#' @param output_filename The location to save the final "stacked" raster. If
+#' this filename has a "vrt" extension as determined by `tools::file_ext()`,
+#' then this function exits after creating a VRT; otherwise, this function will
+#' create a VRT and then use `sf::gdal_utils("warp")` to convert the VRT into
+#' another format.
 #' @inheritParams rlang::args_dots_empty
 #' @param resolution Numeric of length 2, representing the target X and Y
 #' resolution of the output raster. If only a single value is provided, it will
@@ -29,6 +33,12 @@
 #' @param band_names Either a character vector of band names, or a function that
 #' when given a character vector of band names, returns a character vector of
 #' the same length containing new band names.
+#' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
+#' argument of [sf::gdal_utils()]. This argument is ignored (with a warning)
+#' if `output_filename` is a VRT.
+#' @param gdal_config_options Options passed to `gdalwarp` through the
+#' `config_options` argument of [sf::gdal_utils()].  This argument is ignored
+#' (with a warning) if `output_filename` is a VRT.
 #'
 #' @returns `output_filename`, unchanged.
 #'
@@ -49,10 +59,38 @@ stack_rasters <- function(rasters,
                           extent,
                           reference_raster = 1,
                           resampling_method = "bilinear",
-                          band_names) {
+                          band_names,
+                          gdalwarp_options = c(
+                            "-r", "bilinear",
+                            "-multi",
+                            "-overwrite",
+                            "-co", "COMPRESS=DEFLATE",
+                            "-co", "PREDICTOR=2",
+                            "-co", "NUM_THREADS=ALL_CPUS"
+                          ),
+                          gdal_config_options = c(
+                            VSI_CACHE = "TRUE",
+                            GDAL_CACHEMAX = "30%",
+                            VSI_CACHE_SIZE = "10000000",
+                            GDAL_HTTP_MULTIPLEX = "YES",
+                            GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                            GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                            GDAL_HTTP_VERSION = "2",
+                            GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                            GDAL_NUM_THREADS = "ALL_CPUS"
+                          )) {
   rlang::check_dots_empty()
 
   out_dir <- dirname(output_filename)
+
+  use_warper <- tolower(tools::file_ext(output_filename)) != "vrt"
+
+  if (use_warper && (!missing(gdal_config_options) || !missing(gdalwarp_options))) {
+    rlang::warn(
+      "`gdal_config_options` and `gdalwarp_options` are both ignored when `output_filename` ends in 'vrt'.",
+      class = "rsi_gdal_options_ignored"
+    )
+  }
 
   if (!(reference_raster %in% seq_along(rasters) ||
     reference_raster %in% names(rasters))) {
@@ -199,6 +237,12 @@ stack_rasters <- function(rasters,
     band_no <- band_no + 1
   }
 
+  vrt_destination <- ifelse(
+    use_warper,
+    tempfile(fileext = ".vrt"),
+    output_filename
+  )
+
   band_def <- grep("VRTRasterBand", vrt_container)
   writeLines(
     c(
@@ -206,7 +250,18 @@ stack_rasters <- function(rasters,
       unlist(vrt_bands),
       vrt_container[(band_def[[2]] + 1):length(vrt_container)]
     ),
-    output_filename
+    vrt_destination
   )
+
+  if (use_warper) {
+    sf::gdal_utils(
+      "warp",
+      source = vrt_destination,
+      destination = output_filename,
+      options = gdalwarp_options,
+      config_options = gdal_config_options
+    )
+  }
+
   output_filename
 }
