@@ -87,3 +87,11 @@ test_that("stack_rasters fails when rasters don't share a CRS", {
     class = "rsi_multiple_crs"
   )
 })
+
+test_that("stack_rasters fails when rasters are not character vectors", {
+  r1 <- terra::rast(matrix(rnorm(100), 10))
+  expect_snapshot(
+    stack_rasters(r1),
+    error = TRUE
+  )
+})

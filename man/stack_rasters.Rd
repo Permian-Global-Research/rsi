@@ -16,10 +16,10 @@ stack_rasters(
 )
 }
 \arguments{
-\item{rasters}{A list of rasters to combine into a single multi-band raster,
-either as SpatRaster objects from \code{\link[terra:rast]{terra::rast()}} or character file paths
-to files that can be read by \code{\link[terra:rast]{terra::rast()}}. Rasters will be "stacked" upon
-one another, preserving values. They must share CRS.}
+\item{rasters}{A list or character vector of file paths to rasters to combine
+into a single multi-band raster. Files will be read by \code{\link[terra:rast]{terra::rast()}}.
+Rasters will be "stacked" upon one another, preserving values.
+They must share a CRS.}
 
 \item{output_filename}{The location to save the final "stacked" raster. Must be
 a VRT file.}
@@ -55,7 +55,7 @@ as though they were loaded one after another into a GIS. The VRT is fast
 to create and does not require much space, but does require the input rasters
 not be moved or altered. Run
 \code{sf::gdal_utils("warp", output_filename, "some_path.tif")} to turn the output
-VRT into a standalone TIF file.
+VRT into a standalone TIFF file.
 }
 \examples{
 stack_rasters(
