@@ -5,12 +5,12 @@
 #' to create and does not require much space, but does require the input rasters
 #' not be moved or altered. Run
 #' `sf::gdal_utils("warp", output_filename, "some_path.tif")` to turn the output
-#' VRT into a standalone TIF file.
+#' VRT into a standalone TIFF file.
 #'
-#' @param rasters A list of rasters to combine into a single multi-band raster,
-#' either as SpatRaster objects from [terra::rast()] or character file paths
-#' to files that can be read by [terra::rast()]. Rasters will be "stacked" upon
-#' one another, preserving values. They must share CRS.
+#' @param rasters A list or character vector of file paths to rasters to combine
+#' into a single multi-band raster. Files will be read by [terra::rast()].
+#' Rasters will be "stacked" upon one another, preserving values.
+#' They must share a CRS.
 #' @param output_filename The location to save the final "stacked" raster. Must be
 #' a VRT file.
 #' @inheritParams rlang::args_dots_empty
@@ -51,6 +51,14 @@ stack_rasters <- function(rasters,
                           resampling_method = "bilinear",
                           band_names) {
   rlang::check_dots_empty()
+
+  tryCatch(
+    check_type_and_length(rasters = list()),
+    error = function(e) check_type_and_length(
+      rasters = character(),
+      call = rlang::caller_env(4)
+    )
+  )
 
   out_dir <- dirname(output_filename)
 
