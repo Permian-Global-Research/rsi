@@ -52,6 +52,11 @@ stack_rasters <- function(rasters,
                           band_names) {
   rlang::check_dots_empty()
 
+  check_type_and_length(
+    output_filename = character(1),
+    resampling_method = character(1)
+  )
+
   tryCatch(
     check_type_and_length(rasters = list()),
     error = function(e) check_type_and_length(
