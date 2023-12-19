@@ -98,7 +98,7 @@ stack_rasters <- function(rasters,
 
   use_warper <- tolower(tools::file_ext(output_filename)) != "vrt"
 
-  if (use_warper && (!missing(gdal_config_options) || !missing(gdalwarp_options))) {
+  if (!use_warper && (!missing(gdal_config_options) || !missing(gdalwarp_options))) {
     rlang::warn(
       "`gdal_config_options` and `gdalwarp_options` are both ignored when `output_filename` ends in 'vrt'.",
       class = "rsi_gdal_options_ignored"

@@ -16,7 +16,7 @@ test_that("stack_rasters works", {
 
 test_that("stack_rasters works with non-VRT outputs", {
   expect_no_error(
-    out <- stack_rasters(
+    out_tif <- stack_rasters(
       list(
         system.file("rasters/example_sentinel1.tif", package = "rsi")
       ),
@@ -27,12 +27,12 @@ test_that("stack_rasters works with non-VRT outputs", {
   # the re-compression means we don't expect this to necessarily be the same size
   # but it should still be a decent sized file, not just a text file
   expect_true(
-    file.info(out)$size >
+    file.info(out_tif)$size >
       (file.info(system.file("rasters/example_sentinel1.tif", package = "rsi"))$size / 2)
   )
 
   expect_equal(
-    terra::values(terra::rast(out)),
+    terra::values(terra::rast(out_tif, drivers = "GTiff")),
     terra::values(terra::rast(system.file("rasters/example_sentinel1.tif", package = "rsi")))
   )
 })
@@ -116,6 +116,19 @@ test_that("stack_rasters fails when rasters are not character vectors", {
   expect_snapshot(
     stack_rasters(r1, "a"),
     error = TRUE
+  )
+})
+
+test_that("stack_rasters warns when arguments are being ignored", {
+  expect_warning(
+    stack_rasters(
+      list(
+        system.file("rasters/example_sentinel1.tif", package = "rsi")
+      ),
+      tempfile(fileext = ".vrt"),
+      gdalwarp_options = c("THIS IS IGNORED")
+    ),
+    class = "rsi_gdal_options_ignored"
   )
 })
 
