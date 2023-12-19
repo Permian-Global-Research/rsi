@@ -81,6 +81,19 @@ stack_rasters <- function(rasters,
                           )) {
   rlang::check_dots_empty()
 
+  check_type_and_length(
+    output_filename = character(1),
+    resampling_method = character(1)
+  )
+
+  tryCatch(
+    check_type_and_length(rasters = list()),
+    error = function(e) check_type_and_length(
+      rasters = character(),
+      call = rlang::caller_env(4)
+    )
+  )
+
   out_dir <- dirname(output_filename)
 
   use_warper <- tolower(tools::file_ext(output_filename)) != "vrt"
