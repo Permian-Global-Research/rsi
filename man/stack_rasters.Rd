@@ -2,7 +2,7 @@
 % Please edit documentation in R/stack_rasters.R
 \name{stack_rasters}
 \alias{stack_rasters}
-\title{Create and save a multi-band VRT by combining input rasters}
+\title{Create and save a multi-band output raster by combining input rasters}
 \usage{
 stack_rasters(
   rasters,
@@ -12,17 +12,26 @@ stack_rasters(
   extent,
   reference_raster = 1,
   resampling_method = "bilinear",
-  band_names
+  band_names,
+  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
 )
 }
 \arguments{
-\item{rasters}{A list or character vector of file paths to rasters to combine
-into a single multi-band raster. Files will be read by \code{\link[terra:rast]{terra::rast()}}.
-Rasters will be "stacked" upon one another, preserving values.
-They must share a CRS.}
+\item{rasters}{A list of rasters to combine into a single multi-band raster,
+either as SpatRaster objects from \code{\link[terra:rast]{terra::rast()}} or character file paths
+to files that can be read by \code{\link[terra:rast]{terra::rast()}}. Rasters will be "stacked" upon
+one another, preserving values. They must share CRS.}
 
-\item{output_filename}{The location to save the final "stacked" raster. Must be
-a VRT file.}
+\item{output_filename}{The location to save the final "stacked" raster. If
+this filename has a "vrt" extension as determined by \code{tools::file_ext()},
+then this function exits after creating a VRT; otherwise, this function will
+create a VRT and then use \code{sf::gdal_utils("warp")} to convert the VRT into
+another format.}
 
 \item{...}{These dots are for future extensions and must be empty.}
 
@@ -45,17 +54,26 @@ resolutions.}
 \item{band_names}{Either a character vector of band names, or a function that
 when given a character vector of band names, returns a character vector of
 the same length containing new band names.}
+
+\item{gdalwarp_options}{Options passed to \code{gdalwarp} through the \code{options}
+argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. This argument is ignored (with a warning)
+if \code{output_filename} is a VRT.}
+
+\item{gdal_config_options}{Options passed to \code{gdalwarp} through the
+\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.  This argument is ignored
+(with a warning) if \code{output_filename} is a VRT.}
 }
 \value{
 \code{output_filename}, unchanged.
 }
 \description{
-This function creates a VRT that "stacks" all the bands of its input rasters,
-as though they were loaded one after another into a GIS. The VRT is fast
-to create and does not require much space, but does require the input rasters
-not be moved or altered. Run
-\code{sf::gdal_utils("warp", output_filename, "some_path.tif")} to turn the output
-VRT into a standalone TIFF file.
+This function creates an output raster that "stacks" all the bands of its
+input rasters, as though they were loaded one after another into a GIS. It
+does this by first constructing a GDAL virtual raster, or "VRT", and then
+optionally uses GDAL's warper to convert this VRT into a standalone file.
+The VRT is fast to create and does not require much space, but does require
+the input rasters not be moved or altered. Creating a standalone raster from
+this file may take a long time and a large amount of disk space.
 }
 \examples{
 stack_rasters(

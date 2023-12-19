@@ -87,8 +87,7 @@ filter_platforms(platforms = "Landsat-OLI") |>
 There's an equivalent function to filter indices based upon the bands that require. For instance, we can filter the list to only indices that use the red and blue band of images:
 
 ```{r}
-filter_bands(bands = c("R", "B")) |> 
-  head()
+filter_bands(bands = c("R", "B"))
 ```
 
 Arguments to these functions let you control whether you're looking for indices that match _all_ platforms and bands you've specified, or _any_ of them.
