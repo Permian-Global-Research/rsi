@@ -617,12 +617,7 @@ get_sentinel1_imagery <- function(aoi,
                                   )) {
   args <- mget(names(formals()))
   args$`...` <- NULL
-  if (...length()) {
-    dot_names <- ...names()
-    for (i in seq_len(...length())) {
-      args[[dot_names[[i]]]] <- ...elt(i)
-    }
-  }
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -667,12 +662,7 @@ get_sentinel2_imagery <- function(aoi,
                                   )) {
   args <- mget(names(formals()))
   args$`...` <- NULL
-  if (...length()) {
-    dot_names <- ...names()
-    for (i in seq_len(...length())) {
-      args[[dot_names[[i]]]] <- ...elt(i)
-    }
-  }
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -718,12 +708,7 @@ get_landsat_imagery <- function(aoi,
                                 )) {
   args <- mget(names(formals()))
   args$`...` <- NULL
-  if (...length()) {
-    dot_names <- ...names()
-    for (i in seq_len(...length())) {
-      args[[dot_names[[i]]]] <- ...elt(i)
-    }
-  }
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -768,12 +753,7 @@ get_dem <- function(aoi,
                     )) {
   args <- mget(names(formals()))
   args$`...` <- NULL
-  if (...length()) {
-    dot_names <- ...names()
-    for (i in seq_len(...length())) {
-      args[[dot_names[[i]]]] <- ...elt(i)
-    }
-  }
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 

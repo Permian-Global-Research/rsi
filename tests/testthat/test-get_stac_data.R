@@ -207,7 +207,7 @@ test_that("get_*_data works with mapply() (#17)", {
   skip_on_cran()
   san_antonio = sf::st_point(c(-98.491142, 29.424349))
   san_antonio = sf::st_sfc(san_antonio, crs = "EPSG:4326")
-  san_antonio = sf::st_buffer(st_transform(san_antonio, "EPSG:3081"), 1000)
+  san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 1000)
 
   expect_no_error(
     mapply(
