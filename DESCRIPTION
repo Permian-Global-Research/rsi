@@ -11,7 +11,7 @@ Description: Tools for downloading spatial data from 'spatiotemporal' asset
     catalogs ('STAC') and computing standard spectral indices from raster data.
 License: Apache License (>= 2)
 Depends: 
-    R (>= 4.1)
+    R (>= 4.0)
 Imports: 
     future.apply,
     glue,

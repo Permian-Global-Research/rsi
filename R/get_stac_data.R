@@ -203,19 +203,6 @@ get_stac_data <- function(aoi,
     )
   }
 
-  if (...length() && any(...names() == "")) {
-    # mostly because of how we put dots in our argument list in sub-functions;
-    # if any of `...` are not named, then they're getting written one after
-    # another to "" in the list, which means some will be missing
-    #
-    # so, it's an issue with the other get_*_data functions, but we're enforcing
-    # it everywhere for purposes of consistency
-    rlang::abort(
-      "All arguments to `...` must be named.",
-      class = "rsi_unnamed_dots"
-    )
-  }
-
   if (sf::st_is_longlat(aoi) && !(is.null(pixel_x_size) || is.null(pixel_y_size)) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
     rlang::warn(c(
       "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
