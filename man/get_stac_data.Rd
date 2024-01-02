@@ -173,7 +173,7 @@ images from.}
 \link{sentinel1_band_mapping}, \link{sentinel2_band_mapping}, and
 \link{landsat_band_mapping}.}
 
-\item{...}{Passed to \code{item_filter_functiion}.}
+\item{...}{Passed to \code{item_filter_function}.}
 
 \item{sign_function}{A function that takes the output from \code{query_function}
 and signs the item URLs, if necessary.}

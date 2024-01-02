@@ -87,7 +87,7 @@
 #' [landsat_band_mapping].
 #' @param sign_function A function that takes the output from `query_function`
 #' and signs the item URLs, if necessary.
-#' @param ... Passed to `item_filter_functiion`.
+#' @param ... Passed to `item_filter_function`.
 #' @param rescale_bands Logical of length 1: If the STAC collection implements
 #' the `raster` STAC extension, and that extension includes `scale` and `offset`
 #' values, should this function attempt to automatically rescale the downloaded
@@ -200,6 +200,19 @@ get_stac_data <- function(aoi,
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
       class = "rsi_aoi_not_sf"
+    )
+  }
+
+  if (...length() && any(...names() == "")) {
+    # mostly because of how we put dots in our argument list in sub-functions;
+    # if any of `...` are not named, then they're getting written one after
+    # another to "" in the list, which means some will be missing
+    #
+    # so, it's an issue with the other get_*_data functions, but we're enforcing
+    # it everywhere for purposes of consistency
+    rlang::abort(
+      "All arguments to `...` must be named.",
+      class = "rsi_unnamed_dots"
     )
   }
 
@@ -602,7 +615,14 @@ get_sentinel1_imagery <- function(aoi,
                                     GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                     GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  if (...length()) {
+    dot_names <- ...names()
+    for (i in seq_len(...length())) {
+      args[[dot_names[[i]]]] <- ...elt(i)
+    }
+  }
   do.call(get_stac_data, args)
 }
 
@@ -645,7 +665,14 @@ get_sentinel2_imagery <- function(aoi,
                                     GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                     GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  if (...length()) {
+    dot_names <- ...names()
+    for (i in seq_len(...length())) {
+      args[[dot_names[[i]]]] <- ...elt(i)
+    }
+  }
   do.call(get_stac_data, args)
 }
 
@@ -689,7 +716,14 @@ get_landsat_imagery <- function(aoi,
                                   GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                   GDAL_NUM_THREADS = "ALL_CPUS"
                                 )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  if (...length()) {
+    dot_names <- ...names()
+    for (i in seq_len(...length())) {
+      args[[dot_names[[i]]]] <- ...elt(i)
+    }
+  }
   do.call(get_stac_data, args)
 }
 
@@ -732,7 +766,14 @@ get_dem <- function(aoi,
                       GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                       GDAL_NUM_THREADS = "ALL_CPUS"
                     )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  if (...length()) {
+    dot_names <- ...names()
+    for (i in seq_len(...length())) {
+      args[[dot_names[[i]]]] <- ...elt(i)
+    }
+  }
   do.call(get_stac_data, args)
 }
 
