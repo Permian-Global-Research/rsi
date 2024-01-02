@@ -87,7 +87,7 @@
 #' [landsat_band_mapping].
 #' @param sign_function A function that takes the output from `query_function`
 #' and signs the item URLs, if necessary.
-#' @param ... Passed to `item_filter_functiion`.
+#' @param ... Passed to `item_filter_function`.
 #' @param rescale_bands Logical of length 1: If the STAC collection implements
 #' the `raster` STAC extension, and that extension includes `scale` and `offset`
 #' values, should this function attempt to automatically rescale the downloaded
@@ -602,7 +602,9 @@ get_sentinel1_imagery <- function(aoi,
                                     GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                     GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -645,7 +647,9 @@ get_sentinel2_imagery <- function(aoi,
                                     GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                     GDAL_NUM_THREADS = "ALL_CPUS"
                                   )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -689,7 +693,9 @@ get_landsat_imagery <- function(aoi,
                                   GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                                   GDAL_NUM_THREADS = "ALL_CPUS"
                                 )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 
@@ -732,7 +738,9 @@ get_dem <- function(aoi,
                       GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                       GDAL_NUM_THREADS = "ALL_CPUS"
                     )) {
-  args <- as.list(rlang::call_match(defaults = TRUE))[-1]
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
   do.call(get_stac_data, args)
 }
 

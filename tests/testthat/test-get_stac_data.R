@@ -186,6 +186,7 @@ test_that("simple merge method works", {
 })
 
 test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `mask_function`", {
+  skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
@@ -198,6 +199,23 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
       mask_function = NULL,
       rescale_bands = FALSE,
       output_filename = tempfile(fileext = ".tif")
+    )
+  )
+})
+
+test_that("get_*_data works with mapply() (#17)", {
+  skip_on_cran()
+  san_antonio = sf::st_point(c(-98.491142, 29.424349))
+  san_antonio = sf::st_sfc(san_antonio, crs = "EPSG:4326")
+  san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 1000)
+
+  expect_no_error(
+    mapply(
+      get_landsat_imagery,
+      start_date = c("2023-09-01", "2023-10-01"),
+      end_date = c("2023-09-30", "2023-10-31"),
+      output_filename = replicate(2, tempfile(fileext = ".tif")),
+      MoreArgs = c(aoi = list(san_antonio))
     )
   )
 })
