@@ -61,7 +61,7 @@ Because the `RSTACQuery` object is a representation of a future query, we can us
 
 ```{r}
 stac_source |>
-  rstac::collections()
+  rstac::collections() |> 
   rstac::get_request()
 ```
 
