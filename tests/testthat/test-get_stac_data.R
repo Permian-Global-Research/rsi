@@ -150,7 +150,7 @@ test_that("hidden arguments work", {
       "2022-06-01",
       "2022-06-30",
       output_filename = tempfile(fileext = ".tif"),
-      query_function = query_planetary_computer,
+      query_function = default_query_function,
       mask_function = landsat_mask_function
     )
   )
@@ -177,7 +177,7 @@ test_that("simple merge method works", {
       asset_names = "lcpri",
       stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
       collection = "usgs-lcmap-conus-v13",
-      query_function = rsi::query_planetary_computer,
+      query_function = default_query_function,
       sign_function = rsi::sign_planetary_computer,
       output_filename = tempfile(fileext = ".tif")
     )

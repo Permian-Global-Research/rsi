@@ -82,7 +82,7 @@
 #' images from.
 #' @param query_function A function that takes the output from
 #' [rstac::stac_search()] and executes the request. See
-#' [query_planetary_computer()] and the `query_function` slots of
+#' [default_query_function()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
 #' @param sign_function A function that takes the output from `query_function`
@@ -143,7 +143,7 @@
 #'   ),
 #'   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
 #'   collection = "landsat-c2-l2",
-#'   query_function = query_planetary_computer,
+#'   query_function = default_query_function,
 #'   sign_function = sign_planetary_computer,
 #'   mask_band = "qa_pixel",
 #'   mask_function = landsat_mask_function,
@@ -167,8 +167,8 @@ get_stac_data <- function(aoi,
                           asset_names,
                           stac_source,
                           collection,
-                          query_function,
                           ...,
+                          query_function = default_query_function,
                           sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
@@ -242,6 +242,10 @@ get_stac_data <- function(aoi,
     gdalwarp_options = character()
   )
 
+  if (is.null(sign_function) && stac_source == "https://planetarycomputer.microsoft.com/api/stac/v1") {
+    sign_function <- sign_planetary_computer
+  }
+
   gdalwarp_options <- process_gdalwarp_options(
     gdalwarp_options = gdalwarp_options,
     aoi = aoi,
@@ -251,17 +255,25 @@ get_stac_data <- function(aoi,
 
   aoi_bbox <- sf::st_bbox(aoi)
 
-  items <- get_items(
-    sf::st_bbox(sf::st_transform(aoi, 4326)),
-    stac_source,
-    collection,
-    start_date,
-    end_date,
-    limit,
-    query_function,
-    item_filter_function,
+  if (!is.null(start_date)) {
+    start_date <- process_dates(start_date)
+    end_date <- process_dates(end_date)
+  }
+
+  items <- query_function(
+    bbox = sf::st_bbox(sf::st_transform(aoi, 4326)),
+    stac_source = stac_source,
+    collection = collection,
+    start_date = start_date,
+    end_date = end_date,
+    limit = limit,
     ...
   )
+
+  if (!is.null(item_filter_function)) {
+    items <- item_filter_function(items, ...)
+  }
+
   if (missing(asset_names)) asset_names <- NULL
   if (is.null(asset_names)) asset_names <- rstac::items_assets(items)
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
@@ -843,45 +855,6 @@ process_dates <- function(date) {
   date <- as.POSIXct(date, "UTC")
   date <- strftime(date, "%Y-%m-%dT%H:%M:%S%Z", "UTC")
   gsub("UTC", "Z", date)
-}
-
-get_items <- function(bbox_wgs84,
-                      stac_source,
-                      collections,
-                      start_date,
-                      end_date,
-                      limit,
-                      download_function,
-                      item_filter_function,
-                      ...) {
-  if (!is.null(start_date)) {
-    start_date <- process_dates(start_date)
-    end_date <- process_dates(end_date)
-    datetime <- paste0(start_date, "/", end_date)
-  } else {
-    datetime <- NULL
-  }
-
-  items <- rstac::stac_search(
-    rstac::stac(stac_source),
-    collections = collections,
-    bbox = c(
-      bbox_wgs84["xmin"],
-      bbox_wgs84["ymin"],
-      bbox_wgs84["xmax"],
-      bbox_wgs84["ymax"]
-    ),
-    datetime = datetime,
-    limit = limit
-  )
-
-  items <- download_function(items)
-
-  if (!is.null(item_filter_function)) {
-    items <- item_filter_function(items, ...)
-  }
-
-  items
 }
 
 extract_urls <- function(asset_names, items) {
