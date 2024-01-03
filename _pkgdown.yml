@@ -37,5 +37,5 @@ reference:
     contents:
       - ends_with("mask_function")
       - landsat_platform_filter
-      - query_planetary_computer
+      - default_query_function
       - stack_rasters
