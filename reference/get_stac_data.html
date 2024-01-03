@@ -20,7 +20,7 @@ STAC sources."><meta property="og:image" content="https://permian-global-researc
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,12 @@ STAC sources."><meta property="og:image" content="https://permian-global-researc
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Downloading-data-from-STAC-APIs-using-rsi.html">Downloading data from STAC APIs using rsi</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -78,8 +84,8 @@ STAC sources.</p>
 <span>  <span class="va">asset_names</span>,</span>
 <span>  <span class="va">stac_source</span>,</span>
 <span>  <span class="va">collection</span>,</span>
-<span>  <span class="va">query_function</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  query_function <span class="op">=</span> <span class="va">default_query_function</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -242,16 +248,16 @@ imagery from.</p></dd>
 images from.</p></dd>
 
 
+<dt>...</dt>
+<dd><p>Passed to <code>item_filter_function</code>.</p></dd>
+
+
 <dt>query_function</dt>
 <dd><p>A function that takes the output from
 <code><a href="https://brazil-data-cube.github.io/rstac/reference/stac_search.html" class="external-link">rstac::stac_search()</a></code> and executes the request. See
-<code><a href="query_planetary_computer.html">query_planetary_computer()</a></code> and the <code>query_function</code> slots of
+<code><a href="default_query_function.html">default_query_function()</a></code> and the <code>query_function</code> slots of
 <a href="sentinel1_band_mapping.html">sentinel1_band_mapping</a>, <a href="sentinel2_band_mapping.html">sentinel2_band_mapping</a>, and
 <a href="landsat_band_mapping.html">landsat_band_mapping</a>.</p></dd>
-
-
-<dt>...</dt>
-<dd><p>Passed to <code>item_filter_function</code>.</p></dd>
 
 
 <dt>sign_function</dt>
@@ -416,7 +422,7 @@ or your <code>.Renviron</code> file).</p>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1/"</span>,</span></span>
 <span class="r-in"><span>  collection <span class="op">=</span> <span class="st">"landsat-c2-l2"</span>,</span></span>
-<span class="r-in"><span>  query_function <span class="op">=</span> <span class="va">query_planetary_computer</span>,</span></span>
+<span class="r-in"><span>  query_function <span class="op">=</span> <span class="va">default_query_function</span>,</span></span>
 <span class="r-in"><span>  sign_function <span class="op">=</span> <span class="va">sign_planetary_computer</span>,</span></span>
 <span class="r-in"><span>  mask_band <span class="op">=</span> <span class="st">"qa_pixel"</span>,</span></span>
 <span class="r-in"><span>  mask_function <span class="op">=</span> <span class="va">landsat_mask_function</span>,</span></span>

@@ -13,6 +13,9 @@
     <loc>https://permian-global-research.github.io/rsi/SUPPORT.html</loc>
   </url>
   <url>
+    <loc>https://permian-global-research.github.io/rsi/articles/Downloading-data-from-STAC-APIs-using-rsi.html</loc>
+  </url>
+  <url>
     <loc>https://permian-global-research.github.io/rsi/articles/index.html</loc>
   </url>
   <url>
@@ -29,6 +32,9 @@
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/calculate_indices.html</loc>
+  </url>
+  <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/default_query_function.html</loc>
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/dem_band_mapping.html</loc>
@@ -52,9 +58,6 @@
     <loc>https://permian-global-research.github.io/rsi/reference/landsat_platform_filter.html</loc>
   </url>
   <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/query_planetary_computer.html</loc>
-  </url>
-  <url>
     <loc>https://permian-global-research.github.io/rsi/reference/rsi-package.html</loc>
   </url>
   <url>
@@ -65,6 +68,9 @@
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/sentinel2_mask_function.html</loc>
+  </url>
+  <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/sign_planetary_computer.html</loc>
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/spectral_indices.html</loc>
