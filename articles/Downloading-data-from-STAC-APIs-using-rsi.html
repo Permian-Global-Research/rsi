@@ -109,9 +109,9 @@ objects are generally organized. We aren’t going to attach any of these,
 in order to make it clear what functions are coming from rsi itself.
 They should all be installed as part of installing rsi, so you shouldn’t
 need to install anything new for this tutorial.</p>
-<div class="section level3">
-<h3 id="an-overview-of-stac-itself">An overview of STAC itself<a class="anchor" aria-label="anchor" href="#an-overview-of-stac-itself"></a>
-</h3>
+<div class="section level2">
+<h2 id="an-overview-of-stac-itself">An overview of STAC itself<a class="anchor" aria-label="anchor" href="#an-overview-of-stac-itself"></a>
+</h2>
 <p>You can safely skip this section if you’re familiar with STAC and
 rstac.</p>
 <p>Before we start downloading data, let’s talk a little bit about STAC.
@@ -290,9 +290,9 @@ pages of our request. We aren’t going to do that right now – it takes a
 long time and we don’t need to – but put a pin in this idea, for
 later.</p>
 </div>
-<div class="section level3">
-<h3 id="downloading-data-from-stac-apis-using-rsi">Downloading data from STAC APIs using rsi<a class="anchor" aria-label="anchor" href="#downloading-data-from-stac-apis-using-rsi"></a>
-</h3>
+<div class="section level2">
+<h2 id="downloading-data-from-stac-apis-using-rsi">Downloading data from STAC APIs using rsi<a class="anchor" aria-label="anchor" href="#downloading-data-from-stac-apis-using-rsi"></a>
+</h2>
 <p>It took us a thousand words, but we’ve finally reached the title of
 the vignette: how can we actually download data from this API?</p>
 <p>We’ll start off downloading data for a relatively small region;
@@ -326,7 +326,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmpp8sBYO/file1ef2373c3742.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpYSlXey/file1ee5408392a.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -550,7 +550,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     raster == 21824</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x557cf5cbffe8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x56138aecdde0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -650,7 +650,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x557cf8e8e420&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x561387907768&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
@@ -700,10 +700,11 @@ and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_ima
 <p>If we know how to express our desired query in CQL2, we can write
 arbitrarily complex functions to make sure we’re only downloading the
 precise data we’re interested in.</p>
-<div class="section level3">
-<h3 id="a-quick-note-on-rsi-and-other-packages-for-downloading-stac-assets">A quick note on rsi and other packages for downloading STAC
+</div>
+<div class="section level2">
+<h2 id="a-quick-note-on-rsi-and-other-packages-for-downloading-stac-assets">A quick note on rsi and other packages for downloading STAC
 assets<a class="anchor" aria-label="anchor" href="#a-quick-note-on-rsi-and-other-packages-for-downloading-stac-assets"></a>
-</h3>
+</h2>
 <p>rsi is not nearly the only package aiming to help R users take
 advantage of STAC APIs and build cloud-native geospatial workflows. As
 shown above, rsi is fundamentally built on top of the excellent rstac
@@ -727,7 +728,6 @@ at the same time, it’s possible that this approach can be less
 efficient, downloading more data at finer resolutions than is actually
 needed for a given task. As a result, users need to make sure they’re
 only requesting data they actually need.</p>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
