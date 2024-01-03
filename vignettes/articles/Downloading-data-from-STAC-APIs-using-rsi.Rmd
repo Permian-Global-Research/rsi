@@ -268,7 +268,7 @@ get_landsat_imagery(
 ```
 
 
-# Using CQL2 to refine queries to STAC APIs
+## Using CQL2 to refine queries to STAC APIs
 
 This last section of the tutorial focuses on using CQL2 within rsi to filter the items that will be downloaded. If you aren't familiar with using CQl2 in rstac, go read [the corresponding tutorial this is adapted from first](https://github.com/radiantearth/stac-site/blob/main/app/tutorials/r/2-using-rstac-and-cql2-to-query-stac-api/2-using-rstac-and-cql2-to-query-stac-api.en.md); this tutorial assumes you understand `rstac::ext_filter()` already.
 
