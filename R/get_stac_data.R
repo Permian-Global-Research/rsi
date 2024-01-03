@@ -82,7 +82,7 @@
 #' images from.
 #' @param query_function A function that takes the output from
 #' [rstac::stac_search()] and executes the request. See
-#' [query_planetary_computer()] and the `query_function` slots of
+#' [default_query_function()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
 #' @param sign_function A function that takes the output from `query_function`
@@ -167,8 +167,8 @@ get_stac_data <- function(aoi,
                           asset_names,
                           stac_source,
                           collection,
-                          query_function,
                           ...,
+                          query_function = default_query_function,
                           sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
@@ -241,6 +241,10 @@ get_stac_data <- function(aoi,
     limit = numeric(1),
     gdalwarp_options = character()
   )
+
+  if (is.null(sign_function) && stac_source == "https://planetarycomputer.microsoft.com/api/stac/v1") {
+    sign_function <- sign_planetary_computer
+  }
 
   gdalwarp_options <- process_gdalwarp_options(
     gdalwarp_options = gdalwarp_options,

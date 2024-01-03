@@ -17,8 +17,8 @@ get_stac_data(
   asset_names,
   stac_source,
   collection,
-  query_function,
   ...,
+  query_function = default_query_function,
   sign_function = NULL,
   rescale_bands = TRUE,
   item_filter_function = NULL,
@@ -167,13 +167,13 @@ imagery from.}
 \item{collection}{Character of length 1: the STAC collection to download
 images from.}
 
+\item{...}{Passed to \code{item_filter_function}.}
+
 \item{query_function}{A function that takes the output from
 \code{\link[rstac:stac_search]{rstac::stac_search()}} and executes the request. See
-\code{\link[=query_planetary_computer]{query_planetary_computer()}} and the \code{query_function} slots of
+\code{\link[=default_query_function]{default_query_function()}} and the \code{query_function} slots of
 \link{sentinel1_band_mapping}, \link{sentinel2_band_mapping}, and
 \link{landsat_band_mapping}.}
-
-\item{...}{Passed to \code{item_filter_function}.}
 
 \item{sign_function}{A function that takes the output from \code{query_function}
 and signs the item URLs, if necessary.}

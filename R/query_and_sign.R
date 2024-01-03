@@ -73,7 +73,7 @@ default_query_function <- function(bbox,
 
 #' Sign STAC items retrieved from the Planetary Computer
 #'
-#' @param items The items returned by `query_planetary_computer`.
+#' @param items A STACItemCollection, as returned by `default_query_function`.
 #' @param subscription_key Optionally, a subscription key associated with your
 #' Planetary Computer account. At the time of writing, this is required for
 #' downloading Sentinel 1 RTC products, as well as NAIP imagery. This key will

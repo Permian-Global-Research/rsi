@@ -7,7 +7,7 @@
 sign_planetary_computer(items, subscription_key = Sys.getenv("rsi_pc_key"))
 }
 \arguments{
-\item{items}{The items returned by \code{query_planetary_computer}.}
+\item{items}{A STACItemCollection, as returned by \code{default_query_function}.}
 
 \item{subscription_key}{Optionally, a subscription key associated with your
 Planetary Computer account. At the time of writing, this is required for
