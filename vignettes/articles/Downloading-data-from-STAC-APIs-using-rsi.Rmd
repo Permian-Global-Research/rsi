@@ -31,7 +31,7 @@ To give a more concrete example: the red band of a single Landsat image would be
 
 This explanation is a very simplified overview of the STAC family of standards -- for instance, items may also be grouped into _catalogs_, and collections and catalogs may themselves be grouped into other collections and catalogs. For all practical purposes however, if your main interest is downloading data from STAC APIs, the simplified explanation is pretty decent.
 
-For instance, we can see this organization in the wild by using rstac to explore a public STAC API. Microsoft hosts a STAC API as part of their [Planetary Computer](https://planetarycomputer.microsoft.com/); we 
+For instance, we can see this organization in the wild by using rstac to explore a public STAC API. Microsoft hosts a STAC API as part of their [Planetary Computer](https://planetarycomputer.microsoft.com/); we'll use their API for the rest of this tutorial.
 
 To start downloading data, we’ll first need to let rstac know what STAC
 API we want to query and download from. To do so, we’ll pass the URL of
