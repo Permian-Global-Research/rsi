@@ -326,7 +326,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpO2dR4P/file1ee41dfd2897.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpgDOCF2/file1ef81c3a8ad4.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -385,12 +385,17 @@ relevant pieces of each object and merging them together:</p>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
-<p>By default, this merging does not interpolate between overlapping
-pixels, and instead simply uses the value from whichever pixel it
-processed last. That’s fine here, where our tiles shouldn’t overlap (and
-pixel values should be identical if they do), but probably isn’t ideal
-if you want to combine images from multiple time periods into a single
-composite.</p>
+<p>If we wanted, we could parallelize these downloads using
+<code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code>, and set up a progress bar using
+<code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>. We won’t use these functions in this
+vignette, but they can be extremely useful for speeding up and
+monitoring larger downloads.</p>
+<p>By default, the merging done by <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> does not
+interpolate between overlapping pixels, and instead simply uses the
+value from whichever pixel it processed last. That’s fine here, where
+our tiles shouldn’t overlap (and pixel values should be identical if
+they do), but probably isn’t ideal if you want to combine images from
+multiple time periods into a single composite.</p>
 <p>For instance, if we want to download a composite of all the available
 Landsat images over Ashe county from a given month, we’d probably want
 to calculate the median value of each pixel, instead of simply taking
@@ -427,7 +432,7 @@ defaults have been changed:</p>
 <span><span class="co">#&gt; [1] 30</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $asset_names</span></span>
-<span><span class="co">#&gt; landsat_band_mapping$planetary_computer_v1</span></span>
+<span><span class="co">#&gt; rsi::landsat_band_mapping$planetary_computer_v1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $stac_source</span></span>
 <span><span class="co">#&gt; attr(asset_names, "stac_source")</span></span>
@@ -550,7 +555,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     raster == 21824</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5612724aba18&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55bf1fe3e098&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -650,7 +655,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x561275d03fd8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55bf1f55b3b0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
