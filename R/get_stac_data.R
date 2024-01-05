@@ -403,6 +403,216 @@ get_stac_data <- function(aoi,
   as.vector(out)
 }
 
+#' @rdname get_stac_data
+#' @export
+get_sentinel1_imagery <- function(aoi,
+                                  start_date,
+                                  end_date,
+                                  ...,
+                                  pixel_x_size = 10,
+                                  pixel_y_size = 10,
+                                  asset_names = rsi::sentinel1_band_mapping$planetary_computer_v1,
+                                  stac_source = attr(asset_names, "stac_source"),
+                                  collection = attr(asset_names, "collection_name"),
+                                  query_function = attr(asset_names, "query_function"),
+                                  sign_function = attr(asset_names, "sign_function"),
+                                  rescale_bands = FALSE,
+                                  item_filter_function = NULL,
+                                  mask_band = NULL,
+                                  mask_function = NULL,
+                                  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                                  composite_function = "median",
+                                  limit = 999,
+                                  gdalwarp_options = c(
+                                    "-r", "bilinear",
+                                    "-multi",
+                                    "-overwrite",
+                                    "-co", "COMPRESS=DEFLATE",
+                                    "-co", "PREDICTOR=2",
+                                    "-co", "NUM_THREADS=ALL_CPUS"
+                                  ),
+                                  gdal_config_options = c(
+                                    VSI_CACHE = "TRUE",
+                                    GDAL_CACHEMAX = "30%",
+                                    VSI_CACHE_SIZE = "10000000",
+                                    GDAL_HTTP_MULTIPLEX = "YES",
+                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                    GDAL_HTTP_VERSION = "2",
+                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                    GDAL_NUM_THREADS = "ALL_CPUS"
+                                  )) {
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
+  do.call(get_stac_data, args)
+}
+
+#' @rdname get_stac_data
+#' @export
+get_sentinel2_imagery <- function(aoi,
+                                  start_date,
+                                  end_date,
+                                  ...,
+                                  pixel_x_size = 10,
+                                  pixel_y_size = 10,
+                                  asset_names = rsi::sentinel2_band_mapping$planetary_computer_v1,
+                                  stac_source = attr(asset_names, "stac_source"),
+                                  collection = attr(asset_names, "collection_name"),
+                                  query_function = attr(asset_names, "query_function"),
+                                  sign_function = attr(asset_names, "sign_function"),
+                                  rescale_bands = FALSE,
+                                  item_filter_function = NULL,
+                                  mask_band = attr(asset_names, "mask_band"),
+                                  mask_function = attr(asset_names, "mask_function"),
+                                  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                                  composite_function = "median",
+                                  limit = 999,
+                                  gdalwarp_options = c(
+                                    "-r", "bilinear",
+                                    "-multi",
+                                    "-overwrite",
+                                    "-co", "COMPRESS=DEFLATE",
+                                    "-co", "PREDICTOR=2",
+                                    "-co", "NUM_THREADS=ALL_CPUS"
+                                  ),
+                                  gdal_config_options = c(
+                                    VSI_CACHE = "TRUE",
+                                    GDAL_CACHEMAX = "30%",
+                                    VSI_CACHE_SIZE = "10000000",
+                                    GDAL_HTTP_MULTIPLEX = "YES",
+                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                    GDAL_HTTP_VERSION = "2",
+                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                    GDAL_NUM_THREADS = "ALL_CPUS"
+                                  )) {
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
+  do.call(get_stac_data, args)
+}
+
+#' @rdname get_stac_data
+#' @export
+get_landsat_imagery <- function(aoi,
+                                start_date,
+                                end_date,
+                                ...,
+                                platforms = c("landsat-9", "landsat-8"),
+                                pixel_x_size = 30,
+                                pixel_y_size = 30,
+                                asset_names = rsi::landsat_band_mapping$planetary_computer_v1,
+                                stac_source = attr(asset_names, "stac_source"),
+                                collection = attr(asset_names, "collection_name"),
+                                query_function = attr(asset_names, "query_function"),
+                                sign_function = attr(asset_names, "sign_function"),
+                                rescale_bands = TRUE,
+                                item_filter_function = landsat_platform_filter,
+                                mask_band = attr(asset_names, "mask_band"),
+                                mask_function = attr(asset_names, "mask_function"),
+                                output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                                composite_function = "median",
+                                limit = 999,
+                                gdalwarp_options = c(
+                                  "-r", "bilinear",
+                                  "-multi",
+                                  "-overwrite",
+                                  "-co", "COMPRESS=DEFLATE",
+                                  "-co", "PREDICTOR=2",
+                                  "-co", "NUM_THREADS=ALL_CPUS"
+                                ),
+                                gdal_config_options = c(
+                                  VSI_CACHE = "TRUE",
+                                  GDAL_CACHEMAX = "30%",
+                                  VSI_CACHE_SIZE = "10000000",
+                                  GDAL_HTTP_MULTIPLEX = "YES",
+                                  GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                  GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                  GDAL_HTTP_VERSION = "2",
+                                  GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                  GDAL_NUM_THREADS = "ALL_CPUS"
+                                )) {
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
+  do.call(get_stac_data, args)
+}
+
+#' @rdname get_stac_data
+#' @export
+get_dem <- function(aoi,
+                    ...,
+                    start_date = NULL,
+                    end_date = NULL,
+                    pixel_x_size = 30,
+                    pixel_y_size = 30,
+                    asset_names = rsi::dem_band_mapping$planetary_computer_v1$`cop-dem-glo-30`,
+                    stac_source = attr(asset_names, "stac_source"),
+                    collection = attr(asset_names, "collection_name"),
+                    query_function = attr(asset_names, "query_function"),
+                    sign_function = attr(asset_names, "sign_function"),
+                    rescale_bands = FALSE,
+                    item_filter_function = NULL,
+                    mask_band = NULL,
+                    mask_function = NULL,
+                    output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+                    composite_function = "max",
+                    limit = 999,
+                    gdalwarp_options = c(
+                      "-r", "bilinear",
+                      "-multi",
+                      "-overwrite",
+                      "-co", "COMPRESS=DEFLATE",
+                      "-co", "PREDICTOR=2",
+                      "-co", "NUM_THREADS=ALL_CPUS"
+                    ),
+                    gdal_config_options = c(
+                      VSI_CACHE = "TRUE",
+                      GDAL_CACHEMAX = "30%",
+                      VSI_CACHE_SIZE = "10000000",
+                      GDAL_HTTP_MULTIPLEX = "YES",
+                      GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                      GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                      GDAL_HTTP_VERSION = "2",
+                      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                      GDAL_NUM_THREADS = "ALL_CPUS"
+                    )) {
+  args <- mget(names(formals()))
+  args$`...` <- NULL
+  args <- c(args, rlang::list2(...))
+  do.call(get_stac_data, args)
+}
+
+download_assets <- function(urls,
+                            destinations,
+                            gdalwarp_options,
+                            gdal_config_options,
+                            progressor) {
+  if (length(urls) != length(destinations)) {
+    rlang::abort("`urls` and `destinations` must be the same length.")
+  }
+
+  future.apply::future_mapply(
+    function(url, destination) {
+      progressor("Downloading assets")
+      sf::gdal_utils(
+        "warp",
+        paste0("/vsicurl/", url),
+        destination,
+        options = gdalwarp_options,
+        quiet = TRUE,
+        config_options = gdal_config_options
+      )
+    },
+    url = urls,
+    destination = destinations,
+    future.seed = TRUE
+  )
+
+  destinations
+}
+
 apply_masks <- function(mask_band, mask_function, download_locations, p) {
   apply(
     download_locations,
@@ -573,216 +783,6 @@ calc_scale_strings <- function(download_locations, items) {
 
   scale_strings <- scale_strings[scale_strings != ""]
   scale_strings
-}
-
-#' @rdname get_stac_data
-#' @export
-get_sentinel1_imagery <- function(aoi,
-                                  start_date,
-                                  end_date,
-                                  ...,
-                                  pixel_x_size = 10,
-                                  pixel_y_size = 10,
-                                  asset_names = sentinel1_band_mapping$planetary_computer_v1,
-                                  stac_source = attr(asset_names, "stac_source"),
-                                  collection = attr(asset_names, "collection_name"),
-                                  query_function = attr(asset_names, "query_function"),
-                                  sign_function = attr(asset_names, "sign_function"),
-                                  rescale_bands = FALSE,
-                                  item_filter_function = NULL,
-                                  mask_band = NULL,
-                                  mask_function = NULL,
-                                  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                                  composite_function = "median",
-                                  limit = 999,
-                                  gdalwarp_options = c(
-                                    "-r", "bilinear",
-                                    "-multi",
-                                    "-overwrite",
-                                    "-co", "COMPRESS=DEFLATE",
-                                    "-co", "PREDICTOR=2",
-                                    "-co", "NUM_THREADS=ALL_CPUS"
-                                  ),
-                                  gdal_config_options = c(
-                                    VSI_CACHE = "TRUE",
-                                    GDAL_CACHEMAX = "30%",
-                                    VSI_CACHE_SIZE = "10000000",
-                                    GDAL_HTTP_MULTIPLEX = "YES",
-                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                    GDAL_HTTP_VERSION = "2",
-                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                    GDAL_NUM_THREADS = "ALL_CPUS"
-                                  )) {
-  args <- mget(names(formals()))
-  args$`...` <- NULL
-  args <- c(args, rlang::list2(...))
-  do.call(get_stac_data, args)
-}
-
-#' @rdname get_stac_data
-#' @export
-get_sentinel2_imagery <- function(aoi,
-                                  start_date,
-                                  end_date,
-                                  ...,
-                                  pixel_x_size = 10,
-                                  pixel_y_size = 10,
-                                  asset_names = sentinel2_band_mapping$planetary_computer_v1,
-                                  stac_source = attr(asset_names, "stac_source"),
-                                  collection = attr(asset_names, "collection_name"),
-                                  query_function = attr(asset_names, "query_function"),
-                                  sign_function = attr(asset_names, "sign_function"),
-                                  rescale_bands = FALSE,
-                                  item_filter_function = NULL,
-                                  mask_band = attr(asset_names, "mask_band"),
-                                  mask_function = attr(asset_names, "mask_function"),
-                                  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                                  composite_function = "median",
-                                  limit = 999,
-                                  gdalwarp_options = c(
-                                    "-r", "bilinear",
-                                    "-multi",
-                                    "-overwrite",
-                                    "-co", "COMPRESS=DEFLATE",
-                                    "-co", "PREDICTOR=2",
-                                    "-co", "NUM_THREADS=ALL_CPUS"
-                                  ),
-                                  gdal_config_options = c(
-                                    VSI_CACHE = "TRUE",
-                                    GDAL_CACHEMAX = "30%",
-                                    VSI_CACHE_SIZE = "10000000",
-                                    GDAL_HTTP_MULTIPLEX = "YES",
-                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                    GDAL_HTTP_VERSION = "2",
-                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                    GDAL_NUM_THREADS = "ALL_CPUS"
-                                  )) {
-  args <- mget(names(formals()))
-  args$`...` <- NULL
-  args <- c(args, rlang::list2(...))
-  do.call(get_stac_data, args)
-}
-
-#' @rdname get_stac_data
-#' @export
-get_landsat_imagery <- function(aoi,
-                                start_date,
-                                end_date,
-                                ...,
-                                platforms = c("landsat-9", "landsat-8"),
-                                pixel_x_size = 30,
-                                pixel_y_size = 30,
-                                asset_names = landsat_band_mapping$planetary_computer_v1,
-                                stac_source = attr(asset_names, "stac_source"),
-                                collection = attr(asset_names, "collection_name"),
-                                query_function = attr(asset_names, "query_function"),
-                                sign_function = attr(asset_names, "sign_function"),
-                                rescale_bands = TRUE,
-                                item_filter_function = landsat_platform_filter,
-                                mask_band = attr(asset_names, "mask_band"),
-                                mask_function = attr(asset_names, "mask_function"),
-                                output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                                composite_function = "median",
-                                limit = 999,
-                                gdalwarp_options = c(
-                                  "-r", "bilinear",
-                                  "-multi",
-                                  "-overwrite",
-                                  "-co", "COMPRESS=DEFLATE",
-                                  "-co", "PREDICTOR=2",
-                                  "-co", "NUM_THREADS=ALL_CPUS"
-                                ),
-                                gdal_config_options = c(
-                                  VSI_CACHE = "TRUE",
-                                  GDAL_CACHEMAX = "30%",
-                                  VSI_CACHE_SIZE = "10000000",
-                                  GDAL_HTTP_MULTIPLEX = "YES",
-                                  GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                  GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                  GDAL_HTTP_VERSION = "2",
-                                  GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                  GDAL_NUM_THREADS = "ALL_CPUS"
-                                )) {
-  args <- mget(names(formals()))
-  args$`...` <- NULL
-  args <- c(args, rlang::list2(...))
-  do.call(get_stac_data, args)
-}
-
-#' @rdname get_stac_data
-#' @export
-get_dem <- function(aoi,
-                    ...,
-                    start_date = NULL,
-                    end_date = NULL,
-                    pixel_x_size = 30,
-                    pixel_y_size = 30,
-                    asset_names = dem_band_mapping$planetary_computer_v1$`cop-dem-glo-30`,
-                    stac_source = attr(asset_names, "stac_source"),
-                    collection = attr(asset_names, "collection_name"),
-                    query_function = attr(asset_names, "query_function"),
-                    sign_function = attr(asset_names, "sign_function"),
-                    rescale_bands = FALSE,
-                    item_filter_function = NULL,
-                    mask_band = NULL,
-                    mask_function = NULL,
-                    output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-                    composite_function = "max",
-                    limit = 999,
-                    gdalwarp_options = c(
-                      "-r", "bilinear",
-                      "-multi",
-                      "-overwrite",
-                      "-co", "COMPRESS=DEFLATE",
-                      "-co", "PREDICTOR=2",
-                      "-co", "NUM_THREADS=ALL_CPUS"
-                    ),
-                    gdal_config_options = c(
-                      VSI_CACHE = "TRUE",
-                      GDAL_CACHEMAX = "30%",
-                      VSI_CACHE_SIZE = "10000000",
-                      GDAL_HTTP_MULTIPLEX = "YES",
-                      GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                      GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                      GDAL_HTTP_VERSION = "2",
-                      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                      GDAL_NUM_THREADS = "ALL_CPUS"
-                    )) {
-  args <- mget(names(formals()))
-  args$`...` <- NULL
-  args <- c(args, rlang::list2(...))
-  do.call(get_stac_data, args)
-}
-
-download_assets <- function(urls,
-                            destinations,
-                            gdalwarp_options,
-                            gdal_config_options,
-                            progressor) {
-  if (length(urls) != length(destinations)) {
-    rlang::abort("`urls` and `destinations` must be the same length.")
-  }
-
-  future.apply::future_mapply(
-    function(url, destination) {
-      progressor("Downloading assets")
-      sf::gdal_utils(
-        "warp",
-        paste0("/vsicurl/", url),
-        destination,
-        options = gdalwarp_options,
-        quiet = TRUE,
-        config_options = gdal_config_options
-      )
-    },
-    url = urls,
-    destination = destinations,
-    future.seed = TRUE
-  )
-
-  destinations
 }
 
 rescale_band <- function(composited_bands, scale_strings, p) {
