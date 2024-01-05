@@ -180,7 +180,9 @@ get_stac_data(
   terra::plot()
 ```
 
-By default, this merging does not interpolate between overlapping pixels, and instead simply uses the value from whichever pixel it processed last. That’s fine here, where our tiles shouldn’t overlap (and pixel values should be identical if they do), but probably isn't ideal if you want to combine images from multiple time periods into a single composite.
+If we wanted, we could parallelize these downloads using `future::plan()`, and set up a progress bar using `progressr::handlers()`. We won't use these functions in this vignette, but they can be extremely useful for speeding up and monitoring larger downloads.
+
+By default, the merging done by `get_stac_data()` does not interpolate between overlapping pixels, and instead simply uses the value from whichever pixel it processed last. That’s fine here, where our tiles shouldn’t overlap (and pixel values should be identical if they do), but probably isn't ideal if you want to combine images from multiple time periods into a single composite.
 
 For instance, if we want to download a composite of all the available Landsat images over Ashe county from a given month, we'd probably want to calculate the median value of each pixel, instead of simply taking the last value from each. We could do that by adding `composite_function = "median"` to our `get_stac_data()` call.
 
