@@ -9,6 +9,9 @@ Authors@R: c(
   )
 Description: Tools for downloading spatial data from 'spatiotemporal' asset 
     catalogs ('STAC') and computing standard spectral indices from raster data.
+    Methods focus on interoperability with the broader spatial ecosystem; 
+    function arguments and outputs use classes from 'sf' and 'terra', and data
+    downloading functions support complex 'CQL2' queries using 'rstac'.
 License: Apache License (>= 2)
 Depends: 
     R (>= 4.0)

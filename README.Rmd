@@ -19,7 +19,6 @@ library(tibble)
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
-[![CRAN status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0/)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -34,7 +33,25 @@ The goal of rsi is to address several **r**epeated **s**patial **i**nfelicities,
 
 ## Installation
 
-You can install the development version of rsi from [GitHub](https://github.com/) with:
+You can install rsi via:
+
+``` r
+install.packages("rsi")
+```
+
+You can install the development version of rsi from [GitHub](https://github.com/Permian-Global-Research/rsi) with:
+
+``` r
+install.packages(
+  'rsi', 
+  repos = c(
+    'https://mikemahoney218.r-universe.dev', 
+    'https://cloud.r-project.org'
+  )
+)
+```
+
+Or, if you use [pak](https://pak.r-lib.org/):
 
 ``` r
 # install.packages("pak")
@@ -69,8 +86,6 @@ landsat_image <- get_stac_data(
   asset_names = c("red", "blue", "green"),
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
-  query_function = query_planetary_computer,
-  sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
   output_filename = tempfile(fileext = ".tif"),
