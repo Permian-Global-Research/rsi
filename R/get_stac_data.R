@@ -242,7 +242,7 @@ get_stac_data <- function(aoi,
     gdalwarp_options = character()
   )
 
-  if (is.null(sign_function) && stac_source == "https://planetarycomputer.microsoft.com/api/stac/v1") {
+  if (is.null(sign_function) && is_pc(stac_source)) {
     sign_function <- sign_planetary_computer
   }
 
@@ -961,4 +961,8 @@ figure_out_progress_length <- function(items_urls, mask_band, composite_function
     length_progress <- length_progress + (length(scale_strings) * composite_multiplier)
   }
   length_progress
+}
+
+is_pc <- function(url) {
+  grepl("planetarycomputer.microsoft.com/api/stac/v1", url)
 }
