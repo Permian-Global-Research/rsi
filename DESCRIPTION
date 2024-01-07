@@ -1,7 +1,7 @@
 Package: rsi
 Title: Utilities for Retrieving Satellite Imagery, Calculating Spectral
     Indices, and Wrangling the Outputs
-Version: 0.0.0.9001
+Version: 0.1.0
 Authors@R: c(
     person("Michael", "Mahoney", , "mike.mahoney.218@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-304X")),
@@ -9,6 +9,9 @@ Authors@R: c(
   )
 Description: Tools for downloading spatial data from 'spatiotemporal' asset 
     catalogs ('STAC') and computing standard spectral indices from raster data.
+    Methods focus on interoperability with the broader spatial ecosystem; 
+    function arguments and outputs use classes from 'sf' and 'terra', and data
+    downloading functions support complex 'CQL2' queries using 'rstac'.
 License: Apache License (>= 2)
 Depends: 
     R (>= 4.0)

@@ -8,8 +8,6 @@
 [![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 [![License: Apache
 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0/)
 [![Lifecycle:
@@ -38,8 +36,26 @@ provides:
 
 ## Installation
 
+You can install rsi via:
+
+``` r
+install.packages("rsi")
+```
+
 You can install the development version of rsi from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/Permian-Global-Research/rsi) with:
+
+``` r
+install.packages(
+  'rsi', 
+  repos = c(
+    'https://mikemahoney218.r-universe.dev', 
+    'https://cloud.r-project.org'
+  )
+)
+```
+
+Or, if you use [pak](https://pak.r-lib.org/):
 
 ``` r
 # install.packages("pak")
@@ -102,8 +118,6 @@ landsat_image <- get_stac_data(
   asset_names = c("red", "blue", "green"),
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
-  query_function = query_planetary_computer,
-  sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
   output_filename = tempfile(fileext = ".tif"),
@@ -163,6 +177,7 @@ indices <- calculate_indices(
   available_indices,
   output_filename = tempfile(fileext = ".tif")
 )
+#> |---------|---------|---------|---------|=========================================                                          
 
 # Plot the first handful of spatial indices
 terra::plot(terra::rast(indices))

@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for downloading spatial data from 'spatiotemporal' asset catalogs ('STAC') and computing standard spectral indices from raster data.
+Tools for downloading spatial data from 'spatiotemporal' asset catalogs ('STAC') and computing standard spectral indices from raster data. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from 'sf' and 'terra', and data downloading functions support complex 'CQL2' queries using 'rstac'.
 }
 \seealso{
 Useful links:
