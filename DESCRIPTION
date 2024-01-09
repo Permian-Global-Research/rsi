@@ -1,16 +1,17 @@
 Package: rsi
-Title: Utilities for Retrieving Satellite Imagery, Calculating Spectral
-    Indices, and Wrangling the Outputs
+Title: Efficiently Retrieve and Process Satellite Imagery
 Version: 0.1.0
 Authors@R: c(
     person("Michael", "Mahoney", , "mike.mahoney.218@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-304X")),
     person("Permian Global", role = c("cph", "fnd"))
   )
-Description: Tools for downloading spatial data from 'spatiotemporal' asset 
-    catalogs ('STAC') and computing standard spectral indices from raster data.
+Description: Downloads spatial data from spatiotemporal asset catalogs 
+    ('STAC'), computes standard spectral indices from the Awesome Spectral 
+    Indices project <Montero et al. (2023) doi:10.1038/s41597-023-02096-0> 
+    against raster data, and glues the outputs together into predictor bricks. 
     Methods focus on interoperability with the broader spatial ecosystem; 
-    function arguments and outputs use classes from 'sf' and 'terra', and data
+    function arguments and outputs use classes from 'sf' and 'terra', and data 
     downloading functions support complex 'CQL2' queries using 'rstac'.
 License: Apache License (>= 2)
 Depends: 
