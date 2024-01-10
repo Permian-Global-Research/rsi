@@ -5,10 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Tools for downloading spatial data from spatiotemporal asset 
-    catalogs (STAC) and computing standard spectral indices from raster data.">
-<title>Utilities for Retrieving Satellite Imagery, Calculating Spectral
-    Indices, and Wrangling the Outputs • rsi</title>
+<meta name="description" content="Downloads spatial data from spatiotemporal asset catalogs 
+    (STAC), computes standard spectral indices from the Awesome Spectral 
+    Indices project (Montero et al. (2023) &lt;doi:10.1038/s41597-023-02096-0&gt;) 
+    against raster data, and glues the outputs together into predictor bricks. 
+    Methods focus on interoperability with the broader spatial ecosystem; 
+    function arguments and outputs use classes from sf and terra, and data 
+    downloading functions support complex CQL2 queries using rstac.">
+<title>Efficiently Retrieve and Process Satellite Imagery • rsi</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -20,10 +24,14 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Libre_Franklin-0.4.8/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Utilities for Retrieving Satellite Imagery, Calculating Spectral
-    Indices, and Wrangling the Outputs">
-<meta property="og:description" content="Tools for downloading spatial data from spatiotemporal asset 
-    catalogs (STAC) and computing standard spectral indices from raster data.">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Efficiently Retrieve and Process Satellite Imagery">
+<meta property="og:description" content="Downloads spatial data from spatiotemporal asset catalogs 
+    (STAC), computes standard spectral indices from the Awesome Spectral 
+    Indices project (Montero et al. (2023) &lt;doi:10.1038/s41597-023-02096-0&gt;) 
+    against raster data, and glues the outputs together into predictor bricks. 
+    Methods focus on interoperability with the broader spatial ecosystem; 
+    function arguments and outputs use classes from sf and terra, and data 
+    downloading functions support complex CQL2 queries using rstac.">
 <meta property="og:image" content="https://permian-global-research.github.io/rsi/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -38,7 +46,7 @@
     
     <a class="navbar-brand me-2" href="index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,8 +107,20 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of rsi from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>You can install rsi via:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rsi"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version of rsi from <a href="https://github.com/Permian-Global-Research/rsi" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
+<span>  <span class="st">'rsi'</span>, </span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">'https://mikemahoney218.r-universe.dev'</span>, </span>
+<span>    <span class="st">'https://cloud.r-project.org'</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Or, if you use <a href="https://pak.r-lib.org/" class="external-link">pak</a>:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Permian-Global-Research/rsi"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -108,7 +128,7 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>The <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> function provides a tibble with data from the <a href="https://github.com/awesome-spectral-indices/awesome-spectral-indices" class="external-link">Awesome Spectral Indices project</a>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Permian-Global-Research/rsi" class="external-link">rsi</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -129,7 +149,7 @@
 <span><span class="co">#&gt; # ℹ 3 more variables: platforms &lt;list&gt;, reference &lt;chr&gt;, short_name &lt;chr&gt;</span></span></code></pre></div>
 <p>The first time <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> is called it will download the most up-to-date version of the spectral indices JSON file, and then write the resulting table to a cache file in <code>tools::R_user_dir("rsi")</code>. After that, <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> will only download a new file if the cache is older than 1 day, or if the <code>update_cache</code> argument is <code>TRUE</code>, in order to provide the most up-to-date data as quickly as possible. If offline, <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> will always fall back to the cache or, if no cache file exists, a (possibly out-of-date) data file included in rsi itself.</p>
 <p>Separately, the <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> function provides a generic interface for downloading composite images from any accessible STAC catalog. For instance, we could download a cloud-masked composite of Landsat’s visible layers using <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> and a few helper functions from rsi:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
@@ -143,8 +163,6 @@
 <span>  asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span><span class="op">)</span>,</span>
 <span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1/"</span>,</span>
 <span>  collection <span class="op">=</span> <span class="st">"landsat-c2-l2"</span>,</span>
-<span>  query_function <span class="op">=</span> <span class="va">query_planetary_computer</span>,</span>
-<span>  sign_function <span class="op">=</span> <span class="va">sign_planetary_computer</span>,</span>
 <span>  mask_band <span class="op">=</span> <span class="st">"qa_pixel"</span>,</span>
 <span>  mask_function <span class="op">=</span> <span class="va">landsat_mask_function</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
@@ -155,7 +173,7 @@
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
 <p>For these common use cases, however, rsi also provides helper functions which provide most of these arguments for you. For instance, that <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> call could be as simple as:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
 <span>  <span class="va">aoi</span>,</span>
 <span>  start_date <span class="op">=</span> <span class="st">"2022-06-01"</span>,</span>
@@ -165,7 +183,7 @@
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
 <p>By default, these functions download data from Microsoft’s Planetary Computer API, using a number of configuration options set in <code>rsi_band_mapping</code> objects provided by the package. You can see these default configuration options by printing the band mapping objects, and can adjust them through arguments to any <code>get_*</code> function in the package.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
 <span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function sign_function class</span></span>
@@ -173,7 +191,7 @@
 <span><span class="co">#&gt; coastal    blue   green     red   nir08  swir16  swir22    lwir  lwir11 </span></span>
 <span><span class="co">#&gt;     "A"     "B"     "G"     "R"     "N"    "S1"    "S2"     "T"    "T1"</span></span></code></pre></div>
 <p>We can put these pieces together and calculate as many spectral indices as we can based on our downloaded Landsat imagery. The <code><a href="reference/calculate_indices.html">calculate_indices()</a></code> function, well, calculates indices, using subsets of our <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> data frame:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">available_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filters.html">filter_bands</a></span><span class="op">(</span></span>
 <span>  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -183,12 +201,13 @@
 <span>  <span class="va">available_indices</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; |---------|---------|---------|---------|=========================================                                          </span></span>
 <span></span>
 <span><span class="co"># Plot the first handful of spatial indices</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">indices</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>And last but not least, rsi includes a utility for efficiently combining rasters containing different data about the same location into a <a href="https://gdal.org/drivers/raster/vrt.html" class="external-link">VRT</a>, which allows programs like GDAL to treat these separate data sources as a single file. For instance, we can combine our Landsat imagery with the derived indices:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raster_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stack_rasters.html">stack_rasters</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">landsat_image</span>, <span class="va">indices</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".vrt"</span><span class="op">)</span></span>
@@ -250,17 +269,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main" class="external-link"><img src="https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://CRAN.R-project.org/package=rsi" class="external-link"><img src="https://www.r-pkg.org/badges/version/rsi" alt="CRAN status"></a></li>
-<li><a href="https://opensource.org/license/apache-2-0/" class="external-link"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
-<li><a href="https://www.repostatus.org/#active" class="external-link"><img src="https://www.repostatus.org/badges/latest/active.svg" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed."></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>
