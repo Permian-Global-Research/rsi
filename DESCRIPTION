@@ -38,7 +38,7 @@ Config/testthat/parallel: true
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 URL: https://github.com/Permian-Global-Research/rsi, https://permian-global-research.github.io/rsi/
 BugReports: https://github.com/Permian-Global-Research/rsi/issues
 VignetteBuilder: knitr
