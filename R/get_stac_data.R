@@ -274,6 +274,13 @@ get_stac_data <- function(aoi,
     items <- item_filter_function(items, ...)
   }
 
+  if (!length(items$features)) {
+    rlang::abort(
+      "No items were found for this combination of collection, AOI, date range, and item filter function.",
+      class = "rsi_no_items_found"
+    )
+  }
+
   if (missing(asset_names)) asset_names <- NULL
   if (is.null(asset_names)) asset_names <- rstac::items_assets(items)
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
