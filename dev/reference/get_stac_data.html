@@ -354,6 +354,21 @@ uses <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">la
 to iterate through downloading each asset. If there are more images than
 assets, this function uses <code><a href="https://future.apply.futureverse.org/reference/future_lapply.html" class="external-link">future.apply::future_lapply()</a></code> to iterate through
 images.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="downloading-from-planetary-computer">Downloading from Planetary Computer<a class="anchor" aria-label="anchor" href="#downloading-from-planetary-computer"></a></h2>
+    
+
+
+<p>Certain data sets in Planetary Computer require
+<a href="https://planetarycomputer.microsoft.com/docs/concepts/sas/" class="external-link">providing a subscription key</a>.
+Even for non-protected data sets, providing a subscription key grants you
+higher rate limits and faster downloads. As such, it's a good idea to
+<a href="https://planetarycomputer.microsoft.com/account/request" class="external-link">request a Planetary Computer account</a>,
+then <a href="https://planetarycomputer.developer.azure-api.net/" class="external-link">generate a subscription key</a>.
+If you set the <code>rsi_pc_key</code> environment variable to your key (either primary
+or secondary; there is no difference), rsi will automatically use
+this key to sign all requests against Planetary Computer.</p>
 <p>There are currently some challenges with certain Landsat images in Planetary
 Computer; please see
 https://github.com/microsoft/PlanetaryComputer/discussions/101
