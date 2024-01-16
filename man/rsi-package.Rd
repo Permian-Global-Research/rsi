@@ -4,11 +4,11 @@
 \name{rsi-package}
 \alias{rsi}
 \alias{rsi-package}
-\title{rsi: Utilities for Retrieving Satellite Imagery, Calculating Spectral Indices, and Wrangling the Outputs}
+\title{rsi: Efficiently Retrieve and Process Satellite Imagery}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools for downloading spatial data from 'spatiotemporal' asset catalogs ('STAC') and computing standard spectral indices from raster data. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from 'sf' and 'terra', and data downloading functions support complex 'CQL2' queries using 'rstac'.
+Downloads spatial data from spatiotemporal asset catalogs ('STAC'), computes standard spectral indices from the Awesome Spectral Indices project (Montero et al. (2023) \doi{10.1038/s41597-023-02096-0}) against raster data, and glues the outputs together into predictor bricks. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from 'sf' and 'terra', and data downloading functions support complex 'CQL2' queries using 'rstac'.
 }
 \seealso{
 Useful links:

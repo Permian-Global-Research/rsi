@@ -29,7 +29,7 @@
 #' If `resolution` or `extent` are provided, they override the values from the
 #' reference raster.
 #' @param resampling_method The method to use when resampling to different
-#' resolutions.
+#' resolutions in the VRT.
 #' @param band_names Either a character vector of band names, or a function that
 #' when given a character vector of band names, returns a character vector of
 #' the same length containing new band names.
@@ -61,7 +61,6 @@ stack_rasters <- function(rasters,
                           resampling_method = "bilinear",
                           band_names,
                           gdalwarp_options = c(
-                            "-r", "bilinear",
                             "-multi",
                             "-overwrite",
                             "-co", "COMPRESS=DEFLATE",

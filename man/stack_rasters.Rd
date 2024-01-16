@@ -13,8 +13,8 @@ stack_rasters(
   reference_raster = 1,
   resampling_method = "bilinear",
   band_names,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdalwarp_options = c("-multi", "-overwrite", "-co", "COMPRESS=DEFLATE", "-co",
+    "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
   gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
     "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
     GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
@@ -49,7 +49,7 @@ If \code{resolution} or \code{extent} are provided, they override the values fro
 reference raster.}
 
 \item{resampling_method}{The method to use when resampling to different
-resolutions.}
+resolutions in the VRT.}
 
 \item{band_names}{Either a character vector of band names, or a function that
 when given a character vector of band names, returns a character vector of
