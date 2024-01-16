@@ -221,6 +221,9 @@ test_that("get_*_data works with mapply() (#17)", {
 })
 
 test_that("proper error if no items are found", {
+  skip_if_offline()
+  skip_on_cran()
+
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
@@ -237,4 +240,29 @@ test_that("proper error if no items are found", {
     ),
     class = "rsi_no_items_found"
   )
+})
+
+test_that("no-composite paths work on Windows #29, #32", {
+  skip_if_offline()
+  skip_on_cran()
+  skip_on_os("mac")
+  skip_on_os("linux")
+
+  aoi <- sf::st_buffer(
+    sf::st_transform(
+      sf::st_sfc(sf::st_point(c(-74.912131, 44.080410)), crs = 4326),
+      3857
+    ),
+    1000
+  )
+
+  expect_no_error(
+    get_landsat_imagery(
+      aoi = aoi,
+      start_date = "2022-06-01",
+      end_date = "2022-08-01",
+      composite_function = NULL
+    )
+  )
+
 })

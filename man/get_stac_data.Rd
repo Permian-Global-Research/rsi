@@ -251,6 +251,20 @@ uses \code{\link[=lapply]{lapply()}} to iterate through images and \code{\link[f
 to iterate through downloading each asset. If there are more images than
 assets, this function uses \code{\link[future.apply:future_lapply]{future.apply::future_lapply()}} to iterate through
 images.
+}
+
+\section{Downloading from Planetary Computer}{
+
+
+Certain data sets in Planetary Computer require
+\href{https://planetarycomputer.microsoft.com/docs/concepts/sas/}{providing a subscription key}.
+Even for non-protected data sets, providing a subscription key grants you
+higher rate limits and faster downloads. As such, it's a good idea to
+\href{https://planetarycomputer.microsoft.com/account/request}{request a Planetary Computer account},
+then \href{https://planetarycomputer.developer.azure-api.net/}{generate a subscription key}.
+If you set the \code{rsi_pc_key} environment variable to your key (either primary
+or secondary; there is no difference), rsi will automatically use
+this key to sign all requests against Planetary Computer.
 
 There are currently some challenges with certain Landsat images in Planetary
 Computer; please see

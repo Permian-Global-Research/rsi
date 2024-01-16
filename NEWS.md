@@ -1,5 +1,10 @@
 # rsi (development version)
 
+* `get_stac_data()` now removes colons (`:`) from the file names generated when
+  `composite_function = NULL`. This means that datetimes are now generally 
+  formatted as YYYY-MM-DDTHHMMSSZ, which is slightly dissatisfying but is a 
+  valid path on Windows systems (#29, #32).
+
 * `stacK_rasters()` no longer includes `"-r", "bilinear"` in its default value
   for `gdalwarp_options` (#27, #30). 
 
