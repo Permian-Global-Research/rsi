@@ -2,6 +2,7 @@ test_that("Index calculation is stable", {
   skip_if_not_installed("terra")
   # covr can't instrument the local block properly
   skip_if(nzchar(Sys.getenv("is_covr")))
+  skip_on_cran()
   index_out <- tempfile(fileext = ".tif")
   expect_no_error(
     out <- calculate_indices(
@@ -21,6 +22,7 @@ test_that("Index calculation is stable", {
 })
 
 test_that("Index calculations fail when missing a column", {
+  skip_on_cran()
   index_out <- tempfile(fileext = ".tif")
   expect_error(
     calculate_indices(
@@ -33,6 +35,7 @@ test_that("Index calculations fail when missing a column", {
 })
 
 test_that("Index calculations fail when missing bands", {
+  skip_on_cran()
   index_out <- tempfile(fileext = ".tif")
   expect_error(
     calculate_indices(
@@ -45,6 +48,7 @@ test_that("Index calculations fail when missing bands", {
 })
 
 test_that("Index calculations stop obvious security issues", {
+  skip_on_cran()
   example_indices <- filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
   example_indices$formula <- 'system("echo something bad")'
   expect_error(calculate_indices(
