@@ -219,3 +219,22 @@ test_that("get_*_data works with mapply() (#17)", {
     )
   )
 })
+
+test_that("proper error if no items are found", {
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
+
+  expect_error(
+    get_stac_data(
+      aoi,
+      start_date = "1970-01-01",
+      end_date = "1970-12-31",
+      asset_names = "lcpri",
+      stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+      collection = "usgs-lcmap-conus-v13",
+      output_filename = tempfile(fileext = ".tif"),
+    ),
+    class = "rsi_no_items_found"
+  )
+})
