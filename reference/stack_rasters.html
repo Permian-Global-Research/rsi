@@ -22,7 +22,7 @@ this file may take a long time and a large amount of disk space."><meta property
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,8 +87,8 @@ this file may take a long time and a large amount of disk space.</p>
 <span>  reference_raster <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  resampling_method <span class="op">=</span> <span class="st">"bilinear"</span>,</span>
 <span>  <span class="va">band_names</span>,</span>
-<span>  gdalwarp_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-r"</span>, <span class="st">"bilinear"</span>, <span class="st">"-multi"</span>, <span class="st">"-overwrite"</span>, <span class="st">"-co"</span>,</span>
-<span>    <span class="st">"COMPRESS=DEFLATE"</span>, <span class="st">"-co"</span>, <span class="st">"PREDICTOR=2"</span>, <span class="st">"-co"</span>, <span class="st">"NUM_THREADS=ALL_CPUS"</span><span class="op">)</span>,</span>
+<span>  gdalwarp_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-multi"</span>, <span class="st">"-overwrite"</span>, <span class="st">"-co"</span>, <span class="st">"COMPRESS=DEFLATE"</span>, <span class="st">"-co"</span>,</span>
+<span>    <span class="st">"PREDICTOR=2"</span>, <span class="st">"-co"</span>, <span class="st">"NUM_THREADS=ALL_CPUS"</span><span class="op">)</span>,</span>
 <span>  gdal_config_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>VSI_CACHE <span class="op">=</span> <span class="st">"TRUE"</span>, GDAL_CACHEMAX <span class="op">=</span> <span class="st">"30%"</span>, VSI_CACHE_SIZE <span class="op">=</span></span>
 <span>    <span class="st">"10000000"</span>, GDAL_HTTP_MULTIPLEX <span class="op">=</span> <span class="st">"YES"</span>, GDAL_INGESTED_BYTES_AT_OPEN <span class="op">=</span> <span class="st">"32000"</span>,</span>
 <span>    GDAL_DISABLE_READDIR_ON_OPEN <span class="op">=</span> <span class="st">"EMPTY_DIR"</span>, GDAL_HTTP_VERSION <span class="op">=</span> <span class="st">"2"</span>,</span>
@@ -138,7 +138,7 @@ reference raster.</p></dd>
 
 <dt>resampling_method</dt>
 <dd><p>The method to use when resampling to different
-resolutions.</p></dd>
+resolutions in the VRT.</p></dd>
 
 
 <dt>band_names</dt>
@@ -175,7 +175,7 @@ if <code>output_filename</code> is a VRT.</p></dd>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".vrt"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp6GvvnZ/file1bd6178a85d4.vrt"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpnpqggc/file1b2cc6e652e.vrt"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
