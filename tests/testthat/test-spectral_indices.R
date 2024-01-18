@@ -47,6 +47,7 @@ test_that("spectral_indices_url() respects environment variables", {
 })
 
 test_that("no cache", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   if (file.exists(indices_path)) file.remove(indices_path)
   expect_no_warning(spectral_indices())
@@ -71,59 +72,70 @@ test_that("no cache, download and update false", {
 })
 
 test_that("no cache, update true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   if (file.exists(indices_path)) file.remove(indices_path)
   expect_no_warning(spectral_indices(update_cache = TRUE))
 })
 
 test_that("no cache, download true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   if (file.exists(indices_path)) file.remove(indices_path)
   expect_no_warning(spectral_indices(download_indices = TRUE))
 })
 
 test_that("no cache, download and update true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   if (file.exists(indices_path)) file.remove(indices_path)
   expect_no_warning(spectral_indices(download_indices = TRUE, update_cache = TRUE))
 })
 
 test_that("new cache", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices())
 })
 
 test_that("new cache, update false", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(update_cache = FALSE))
 })
 
 test_that("new cache, download false", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(download_indices = FALSE))
 })
 
 test_that("new cache, download and update false", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(download_indices = FALSE, update_cache = FALSE))
 })
 
 test_that("new cache, update true", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(update_cache = TRUE))
 })
 
 test_that("new cache, download true", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(download_indices = TRUE))
 })
 
 test_that("new cache, download and update true", {
+  skip_if_offline()
   invisible(spectral_indices(update_cache = TRUE))
   expect_no_warning(spectral_indices(download_indices = TRUE, update_cache = TRUE))
 })
 
 test_that("old cache", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -131,6 +143,7 @@ test_that("old cache", {
 })
 
 test_that("old cache, update false", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -138,6 +151,7 @@ test_that("old cache, update false", {
 })
 
 test_that("old cache, download false", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -145,6 +159,7 @@ test_that("old cache, download false", {
 })
 
 test_that("old cache, download and update false", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -152,6 +167,7 @@ test_that("old cache, download and update false", {
 })
 
 test_that("old cache, update true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -159,6 +175,7 @@ test_that("old cache, update true", {
 })
 
 test_that("old cache, download true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
@@ -166,6 +183,7 @@ test_that("old cache, download true", {
 })
 
 test_that("old cache, download and update true", {
+  skip_if_offline()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
   invisible(spectral_indices(update_cache = TRUE))
   Sys.setFileTime(indices_path, "1970-01-01")
