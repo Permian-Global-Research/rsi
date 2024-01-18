@@ -1,3 +1,5 @@
+# rsi (development version)
+
 # rsi 0.1.1
 
 * `get_stac_data()` now removes colons (`:`) from the file names generated when
