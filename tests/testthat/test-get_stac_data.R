@@ -2,7 +2,7 @@ test_that("get_landsat_imagery() is stable", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_landsat_imagery(
@@ -25,7 +25,7 @@ test_that("get_sentinel1_imagery() is stable", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_sentinel1_imagery(
@@ -48,7 +48,7 @@ test_that("get_sentinel2_imagery() is stable", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_sentinel2_imagery(
@@ -72,7 +72,7 @@ test_that("get_dem() is stable", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_dem(
@@ -93,7 +93,7 @@ test_that("non-default mappings work", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_sentinel2_imagery(
@@ -118,7 +118,7 @@ test_that("can download RTC products", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_sentinel1_imagery(
@@ -142,7 +142,7 @@ test_that("hidden arguments work", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_landsat_imagery(
@@ -167,7 +167,7 @@ test_that("simple merge method works", {
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_no_error(
     out <- get_stac_data(
@@ -189,7 +189,7 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
   skip_on_cran()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
   expect_snapshot(
     x <- get_landsat_imagery(
@@ -207,7 +207,7 @@ test_that("get_*_data works with mapply() (#17)", {
   skip_on_cran()
   san_antonio = sf::st_point(c(-98.491142, 29.424349))
   san_antonio = sf::st_sfc(san_antonio, crs = "EPSG:4326")
-  san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 1000)
+  san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 100)
 
   expect_no_error(
     mapply(
@@ -226,12 +226,12 @@ test_that("proper error if no items are found", {
 
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
-  aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
 
   expect_error(
     get_stac_data(
       aoi,
-      start_date = "1970-01-01",
+      start_date = "1970-01-01", # pre-LCMAP dates
       end_date = "1970-12-31",
       asset_names = "lcpri",
       stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
@@ -253,7 +253,7 @@ test_that("no-composite paths work on Windows #29, #32", {
       sf::st_sfc(sf::st_point(c(-74.912131, 44.080410)), crs = 4326),
       3857
     ),
-    1000
+    100
   )
 
   expect_no_error(
@@ -264,5 +264,31 @@ test_that("no-composite paths work on Windows #29, #32", {
       composite_function = NULL
     )
   )
+})
 
+test_that("no-composites return the same data", {
+  skip_if_offline()
+  skip_on_cran()
+
+  aoi <- sf::st_buffer(
+    sf::st_transform(
+      sf::st_sfc(sf::st_point(c(-74.912131, 44.080410)), crs = 4326),
+      3857
+    ),
+    100
+  )
+
+  expect_contains(
+    names(
+      terra::rast(
+        get_landsat_imagery(
+          aoi = aoi,
+          start_date = "2022-07-01",
+          end_date = "2022-07-05",
+          composite_function = NULL
+        )
+      ),
+      as.vector(landsat_band_mapping$planetary_computer_v1)
+    )
+  )
 })
