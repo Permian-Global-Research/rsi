@@ -25,7 +25,7 @@ get_stac_data(
   mask_band = NULL,
   mask_function = NULL,
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
-  composite_function = c("merge", "median", "mean", "sum", "min", "max", "NULL"),
+  composite_function = c("merge", "median", "mean", "sum", "min", "max"),
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
     "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
