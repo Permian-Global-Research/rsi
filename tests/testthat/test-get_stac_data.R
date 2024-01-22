@@ -289,6 +289,6 @@ test_that("no-composites return the same data", {
         )
       )
     ),
-    as.vector(landsat_band_mapping$planetary_computer_v1)
+    setdiff(rsi::landsat_band_mapping$planetary_computer_v1, "T")
   )
 })
