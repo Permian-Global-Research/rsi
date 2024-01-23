@@ -745,26 +745,70 @@ complex_download <- function(items,
 
   if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_locations, p)
 
+  out <- make_composite_bands(
+    download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
+    composite_function,
+    p
+  )
+
+  if (rescale_bands) lapply(out$final_bands, rescale_band, scale_strings, p)
+  out
+}
+
+
+make_composite_bands <- function(downloaded_bands, composite_function, p) {
+
   if (is.null(composite_function)) {
-    out_vrt <- replicate(nrow(download_locations), tempfile(fileext = ".tif"))
-    final_bands <- apply(download_locations, 1, identity, simplify = FALSE)
-  } else {
-    out_vrt <- tempfile(fileext = ".vrt")
-    final_bands <- list(
-      make_composite_bands(
-        download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
-        composite_function,
-        p
+    return(
+      list(
+        out_vrt = replicate(nrow(downloaded_bands), tempfile(fileext = ".tif")),
+        final_bands = apply(downloaded_bands, 1, identity, simplify = FALSE)
       )
     )
   }
-  if (rescale_bands) lapply(final_bands, rescale_band, scale_strings, p)
+
+  download_dir <- file.path(tempdir(), "composite_dir")
+  if (!dir.exists(download_dir)) dir.create(download_dir)
+
+  out <- vapply(
+    names(downloaded_bands),
+    function(band_name) {
+      p(glue::glue("Compositing {band_name}"))
+      out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
+
+      if (length(downloaded_bands[[band_name]]) == 1) {
+        file.copy(downloaded_bands[[band_name]], out_file)
+      } else if (composite_function == "merge") {
+        do.call(
+          terra::merge,
+          list(
+            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            filename = out_file,
+            overwrite = TRUE
+          )
+        )
+      } else {
+        do.call(
+          terra::mosaic,
+          list(
+            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            fun = composite_function,
+            filename = out_file,
+            overwrite = TRUE
+          )
+        )
+      }
+
+      out_file
+    },
+    character(1)
+  )
+
   list(
-    final_bands = final_bands,
-    out_vrt = out_vrt
+    out_vrt = tempfile(fileext = ".vrt"),
+    final_bands = list(out)
   )
 }
-
 calc_scale_strings <- function(download_locations, items) {
   # Assign scale, offset attributes if they exist
   scales <- vapply(
@@ -887,45 +931,6 @@ extract_urls <- function(asset_names, items) {
   items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
 
   items_urls
-}
-
-make_composite_bands <- function(downloaded_bands, composite_function, p) {
-  download_dir <- file.path(tempdir(), "composite_dir")
-  if (!dir.exists(download_dir)) dir.create(download_dir)
-
-  vapply(
-    names(downloaded_bands),
-    function(band_name) {
-      p(glue::glue("Compositing {band_name}"))
-      out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
-
-      if (length(downloaded_bands[[band_name]]) == 1) {
-        file.copy(downloaded_bands[[band_name]], out_file)
-      } else if (composite_function == "merge") {
-        do.call(
-          terra::merge,
-          list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
-            filename = out_file,
-            overwrite = TRUE
-          )
-        )
-      } else {
-        do.call(
-          terra::mosaic,
-          list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
-            fun = composite_function,
-            filename = out_file,
-            overwrite = TRUE
-          )
-        )
-      }
-
-      out_file
-    },
-    character(1)
-  )
 }
 
 maybe_sign_items <- function(items, sign_function) {

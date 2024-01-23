@@ -1,5 +1,9 @@
 # rsi (development version)
 
+* `get_stac_data()` no longer includes `mask_band` in its outputs when 
+  `composite_function = NULL`. Add this band to `asset_names` to include it in 
+  the download.
+
 # rsi 0.1.1
 
 * `get_stac_data()` now removes colons (`:`) from the file names generated when
