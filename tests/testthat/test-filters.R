@@ -8,7 +8,8 @@ test_that("filter_platforms() works", {
   test_plats <- c("Landsat-OLI", "Sentinel-2")
 
   expect_no_error(
-    both_plats <- filter_platforms(idxs, test_plats)
+    # no internet and no cache file == warning
+    both_plats <- suppressWarnings(filter_platforms(idxs, test_plats), classes = "rsi_failed_download")
   )
 
   expect_true(
@@ -18,7 +19,7 @@ test_that("filter_platforms() works", {
   )
 
   expect_no_error(
-    either_plat <- filter_platforms(idxs, test_plats, operand = "any")
+    either_plat <- suppressWarnings(filter_platforms(idxs, test_plats, operand = "any"), classes = "rsi_failed_download")
   )
 
   expect_true(
@@ -38,7 +39,7 @@ test_that("filter_bands() works", {
   test_bands <- c("R", "N")
 
   expect_no_error(
-    both_bands <- filter_bands(idxs, test_bands)
+    both_bands <- suppressWarnings(filter_bands(idxs, test_bands), classes = "rsi_failed_download")
   )
 
   expect_true(
@@ -48,7 +49,7 @@ test_that("filter_bands() works", {
   )
 
   expect_no_error(
-    either_band <- filter_bands(idxs, test_bands, operand = "any")
+    either_band <- suppressWarnings(filter_bands(idxs, test_bands, operand = "any"), classes = "rsi_failed_download")
   )
 
   expect_true(
