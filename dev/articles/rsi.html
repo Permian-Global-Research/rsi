@@ -129,7 +129,7 @@ imagery from September 2023:</p>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpA4AzsC/file2730199fb2b.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpxkV4W2/file27c14feabc36.tif"</span></span></code></pre></div>
 <p>If we wanted to, we could use <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> here to
 specify a parallelization methodology to speed up downloads by using
 multiple threads. We could also use <code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>
@@ -138,8 +138,8 @@ to get a progress bar to report our download status.</p>
 composite of all bands available in Landsat 8 and 9 imagery for our
 timeframe:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <p>Notice that this composite has been cloud-masked (using the QA pixel
 band) and rescaled (using the scale and offset specified in metadata
@@ -150,8 +150,8 @@ instance, we could also grab a DEM for this area from Planetary
 Computer, using the <code><a href="../reference/get_stac_data.html">get_dem()</a></code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">our_dem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_dem</a></span><span class="op">(</span><span class="va">our_aoi</span><span class="op">)</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_dem</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_dem</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Under the hood, both of these functions (and their friends,
 <code><a href="../reference/get_stac_data.html">get_sentinel2_imagery()</a></code> and
@@ -230,14 +230,14 @@ from our images:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">our_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
 <span>  <span class="va">our_imagery</span>,</span>
-<span>  <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  <span class="st">"our_indices.tif"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in x@cpp$writeStop(): GDAL Message 1: our_indices.tif: Metadata</span></span>
 <span><span class="co">#&gt; exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM</span></span>
 <span><span class="co">#&gt; instead.</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_indices</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_indices</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>Note that <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code> is evaluating the formulas
 in the <code>formula</code> column of the spectral indices data frame as
@@ -271,8 +271,8 @@ model fitting and prediction:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".vrt"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">combined_layers</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">combined_layers</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
   </main>
 </div>
