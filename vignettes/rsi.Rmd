@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = rlang::is_installed("curl") && !is.null(curl::nslookup("r-project.org", error = FALSE))
+  eval = rlang::is_installed("curl") && !is.null(curl::nslookup("r-project.org", error = FALSE)) && !(!interactive() && !isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false"))))
 )
 ```
 

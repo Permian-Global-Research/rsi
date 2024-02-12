@@ -1,11 +1,7 @@
 # no cache, update false
 
     Code
-      spectral_indices(update_cache = FALSE)
-    Condition
-      Warning:
-      No cache file present and `download_indices` set to `FALSE`.
-      i Returning (likely outdated) package data instead.
+      suppressWarnings(spectral_indices(update_cache = FALSE))
     Output
       # A tibble: 231 x 9
          application_domain bands     contributor   date_of_addition formula long_name

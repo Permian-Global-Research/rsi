@@ -7,7 +7,7 @@ test_that("Index calculation is stable", {
   expect_no_error(
     out <- calculate_indices(
       system.file("rasters/example_sentinel1.tif", package = "rsi"),
-      filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
+      suppressWarnings(filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)")),
       index_out,
       names_suffix = "sentinel1"
     )
@@ -27,7 +27,7 @@ test_that("Index calculations fail when missing a column", {
   expect_error(
     calculate_indices(
       system.file("rasters/example_sentinel1.tif", package = "rsi"),
-      filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)")["formula"],
+      suppressWarnings(filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)"))["formula"],
       index_out
     ),
     class = "rsi_missing_column"
@@ -40,7 +40,7 @@ test_that("Index calculations fail when missing bands", {
   expect_error(
     calculate_indices(
       system.file("rasters/example_sentinel1.tif", package = "rsi"),
-      filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Landsat-OLI"),
+      suppressWarnings(filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Landsat-OLI")),
       index_out
     ),
     class = "rsi_missing_indices"
@@ -49,7 +49,7 @@ test_that("Index calculations fail when missing bands", {
 
 test_that("Index calculations stop obvious security issues", {
   skip_on_cran()
-  example_indices <- filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
+  example_indices <- suppressWarnings(filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)"))[1, ]
   example_indices$formula <- 'system("echo something bad")'
   expect_error(calculate_indices(
     system.file("rasters/example_sentinel1.tif", package = "rsi"),

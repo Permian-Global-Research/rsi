@@ -1,5 +1,6 @@
 test_that("get_landsat_imagery() is stable", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -23,6 +24,7 @@ test_that("get_landsat_imagery() is stable", {
 
 test_that("get_sentinel1_imagery() is stable", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -46,6 +48,7 @@ test_that("get_sentinel1_imagery() is stable", {
 
 test_that("get_sentinel2_imagery() is stable", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -70,6 +73,7 @@ test_that("get_sentinel2_imagery() is stable", {
 
 test_that("get_dem() is stable", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -91,6 +95,7 @@ test_that("get_dem() is stable", {
 
 test_that("non-default mappings work", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -116,6 +121,7 @@ test_that("non-default mappings work", {
 test_that("can download RTC products", {
   skip_if(Sys.getenv("rsi_pc_key") == "", "Environment variable `rsi_pc_key` not set")
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -140,6 +146,7 @@ test_that("can download RTC products", {
 
 test_that("hidden arguments work", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -165,6 +172,7 @@ test_that("hidden arguments work", {
 
 test_that("simple merge method works", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -187,6 +195,7 @@ test_that("simple merge method works", {
 
 test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `mask_function`", {
   skip_on_cran()
+  skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
@@ -205,6 +214,7 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
 
 test_that("get_*_data works with mapply() (#17)", {
   skip_on_cran()
+  skip_if_offline()
   san_antonio = sf::st_point(c(-98.491142, 29.424349))
   san_antonio = sf::st_sfc(san_antonio, crs = "EPSG:4326")
   san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 100)
