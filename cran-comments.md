@@ -1,5 +1,4 @@
-This is the second CRAN release of rsi. This version addresses failing OpenBLAS
-checks and several other minor issues identified post release.
+This is the third CRAN release of rsi. This version should fix all identified issues with web resources; apologies, I had fixed errors related to R-Devel in the last release and missed that one of the checks also had issues with web resources!
 
 ## R CMD check results
 

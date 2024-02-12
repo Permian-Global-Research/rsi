@@ -177,6 +177,7 @@ indices <- calculate_indices(
   available_indices,
   output_filename = tempfile(fileext = ".tif")
 )
+#> |---------|---------|---------|---------|=========================================                                          
 
 # Plot the first handful of spatial indices
 terra::plot(terra::rast(indices))
