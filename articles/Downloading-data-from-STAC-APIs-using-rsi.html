@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -196,18 +196,18 @@ API, which lists all the collections available from this API:</p>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###STACCollectionList</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (122 item(s)):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (123 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
 <span><span class="co">#&gt;   - 3dep-lidar-dsm</span></span>
 <span><span class="co">#&gt;   - fia</span></span>
+<span><span class="co">#&gt;   - io-lulc-annual-v02</span></span>
 <span><span class="co">#&gt;   - sentinel-1-rtc</span></span>
 <span><span class="co">#&gt;   - gridmet</span></span>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
-<span><span class="co">#&gt;   - daymet-annual-hi</span></span>
-<span><span class="co">#&gt;   - ... with 112 more collection(s).</span></span>
+<span><span class="co">#&gt;   - ... with 113 more collection(s).</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
 Computer data catalog</a>; the Planetary Computer is organized so that
@@ -326,23 +326,23 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmp1Cm1QK/file1ead75674588.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpOHg0Pw/file1f8337225bf0.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
-<code><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">terra::rast()</a></code> and <code><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">terra::plot()</a></code> to load this
+<code><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">terra::rast()</a></code> and <code><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">terra::plot()</a></code> to load this
 data into R and visualize it:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>If we draw our Ashe county polygon on top of this raster, we can see
 that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> has only downloaded the portion of
 this asset that falls within the bounding box we provided:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="va">ashe</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="va">ashe</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
 <p>What if we wanted to download more than one raster asset? We could
 choose to pass multiple asset names to <code>asset_names</code>. For
@@ -359,8 +359,8 @@ write:</p>
 <span>  collection <span class="op">=</span> <span class="st">"usgs-lcmap-conus-v13"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
 <p>Neat!</p>
 <p>Now, as it happens, Ashe county is entirely contained inside a single
@@ -382,8 +382,8 @@ relevant pieces of each object and merging them together:</p>
 <span>  collection <span class="op">=</span> <span class="st">"usgs-lcmap-conus-v13"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
 <p>If we wanted, we could parallelize these downloads using
 <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code>, and set up a progress bar using
@@ -536,8 +536,8 @@ download Landsat imagery looks like this:</p>
 <span>  end_date <span class="op">=</span> <span class="st">"2021-06-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
 <p>You can see transparent parts of each band where pixels in all images
 from June were automatically masked out, due to their value in their
@@ -555,7 +555,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     raster == 21824</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x555c70a4bfe0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55debce38a50&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -584,8 +584,8 @@ AOI separately:</p>
 <span>  composite_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mask_function <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># otherwise half of these images are blank</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: `mask_function` was NULL, but `mask_band` was not `NULL`.</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> `mask_band` will be ignored (not downloaded or used).</span></span></code></pre></div>
@@ -655,7 +655,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x555c7559b2d8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55deb8bf6048&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
@@ -699,8 +699,8 @@ and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_ima
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="va">custom_query_function</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 <p>If we know how to express our desired query in CQL2, we can write
 arbitrarily complex functions to make sure we’re only downloading the

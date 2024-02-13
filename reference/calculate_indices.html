@@ -16,7 +16,7 @@ formula, bands, and short_name column."><meta property="og:image" content="https
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +62,7 @@ formula, bands, and short_name column."><meta property="og:image" content="https
 
     <div class="ref-description section level2">
     <p>This function computes any number of indices from an input raster via
-<code><a href="https://rdrr.io/pkg/terra/man/predict.html" class="external-link">terra::predict()</a></code>. By default, this function is designed to work with
+<code><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">terra::predict()</a></code>. By default, this function is designed to work with
 subsets of <code><a href="spectral_indices.html">spectral_indices()</a></code>, but it will work with any data frame with a
 <code>formula</code>, <code>bands</code>, and <code>short_name</code> column.</p>
     </div>
@@ -76,7 +76,7 @@ subsets of <code><a href="spectral_indices.html">spectral_indices()</a></code>, 
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>raster</dt>
 <dd><p>The raster (either as a SpatRaster or object readable by
-<code><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">terra::rast()</a></code>) to compute indices from.</p></dd>
+<code><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">terra::rast()</a></code>) to compute indices from.</p></dd>
 
 
 <dt>indices</dt>
@@ -134,7 +134,7 @@ workload.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>No cache file present and `download_indices` set to `FALSE`.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">ℹ</span> Returning (likely outdated) package data instead.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpilsq5T/file1b3219700a41.tif"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpuyhk9Z/file1bc51efd68ec.tif"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Formulas aren't able to access most R functions or operators:</span></span></span>
 <span class="r-in"><span><span class="va">example_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="filters.html">filter_platforms</a></span><span class="op">(</span>platforms <span class="op">=</span> <span class="st">"Sentinel-1 (Dual Polarisation VV-VH)"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>

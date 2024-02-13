@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,11 @@
       <small>Source: <a href="https://github.com/Permian-Global-Research/rsi/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.2" id="rsi-012">rsi 0.1.2<a class="anchor" aria-label="anchor" href="#rsi-012"></a></h2><p class="text-muted">CRAN release: 2024-02-13</p>
+<ul><li>
+<code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> no longer includes <code>mask_band</code> in its outputs when <code>composite_function = NULL</code>. Add this band to <code>asset_names</code> to include it in the download.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="rsi-011">rsi 0.1.1<a class="anchor" aria-label="anchor" href="#rsi-011"></a></h2><p class="text-muted">CRAN release: 2024-01-18</p>
 <ul><li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> now removes colons (<code>:</code>) from the file names generated when <code>composite_function = NULL</code>. This means that datetimes are now generally formatted as YYYY-MM-DDTHHMMSSZ, which is slightly dissatisfying but is a valid path on Windows systems (thanks to <a href="https://github.com/jguelat" class="external-link">@jguelat</a>, <a href="https://github.com/Permian-Global-Research/rsi/issues/29" class="external-link">#29</a>, <a href="https://github.com/Permian-Global-Research/rsi/issues/32" class="external-link">#32</a>).</p></li>
