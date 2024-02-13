@@ -1,3 +1,5 @@
+# rsi (development version)
+
 # rsi 0.1.2
 
 * `get_stac_data()` no longer includes `mask_band` in its outputs when 
