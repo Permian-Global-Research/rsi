@@ -298,7 +298,11 @@ get_stac_data <- function(aoi,
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
 
   items_urls <- extract_urls(asset_names, items)
-  if (!is.null(mask_band)) items_urls[[mask_band]] <- rstac::assets_url(items, mask_band)
+  drop_mask_band <- FALSE
+  if (!is.null(mask_band) && !(mask_band %in% names(item_urls))) {
+    items_urls[[mask_band]] <- rstac::assets_url(items, mask_band)
+    drop_mask_band <- TRUE
+  }
 
   download_locations <- data.frame(
     matrix(
@@ -375,6 +379,8 @@ get_stac_data <- function(aoi,
     )
     on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
+
+  if (drop_mask_band) items_urls[[mask_band]] <- NULL
 
   mapply(
     function(in_bands, vrt) {
