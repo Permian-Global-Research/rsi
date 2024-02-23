@@ -1,5 +1,12 @@
 # rsi (development version)
 
+* `stack_rasters()` will only rename bands if `band_names` is the same length as 
+  the number of bands in the output raster (or missing, or defined by a 
+  function). It will now warn you if these lengths are different. Previously, if 
+  you provided more than the required number of band names, `stack_rasters()` 
+  would silently ignore the extra names, and would error if you provided fewer 
+  names than bands. 
+
 # rsi 0.1.2
 
 * `get_stac_data()` no longer includes `mask_band` in its outputs when 
