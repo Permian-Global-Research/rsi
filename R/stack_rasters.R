@@ -238,11 +238,13 @@ stack_rasters <- function(rasters,
     band_def <- grep("VRTRasterBand", vrt)
     vrt <- vrt[seq(band_def[[1]], band_def[[2]])]
     vrt[1] <- gsub("band=\"1\"", paste0("band=\"", band_no, "\""), vrt[1])
-    vrt <- c(
-      vrt[1],
-      paste0("    <Description>", var_names[[band_no]], "</Description>"),
-      vrt[2:length(vrt)]
-    )
+    if (length(intermediate_vrt) == length(var_names)) {
+      vrt <- c(
+        vrt[1],
+        paste0("    <Description>", var_names[[band_no]], "</Description>"),
+        vrt[2:length(vrt)]
+      )
+    }
 
     vrt_bands[[band_no]] <- vrt
 
