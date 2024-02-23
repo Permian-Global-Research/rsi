@@ -164,8 +164,8 @@ function:</p>
 <span>  <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">stac_source</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###RSTACQuery</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">url:</span> https://planetarycomputer.microsoft.com/api/stac/v1</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###rstac_query</span></span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">url:</span> https://planetarycomputer.microsoft.com/api/stac/v1/</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">params:</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> version, base_url, endpoint, params, verb, encode</span></span></code></pre></div>
 <p>As you can see, the output of <code>stac()</code> is an
@@ -180,7 +180,7 @@ the Planetary Computer STAC API, we get a brief description of what this
 API provides:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="va">stac_source</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###STACCatalog</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###Catalog</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">id:</span> microsoft-pc</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">description:</span> </span></span>
 <span><span class="co">#&gt; Searchable spatiotemporal metadata describing Earth science datasets hosted by the Microsoft Planetary Computer</span></span>
@@ -196,18 +196,18 @@ API, which lists all the collections available from this API:</p>
 <code class="sourceCode R"><span><span class="va">stac_source</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###STACCollectionList</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###Collections</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (123 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
 <span><span class="co">#&gt;   - 3dep-lidar-dsm</span></span>
 <span><span class="co">#&gt;   - fia</span></span>
-<span><span class="co">#&gt;   - io-lulc-annual-v02</span></span>
 <span><span class="co">#&gt;   - sentinel-1-rtc</span></span>
 <span><span class="co">#&gt;   - gridmet</span></span>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
+<span><span class="co">#&gt;   - daymet-annual-hi</span></span>
 <span><span class="co">#&gt;   - ... with 113 more collection(s).</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
@@ -234,7 +234,7 @@ by using the collection’s ID of <code>usgs-lcmap-conus-v13</code>:</p>
 <span>  limit <span class="op">=</span> <span class="fl">999</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###Items</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (422 item(s)):</span></span>
 <span><span class="co">#&gt;   - LCMAP_CU_032003_2021_V13_CCDC</span></span>
 <span><span class="co">#&gt;   - LCMAP_CU_031006_2021_V13_CCDC</span></span>
@@ -268,7 +268,7 @@ don’t need a full list of them right now:</p>
 <span>  datetime <span class="op">=</span> <span class="st">"2021-01-01/2021-12-31"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###Items</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (250 item(s)):</span></span>
 <span><span class="co">#&gt;   - LC09_L2SR_088122_20211230_02_T2</span></span>
 <span><span class="co">#&gt;   - LC09_L2SR_088121_20211230_02_T2</span></span>
@@ -327,7 +327,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmp2AsEAj/file1f1f10d40c55.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpsPLCZ0/file1fc172c825f2.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -556,7 +556,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     raster == 21824</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55af0ae88768&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55ec68bcef68&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -626,7 +626,7 @@ images:</p>
 <span>      <span class="va">`eo:cloud_cover`</span> <span class="op">&lt;</span> <span class="fl">50</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">###STACItemCollection</span></span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">###Items</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (1 item(s)):</span></span>
 <span><span class="co">#&gt;   - LC08_L2SP_017035_20210628_02_T1</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">assets:</span> </span></span>
@@ -656,7 +656,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55af0daad8d8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55ec6751a1e0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list

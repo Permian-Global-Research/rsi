@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   Downloading-data-from-STAC-APIs-using-rsi: Downloading-data-from-STAC-APIs-using-rsi.html
   rsi: rsi.html
-last_built: 2024-02-13T18:48Z
+last_built: 2024-02-23T21:32Z
 urls:
   reference: https://permian-global-research.github.io/rsi/reference
   article: https://permian-global-research.github.io/rsi/articles
