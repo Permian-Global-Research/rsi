@@ -143,3 +143,23 @@ test_that("type_and_length checks", {
     error = TRUE
   )
 })
+
+test_that("stack_rasters warns when band names aren't the right length", {
+  expect_warning(
+    stack_rasters(
+      list(system.file("rasters/example_sentinel1.tif", package = "rsi")),
+      tempfile(fileext = ".vrt"),
+      band_names = "VH"
+    ),
+    class = "rsi_band_name_length_mismatch"
+  )
+
+  expect_warning(
+    stack_rasters(
+      list(system.file("rasters/example_sentinel1.tif", package = "rsi")),
+      tempfile(fileext = ".vrt"),
+      band_names = c("VH", "VV", "EXTRA")
+    ),
+    class = "rsi_band_name_length_mismatch"
+  )
+})
