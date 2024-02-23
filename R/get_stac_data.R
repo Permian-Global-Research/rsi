@@ -299,7 +299,7 @@ get_stac_data <- function(aoi,
 
   items_urls <- extract_urls(asset_names, items)
   drop_mask_band <- FALSE
-  if (!is.null(mask_band) && !(mask_band %in% names(item_urls))) {
+  if (!is.null(mask_band) && !(mask_band %in% names(items_urls))) {
     items_urls[[mask_band]] <- rstac::assets_url(items, mask_band)
     drop_mask_band <- TRUE
   }
