@@ -55,8 +55,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsi-development-version">rsi (development version)<a class="anchor" aria-label="anchor" href="#rsi-development-version"></a></h2>
-<ul><li>
-<code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> will only rename bands if <code>band_names</code> is the same length as the number of bands in the output raster (or missing, or defined by a function). It will now warn you if these lengths are different. Previously, if you provided more than the required number of band names, <code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> would silently ignore the extra names, and would error if you provided fewer names than bands.</li>
+<ul><li><p>Added <code>get_naip_data()</code>, a function for getting National Agricultural Imagery Program data from (by default) Planetary Computer. Data covers the continental United States.</p></li>
+<li><p><code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> will only rename bands if <code>band_names</code> is the same length as the number of bands in the output raster (or missing, or defined by a function). It will now warn you if these lengths are different. Previously, if you provided more than the required number of band names, <code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> would silently ignore the extra names, and would error if you provided fewer names than bands.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="rsi-012">rsi 0.1.2<a class="anchor" aria-label="anchor" href="#rsi-012"></a></h2><p class="text-muted">CRAN release: 2024-02-13</p>
