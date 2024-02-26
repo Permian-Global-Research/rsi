@@ -302,3 +302,21 @@ test_that("no-composites return the same data", {
     setdiff(rsi::landsat_band_mapping$planetary_computer_v1, "T")
   )
 })
+
+test_that("get_naip_imagery() is stable", {
+  skip_on_cran()
+  skip_if_offline()
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
+
+  expect_no_error(
+    out <- get_naip_imagery(
+      aoi,
+      "2018-01-01",
+      "2020-01-31",
+      output_filename = tempfile(fileext = ".tif")
+    )
+  )
+  expect_no_error(terra::rast(out))
+})

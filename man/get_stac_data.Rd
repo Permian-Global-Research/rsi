@@ -5,6 +5,7 @@
 \alias{get_sentinel1_imagery}
 \alias{get_sentinel2_imagery}
 \alias{get_landsat_imagery}
+\alias{get_naip_imagery}
 \alias{get_dem}
 \title{Retrieve raster data from STAC endpoints}
 \usage{
@@ -108,6 +109,30 @@ get_landsat_imagery(
   mask_function = attr(asset_names, "mask_function"),
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
+  limit = 999,
+  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+)
+
+get_naip_imagery(
+  aoi,
+  start_date,
+  end_date,
+  ...,
+  pixel_x_size = 1,
+  pixel_y_size = 1,
+  asset_names = "image",
+  stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
+  collection = "naip",
+  query_function = default_query_function,
+  sign_function = sign_planetary_computer,
+  rescale_bands = FALSE,
+  output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
+  composite_function = "merge",
   limit = 999,
   gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
     "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),

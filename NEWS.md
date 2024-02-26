@@ -1,5 +1,9 @@
 # rsi (development version)
 
+* Added `get_naip_data()`, a function for getting National Agricultural Imagery
+  Program data from (by default) Planetary Computer. Data covers the continental
+  United States.
+
 * `stack_rasters()` will only rename bands if `band_names` is the same length as 
   the number of bands in the output raster (or missing, or defined by a 
   function). It will now warn you if these lengths are different. Previously, if 
