@@ -104,7 +104,7 @@ spatial area of interest, we’ll first mock up a small bounding box in
 northern Massachusetts (in a planar CRS appropriate for the region):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">our_aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">200000</span>, ymin <span class="op">=</span> <span class="fl">900000</span>, xmax <span class="op">=</span> <span class="fl">200100</span>, ymax <span class="op">=</span> <span class="fl">900100</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">200000</span>, ymin <span class="op">=</span> <span class="fl">900000</span>, xmax <span class="op">=</span> <span class="fl">200100</span>, ymax <span class="op">=</span> <span class="fl">900100</span><span class="op">)</span>,</span>
 <span>  crs <span class="op">=</span> <span class="fl">26986</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">our_aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="va">our_aoi</span><span class="op">)</span><span class="op">)</span></span>
@@ -129,7 +129,7 @@ imagery from September 2023:</p>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpwZzrpY/file26f318a3862e.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpMWQXIv/file2783626b7201.tif"</span></span></code></pre></div>
 <p>If we wanted to, we could use <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> here to
 specify a parallelization methodology to speed up downloads by using
 multiple threads. We could also use <code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>
@@ -138,7 +138,7 @@ to get a progress bar to report our download status.</p>
 composite of all bands available in Landsat 8 and 9 imagery for our
 timeframe:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <p>Notice that this composite has been cloud-masked (using the QA pixel
@@ -150,7 +150,7 @@ instance, we could also grab a DEM for this area from Planetary
 Computer, using the <code><a href="../reference/get_stac_data.html">get_dem()</a></code> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">our_dem</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_dem</a></span><span class="op">(</span><span class="va">our_aoi</span><span class="op">)</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_dem</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_dem</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Under the hood, both of these functions (and their friends,
@@ -165,7 +165,7 @@ also has an interface to the <a href="https://github.com/awesome-spectral-indice
 Spectral Indices</a> project via the <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>
 function:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
 <span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
@@ -192,7 +192,7 @@ be used to, well, filter the list to only indices that can be calculated
 from a given platform. For instance, to filter to only indices that can
 be calculated using data from Landsat’s Operational Land Imager:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_platforms</a></span><span class="op">(</span>platforms <span class="op">=</span> <span class="st">"Landsat-OLI"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_platforms</a></span><span class="op">(</span>platforms <span class="op">=</span> <span class="st">"Landsat-OLI"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
 <span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
@@ -236,7 +236,7 @@ from our images:</p>
 <span><span class="co">#&gt; Warning in x@cpp$writeStop(): GDAL Message 1: our_indices.tif: Metadata</span></span>
 <span><span class="co">#&gt; exceeding 32000 bytes cannot be written into GeoTIFF. Transferred to PAM</span></span>
 <span><span class="co">#&gt; instead.</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_indices</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_indices</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>Note that <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code> is evaluating the formulas
@@ -271,7 +271,7 @@ model fitting and prediction:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".vrt"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">combined_layers</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">combined_layers</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rsi_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
   </main>

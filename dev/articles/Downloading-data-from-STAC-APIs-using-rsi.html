@@ -194,10 +194,10 @@ query the <code>/collections</code> endpoint of the Planetary Computer
 API, which lists all the collections available from this API:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">stac_source</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Collections</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (124 item(s)):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (123 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
@@ -208,7 +208,7 @@ API, which lists all the collections available from this API:</p>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
 <span><span class="co">#&gt;   - daymet-annual-hi</span></span>
-<span><span class="co">#&gt;   - ... with 114 more collection(s).</span></span>
+<span><span class="co">#&gt;   - ... with 113 more collection(s).</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
 Computer data catalog</a>; the Planetary Computer is organized so that
@@ -232,7 +232,7 @@ by using the collection’s ID of <code>usgs-lcmap-conus-v13</code>:</p>
 <span>  collections <span class="op">=</span> <span class="st">"usgs-lcmap-conus-v13"</span>,</span>
 <span>  datetime <span class="op">=</span> <span class="st">"2021-01-01/2021-12-31"</span>,</span>
 <span>  limit <span class="op">=</span> <span class="fl">999</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Items</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (422 item(s)):</span></span>
@@ -266,7 +266,7 @@ don’t need a full list of them right now:</p>
 <span>  q <span class="op">=</span> <span class="va">stac_source</span>,</span>
 <span>  collections <span class="op">=</span> <span class="st">"landsat-c2-l2"</span>,</span>
 <span>  datetime <span class="op">=</span> <span class="st">"2021-01-01/2021-12-31"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Items</span></span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">features</span> (250 item(s)):</span></span>
@@ -327,21 +327,21 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmph39o0L/file1eab5c5438cf.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp3Z2yBO/file1ef6330a1333.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
 <code><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">terra::rast()</a></code> and <code><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">terra::plot()</a></code> to load this
 data into R and visualize it:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>If we draw our Ashe county polygon on top of this raster, we can see
 that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> has only downloaded the portion of
 this asset that falls within the bounding box we provided:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="va">ashe</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
@@ -359,8 +359,8 @@ write:</p>
 <span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span>,</span>
 <span>  collection <span class="op">=</span> <span class="st">"usgs-lcmap-conus-v13"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
 <p>Neat!</p>
@@ -382,8 +382,8 @@ relevant pieces of each object and merging them together:</p>
 <span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span>,</span>
 <span>  collection <span class="op">=</span> <span class="st">"usgs-lcmap-conus-v13"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
 <p>If we wanted, we could parallelize these downloads using
@@ -415,7 +415,7 @@ sounds really fiddly.</p>
 default values. We use the following block of code to see exactly what
 defaults have been changed:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Get the arguments, and default values, from </span></span>
+<code class="sourceCode R"><span><span class="co"># Get the arguments, and default values, from</span></span>
 <span><span class="co"># get_stac_data and get_landsat_imagery</span></span>
 <span><span class="va">gsd_formals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">get_stac_data</span><span class="op">)</span></span>
 <span><span class="va">gli_formals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">get_landsat_imagery</span><span class="op">)</span></span>
@@ -536,8 +536,8 @@ download Landsat imagery looks like this:</p>
 <span>  start_date <span class="op">=</span> <span class="st">"2021-06-01"</span>,</span>
 <span>  end_date <span class="op">=</span> <span class="st">"2021-06-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
 <p>You can see transparent parts of each band where pixels in all images
@@ -556,7 +556,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     raster == 21824</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x558d1f678200&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x563d32905200&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -584,9 +584,9 @@ AOI separately:</p>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
 <span>  composite_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mask_function <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># otherwise half of these images are blank</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: `mask_function` was NULL, but `mask_band` was not `NULL`.</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> `mask_band` will be ignored (not downloaded or used).</span></span></code></pre></div>
@@ -611,18 +611,18 @@ images:</p>
 </ul>
 <p>We could write a filter that looks something like this:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="va">ashe</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="va">ashe</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_bbox_as_geojson</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">datetime</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_interval</a></span><span class="op">(</span><span class="st">"2021-06-01"</span>, <span class="st">"2021-06-30"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/ext_filter.html" class="external-link">ext_filter</a></span><span class="op">(</span></span>
 <span>    <span class="va">collection</span> <span class="op">==</span> <span class="st">"landsat-c2-l2"</span> <span class="op">&amp;&amp;</span></span>
-<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span><span class="va">datetime</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
-<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span><span class="va">geometry</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span> </span>
-<span>      <span class="va">platform</span> <span class="op">==</span> <span class="st">"landsat-8"</span> <span class="op">&amp;&amp;</span> </span>
+<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span> <span class="va">datetime</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span> <span class="va">geometry</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="va">platform</span> <span class="op">==</span> <span class="st">"landsat-8"</span> <span class="op">&amp;&amp;</span></span>
 <span>      <span class="va">`eo:cloud_cover`</span> <span class="op">&lt;</span> <span class="fl">50</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -656,7 +656,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x558d1767c090&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x563d3095ed90&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
@@ -669,25 +669,25 @@ place. For instance, to perform the same CQL2 query as before, we can
 effectively copy and paste our code from above into a new query function
 and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_imagery()</a></code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">custom_query_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">bbox</span>, </span>
-<span>                                  <span class="va">stac_source</span>, </span>
-<span>                                  <span class="va">collection</span>, </span>
-<span>                                  <span class="va">start_date</span>, </span>
-<span>                                  <span class="va">end_date</span>, </span>
-<span>                                  <span class="va">limit</span>, </span>
+<code class="sourceCode R"><span><span class="va">custom_query_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">bbox</span>,</span>
+<span>                                  <span class="va">stac_source</span>,</span>
+<span>                                  <span class="va">collection</span>,</span>
+<span>                                  <span class="va">start_date</span>,</span>
+<span>                                  <span class="va">end_date</span>,</span>
+<span>                                  <span class="va">limit</span>,</span>
 <span>                                  <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># `bbox` is guaranteed to be in 4326 already</span></span>
-<span>  <span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_bbox_as_geojson</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span> </span>
-<span>  <span class="co"># `start_date` and `end_date` will be processed </span></span>
+<span>  <span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_bbox_as_geojson</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span></span>
+<span>  <span class="co"># `start_date` and `end_date` will be processed</span></span>
 <span>  <span class="co"># and so hopefully will be in RFC-3339 formats</span></span>
 <span>  <span class="va">datetime</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_interval</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">request</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/ext_filter.html" class="external-link">ext_filter</a></span><span class="op">(</span></span>
 <span>    <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="va">stac_source</span><span class="op">)</span>,</span>
-<span>    <span class="va">collection</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span><span class="va">collection</span><span class="op">}</span><span class="op">}</span> <span class="op">&amp;&amp;</span> <span class="co"># I could have left this hard-coded!</span></span>
-<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span><span class="va">datetime</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
-<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span><span class="va">geometry</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span> </span>
-<span>      <span class="va">platform</span> <span class="op">==</span> <span class="st">"landsat-8"</span> <span class="op">&amp;&amp;</span> </span>
+<span>    <span class="va">collection</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span> <span class="va">collection</span> <span class="op">}</span><span class="op">}</span> <span class="op">&amp;&amp;</span> <span class="co"># I could have left this hard-coded!</span></span>
+<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span> <span class="va">datetime</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span> <span class="va">geometry</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="va">platform</span> <span class="op">==</span> <span class="st">"landsat-8"</span> <span class="op">&amp;&amp;</span></span>
 <span>      <span class="va">`eo:cloud_cover`</span> <span class="op">&lt;</span> <span class="fl">50</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_fetch</a></span><span class="op">(</span><span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="va">request</span><span class="op">)</span><span class="op">)</span></span>
@@ -699,8 +699,8 @@ and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_ima
 <span>  end_date <span class="op">=</span> <span class="st">"2021-06-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="va">custom_query_function</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 <p>If we know how to express our desired query in CQL2, we can write
