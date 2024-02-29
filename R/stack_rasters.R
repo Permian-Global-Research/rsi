@@ -87,10 +87,12 @@ stack_rasters <- function(rasters,
 
   tryCatch(
     check_type_and_length(rasters = list()),
-    error = function(e) check_type_and_length(
-      rasters = character(),
-      call = rlang::caller_env(4)
-    )
+    error = function(e) {
+      check_type_and_length(
+        rasters = character(),
+        call = rlang::caller_env(4)
+      )
+    }
   )
 
   out_dir <- dirname(output_filename)

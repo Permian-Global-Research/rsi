@@ -46,7 +46,6 @@ default_query_function <- function(bbox,
                                    end_date,
                                    limit,
                                    ...) {
-
   if (!is.null(start_date)) {
     datetime <- paste0(start_date, "/", end_date)
   } else {
@@ -107,5 +106,3 @@ sign_planetary_computer <- function(items,
     )
   }
 }
-
-

@@ -805,7 +805,6 @@ complex_download <- function(items,
 
 
 make_composite_bands <- function(downloaded_bands, composite_function, p) {
-
   if (is.null(composite_function)) {
     return(
       list(

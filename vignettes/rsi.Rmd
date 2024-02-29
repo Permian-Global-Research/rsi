@@ -25,7 +25,7 @@ In order to download data from a STAC API, we're going to need to specify both a
 
 ```{r}
 our_aoi <- sf::st_bbox(
-  c(xmin = 200000, ymin = 900000, xmax = 200100, ymax = 900100), 
+  c(xmin = 200000, ymin = 900000, xmax = 200100, ymax = 900100),
   crs = 26986
 )
 our_aoi <- sf::st_as_sf(sf::st_as_sfc(our_aoi))
@@ -52,7 +52,7 @@ If we wanted to, we could use `future::plan()` here to specify a parallelization
 By default, `get_landsat_imagery()` will download a composite of all bands available in Landsat 8 and 9 imagery for our timeframe:
 
 ```{r}
-terra::rast(our_imagery) |> 
+terra::rast(our_imagery) |>
   terra::plot()
 ```
 
@@ -62,7 +62,7 @@ We're also able to use rsi to download other data sets -- for instance, we could
 
 ```{r}
 our_dem <- get_dem(our_aoi)
-terra::rast(our_dem) |> 
+terra::rast(our_dem) |>
   terra::plot()
 ```
 
@@ -71,7 +71,7 @@ Under the hood, both of these functions (and their friends, `get_sentinel2_image
 In addition to these STAC-focused data-downloading functions, rsi also has an interface to the [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices) project via the `spectral_indices()` function:
 
 ```{r}
-spectral_indices() |> 
+spectral_indices() |>
   head()
 ```
 
@@ -80,7 +80,7 @@ This function attempts to grab the newest version of the spectral indices JSON f
 There are also functions in rsi to sort through the ASI list of indices. For instance, the `filter_platforms()` function can be used to, well, filter the list to only indices that can be calculated from a given platform. For instance, to filter to only indices that can be calculated using data from Landsat's Operational Land Imager:
 
 ```{r}
-filter_platforms(platforms = "Landsat-OLI") |> 
+filter_platforms(platforms = "Landsat-OLI") |>
   head()
 ```
 
@@ -100,7 +100,7 @@ our_indices <- calculate_indices(
   filter_bands(bands = names(terra::rast(our_imagery))),
   "our_indices.tif"
 )
-terra::rast(our_indices) |> 
+terra::rast(our_indices) |>
   terra::plot()
 ```
 
@@ -128,6 +128,6 @@ combined_layers <- stack_rasters(
   tempfile(fileext = ".vrt")
 )
 
-terra::rast(combined_layers) |> 
+terra::rast(combined_layers) |>
   terra::plot()
 ```
