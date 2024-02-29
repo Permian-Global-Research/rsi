@@ -61,7 +61,7 @@ Because the `RSTACQuery` object is a representation of a future query, we can us
 
 ```{r}
 stac_source |>
-  rstac::collections() |> 
+  rstac::collections() |>
   rstac::get_request()
 ```
 
@@ -77,7 +77,7 @@ rstac::stac_search(
   collections = "usgs-lcmap-conus-v13",
   datetime = "2021-01-01/2021-12-31",
   limit = 999
-) |> 
+) |>
   rstac::get_request()
 ```
 
@@ -90,7 +90,7 @@ rstac::stac_search(
   q = stac_source,
   collections = "landsat-c2-l2",
   datetime = "2021-01-01/2021-12-31"
-) |> 
+) |>
   rstac::get_request()
 ```
 
@@ -132,14 +132,14 @@ ashe_lcpri
 And a few seconds later, we've got our data! The output from `get_stac_data()` is a path to this data, saved as a raster somewhere on our computer; that means we can pass this object to `terra::rast()` and `terra::plot()` to load this data into R and visualize it:
 
 ```{r}
-terra::rast(ashe_lcpri) |> 
+terra::rast(ashe_lcpri) |>
   terra::plot()
 ```
 
 If we draw our Ashe county polygon on top of this raster, we can see that `get_stac_data()` has only downloaded the portion of this asset that falls within the bounding box we provided:
 
 ```{r}
-terra::rast(ashe_lcpri) |> 
+terra::rast(ashe_lcpri) |>
   terra::plot()
 terra::plot(terra::vect(ashe), add = TRUE, col = "red")
 ```
@@ -155,8 +155,8 @@ get_stac_data(
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
   collection = "usgs-lcmap-conus-v13",
   output_filename = tempfile(fileext = ".tif")
-) |> 
-  terra::rast() |> 
+) |>
+  terra::rast() |>
   terra::plot()
 ```
 
@@ -175,8 +175,8 @@ get_stac_data(
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
   collection = "usgs-lcmap-conus-v13",
   output_filename = tempfile(fileext = ".tif")
-) |> 
-  terra::rast() |> 
+) |>
+  terra::rast() |>
   terra::plot()
 ```
 
@@ -191,7 +191,7 @@ But that said, we'd probably want to do a number of other things, too. For insta
 For that reason, rsi provides a function, `get_landsat_imagery()`, which wraps `get_stac_data()` and sets a number of arguments to helpful default values. We use the following block of code to see exactly what defaults have been changed:
 
 ```{r}
-# Get the arguments, and default values, from 
+# Get the arguments, and default values, from
 # get_stac_data and get_landsat_imagery
 gsd_formals <- formals(get_stac_data)
 gli_formals <- formals(get_landsat_imagery)
@@ -233,8 +233,8 @@ get_landsat_imagery(
   start_date = "2021-06-01",
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif")
-) |> 
-  terra::rast() |> 
+) |>
+  terra::rast() |>
   terra::plot()
 ```
 
@@ -263,9 +263,9 @@ get_landsat_imagery(
   output_filename = tempfile(fileext = ".tif"),
   composite_function = NULL,
   mask_function = NULL # otherwise half of these images are blank
-) |> 
-  lapply(terra::rast) |> 
-  lapply(terra::plot) |> 
+) |>
+  lapply(terra::rast) |>
+  lapply(terra::plot) |>
   invisible()
 ```
 
@@ -284,18 +284,18 @@ By the end of that tutorial, we had written relatively complex filters using rst
 We could write a filter that looks something like this:
 
 ```{r}
-geometry <- ashe |> 
-  sf::st_transform(4326) |> 
-  sf::st_bbox() |> 
+geometry <- ashe |>
+  sf::st_transform(4326) |>
+  sf::st_bbox() |>
   rstac::cql2_bbox_as_geojson()
 datetime <- rstac::cql2_interval("2021-06-01", "2021-06-30")
 
 rstac::stac("https://planetarycomputer.microsoft.com/api/stac/v1") |>
   rstac::ext_filter(
     collection == "landsat-c2-l2" &&
-      t_intersects(datetime, {{datetime}}) &&
-      s_intersects(geometry, {{geometry}}) && 
-      platform == "landsat-8" && 
+      t_intersects(datetime, {{ datetime }}) &&
+      s_intersects(geometry, {{ geometry }}) &&
+      platform == "landsat-8" &&
       `eo:cloud_cover` < 50
   ) |>
   rstac::post_request()
@@ -314,25 +314,25 @@ This is a relatively straightforward function -- it composes a datetime from the
 This works for most STAC APIs, but if we want to perform a more complicated query we can provide our own custom query function in its place. For instance, to perform the same CQL2 query as before, we can effectively copy and paste our code from above into a new query function and pass that to `get_landsat_imagery()`:
 
 ```{r}
-custom_query_function <- function(bbox, 
-                                  stac_source, 
-                                  collection, 
-                                  start_date, 
-                                  end_date, 
-                                  limit, 
+custom_query_function <- function(bbox,
+                                  stac_source,
+                                  collection,
+                                  start_date,
+                                  end_date,
+                                  limit,
                                   ...) {
   # `bbox` is guaranteed to be in 4326 already
-  geometry <- rstac::cql2_bbox_as_geojson(bbox) 
-  # `start_date` and `end_date` will be processed 
+  geometry <- rstac::cql2_bbox_as_geojson(bbox)
+  # `start_date` and `end_date` will be processed
   # and so hopefully will be in RFC-3339 formats
   datetime <- rstac::cql2_interval(start_date, end_date)
-  
+
   request <- rstac::ext_filter(
     rstac::stac(stac_source),
-    collection == {{collection}} && # I could have left this hard-coded!
-      t_intersects(datetime, {{datetime}}) &&
-      s_intersects(geometry, {{geometry}}) && 
-      platform == "landsat-8" && 
+    collection == {{ collection }} && # I could have left this hard-coded!
+      t_intersects(datetime, {{ datetime }}) &&
+      s_intersects(geometry, {{ geometry }}) &&
+      platform == "landsat-8" &&
       `eo:cloud_cover` < 50
   )
   rstac::items_fetch(rstac::post_request(request))
@@ -344,8 +344,8 @@ get_landsat_imagery(
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif"),
   query_function = custom_query_function
-) |> 
-  terra::rast() |> 
+) |>
+  terra::rast() |>
   terra::plot()
 ```
 

@@ -215,9 +215,9 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
 test_that("get_*_data works with mapply() (#17)", {
   skip_on_cran()
   skip_if_offline()
-  san_antonio = sf::st_point(c(-98.491142, 29.424349))
-  san_antonio = sf::st_sfc(san_antonio, crs = "EPSG:4326")
-  san_antonio = sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 100)
+  san_antonio <- sf::st_point(c(-98.491142, 29.424349))
+  san_antonio <- sf::st_sfc(san_antonio, crs = "EPSG:4326")
+  san_antonio <- sf::st_buffer(sf::st_transform(san_antonio, "EPSG:3081"), 100)
 
   expect_no_error(
     mapply(
