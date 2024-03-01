@@ -43,6 +43,8 @@ sentinel2_mask_function <- function(raster) {
 #' Create a Landsat mask raster from the QA band
 #'
 #' @param raster The QA band of a Landsat image
+#' @param include Include pixels that represent land, water, or both? Passing
+#' `c("land", "water")` is identical to passing `"both"`.
 #'
 #' @returns A boolean raster to be used to mask a Landsat image
 #'
@@ -59,8 +61,15 @@ sentinel2_mask_function <- function(raster) {
 #' )
 #'
 #' @export
-landsat_mask_function <- function(raster) {
+landsat_mask_function <- function(raster, include = c("land", "water", "both")) {
+  include <- rlang::arg_match(include, multiple = TRUE)
+  classes <- numeric()
+
   # "Clear with lows set"
   # https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/LSDS-1619_Landsat-8-9-C2-L2-ScienceProductGuide-v4.pdf
-  raster == 21824
+  if (any(c("land", "both") %in% include)) classes <- c(classes, 21824)
+  # from https://github.com/Permian-Global-Research/rsi/issues/37
+  if (any(c("water", "both") %in% include)) classes <- c(classes, 21952)
+
+  terra::`%in%`(raster, classes)
 }

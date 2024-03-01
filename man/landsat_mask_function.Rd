@@ -4,10 +4,13 @@
 \alias{landsat_mask_function}
 \title{Create a Landsat mask raster from the QA band}
 \usage{
-landsat_mask_function(raster)
+landsat_mask_function(raster, include = c("land", "water", "both"))
 }
 \arguments{
 \item{raster}{The QA band of a Landsat image}
+
+\item{include}{Include pixels that represent land, water, or both? Passing
+\code{c("land", "water")} is identical to passing \code{"both"}.}
 }
 \value{
 A boolean raster to be used to mask a Landsat image

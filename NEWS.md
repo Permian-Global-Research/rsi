@@ -1,5 +1,10 @@
 # rsi (development version)
 
+* `landsat_mask_function()` gains an argument, `include`, which lets you specify
+  whether you'd like to include pixels that represent land (`"land"`), water
+  (`"water"`), or both (`"both"`). Thanks to @mateuszrydzik for the report via
+  #37 (#46).
+
 * Added `get_naip_data()`, a function for getting National Agricultural Imagery
   Program data from (by default) Planetary Computer. Data covers the continental
   United States.
