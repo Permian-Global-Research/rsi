@@ -62,6 +62,7 @@ sentinel2_mask_function <- function(raster) {
 #'
 #' @export
 landsat_mask_function <- function(raster, include = c("land", "water", "both")) {
+  if (missing(include)) include <- include[[1]]
   include <- rlang::arg_match(include, multiple = TRUE)
   classes <- numeric()
 
