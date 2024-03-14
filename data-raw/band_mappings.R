@@ -100,6 +100,28 @@ sentinel1_band_mapping <- list(
 
 usethis::use_data(sentinel1_band_mapping, overwrite = TRUE)
 
+alos_palsar_band_mapping <- list(
+  planetary_computer_v1 = structure(
+    c(
+      "HH" = "HH",
+      "HV" = "HV",
+      "VV" = "VV",
+      "VH" = "VH",
+      "linci" = "linci"
+    ),
+    mask_band = "mask",
+    mask_function = alos_palsar_mask_function,
+    stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+    collection_name = "alos-palsar-mosaic",
+    query_function = default_query_function,
+    sign_function = sign_planetary_computer,
+    class = "rsi_band"
+  )
+)
+
+usethis::use_data(alos_palsar_band_mapping, overwrite = TRUE)
+
+
 pc_dem_mapping <- function(assets, collection_name) {
   structure(
     assets,

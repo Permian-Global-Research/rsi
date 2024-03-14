@@ -320,3 +320,21 @@ test_that("get_naip_imagery() is stable", {
   )
   expect_no_error(terra::rast(out))
 })
+
+test_that("get_alos_palsar_imagery() is stable", {
+  skip_on_cran()
+  skip_if_offline()
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
+
+  expect_no_error(
+    out <- get_alos_palsar_imagery(
+      aoi,
+      "2021-01-01",
+      "2021-12-31",
+      output_filename = tempfile(fileext = ".tif")
+    )
+  )
+  expect_no_error(terra::rast(out))
+})
