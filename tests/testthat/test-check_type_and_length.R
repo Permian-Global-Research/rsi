@@ -26,3 +26,13 @@ test_that("integer-ish are valid integers", {
   }
   expect_true(f1())
 })
+
+test_that("multi-class arguments are fine", {
+  f1 <- function(x) {
+    check_type_and_length(x = character())
+  }
+  y <- "a"
+  class(y) <- c("glue", class(y))
+
+  expect_true(f1(y))
+})

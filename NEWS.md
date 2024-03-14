@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* Functions will no longer error if you construct their arguments with 
+  `glue::glue()` (or otherwise if they have more than one class).
+
 * `landsat_mask_function()` gains an argument, `include`, which lets you specify
   whether you'd like to include pixels that represent land (`"land"`), water
   (`"water"`), or both (`"both"`). Thanks to @mateuszrydzik for the report via
