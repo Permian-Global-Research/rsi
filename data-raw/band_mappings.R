@@ -104,7 +104,10 @@ alos_palsar_band_mapping <- list(
   planetary_computer_v1 = structure(
     c(
       "HH" = "HH",
-      "HV" = "HV"
+      "HV" = "HV",
+      "VV" = "VV",
+      "VH" = "VH",
+      "linci" = "linci"
     ),
     mask_band = "mask",
     mask_function = alos_palsar_mask_function,
