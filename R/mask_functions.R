@@ -96,6 +96,7 @@ landsat_mask_function <- function(raster, include = c("land", "water", "both")) 
 #'   mask_function = alos_palsar_mask_function
 #' )
 #'
+#' @export
 alos_palsar_mask_function <- function(
     raster,
     include = c("land", "water", "both")) {
