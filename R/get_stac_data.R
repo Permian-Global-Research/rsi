@@ -69,12 +69,19 @@
 #' expected values.
 #'
 #' @section Sentinel-1 Data:
-#' The `get_sentinel1_data()` function is designed to download Sentinel-1 data
+#' The `get_sentinel1_imagery()` function is designed to download Sentinel-1 data
 #' from the Microsoft Planetary Computer STAC API. Both the GRD and RTC
 #' Sentinel-1 collections are supported. To download RTC data,
 #' set `collection` to `sentinel-1-rtc`, and supply your subscription key
 #' as an environment variable named `rsi_pc_key` (through, e.g., `Sys.setenv()`
 #' or your `.Renviron` file).
+#'
+#' @section AlOS PALSAR Data:
+#' The `get_alos_palsar_imagery()` function is designed to download ALOS PALSAR
+#' annual mosaic data from the Microsoft Planetary Computer STAC API. Data are
+#' returned as a digital number (which is appropriate for some applications
+#' and indices). To convert to backscatter (decibels) use the following formula:
+#' `10 * log10(dn) - 83.0` where dn is the radar band in digital number.
 #'
 #' @param aoi An sf(c) object outlining the area of interest to get imagery for.
 #' Will be used to get the bounding box used for calculating metrics and the
