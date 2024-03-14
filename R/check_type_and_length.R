@@ -21,7 +21,7 @@ check_type_and_length <- function(...,
 
     arg_class <- class(arg)
     dot_class <- class(dots[[dot]])
-    if (arg_class != dot_class) {
+    if (!any(arg_class %in% dot_class)) {
       if ("integer" %in% arg_class && "numeric" %in% dot_class) {
         next # Purposefully doing nothing -- rely on implicit conversion
       } else if ("integer" %in% dot_class && rlang::is_integerish(arg)) {
