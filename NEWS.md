@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* `get_alos_palsar_imagery()` and `alos_palsar_mask_function()` are new 
+  functions to help you get and mask ALOS PALSAR imagery, respectively.
+
 * Functions will no longer error if you construct their arguments with 
   `glue::glue()` (or otherwise if they have more than one class).
 
