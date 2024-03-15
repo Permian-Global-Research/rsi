@@ -208,6 +208,33 @@ STAC sources.</p>
 <span>    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES <span class="op">=</span> <span class="st">"YES"</span>, GDAL_NUM_THREADS <span class="op">=</span> <span class="st">"ALL_CPUS"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">get_alos_palsar_imagery</span><span class="op">(</span></span>
+<span>  <span class="va">aoi</span>,</span>
+<span>  <span class="va">start_date</span>,</span>
+<span>  <span class="va">end_date</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  pixel_x_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  pixel_y_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  asset_names <span class="op">=</span> <span class="fu">rsi</span><span class="fu">::</span><span class="va"><a href="alos_palsar_band_mapping.html">alos_palsar_band_mapping</a></span><span class="op">$</span><span class="va">planetary_computer_v1</span>,</span>
+<span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
+<span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
+<span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
+<span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mask_band <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"mask_band"</span><span class="op">)</span>,</span>
+<span>  mask_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"mask_function"</span><span class="op">)</span>,</span>
+<span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">proceduralnames</span><span class="fu">::</span><span class="fu"><a href="https://mikemahoney218.github.io/proceduralnames/reference/make_english_names.html" class="external-link">make_english_names</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
+<span>  composite_function <span class="op">=</span> <span class="st">"median"</span>,</span>
+<span>  limit <span class="op">=</span> <span class="fl">999</span>,</span>
+<span>  gdalwarp_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-r"</span>, <span class="st">"bilinear"</span>, <span class="st">"-multi"</span>, <span class="st">"-overwrite"</span>, <span class="st">"-co"</span>,</span>
+<span>    <span class="st">"COMPRESS=DEFLATE"</span>, <span class="st">"-co"</span>, <span class="st">"PREDICTOR=2"</span>, <span class="st">"-co"</span>, <span class="st">"NUM_THREADS=ALL_CPUS"</span><span class="op">)</span>,</span>
+<span>  gdal_config_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>VSI_CACHE <span class="op">=</span> <span class="st">"TRUE"</span>, GDAL_CACHEMAX <span class="op">=</span> <span class="st">"30%"</span>, VSI_CACHE_SIZE <span class="op">=</span></span>
+<span>    <span class="st">"10000000"</span>, GDAL_HTTP_MULTIPLEX <span class="op">=</span> <span class="st">"YES"</span>, GDAL_INGESTED_BYTES_AT_OPEN <span class="op">=</span> <span class="st">"32000"</span>,</span>
+<span>    GDAL_DISABLE_READDIR_ON_OPEN <span class="op">=</span> <span class="st">"EMPTY_DIR"</span>, GDAL_HTTP_VERSION <span class="op">=</span> <span class="st">"2"</span>,</span>
+<span>    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES <span class="op">=</span> <span class="st">"YES"</span>, GDAL_NUM_THREADS <span class="op">=</span> <span class="st">"ALL_CPUS"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">get_dem</span><span class="op">(</span></span>
 <span>  <span class="va">aoi</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -436,12 +463,22 @@ expected values.</p>
     <h2 id="sentinel-data">Sentinel-1 Data<a class="anchor" aria-label="anchor" href="#sentinel-data"></a></h2>
     
 
-<p>The <code>get_sentinel1_data()</code> function is designed to download Sentinel-1 data
+<p>The <code>get_sentinel1_imagery()</code> function is designed to download Sentinel-1 data
 from the Microsoft Planetary Computer STAC API. Both the GRD and RTC
 Sentinel-1 collections are supported. To download RTC data,
 set <code>collection</code> to <code>sentinel-1-rtc</code>, and supply your subscription key
 as an environment variable named <code>rsi_pc_key</code> (through, e.g., <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv()</a></code>
 or your <code>.Renviron</code> file).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="alos-palsar-data">AlOS PALSAR Data<a class="anchor" aria-label="anchor" href="#alos-palsar-data"></a></h2>
+    
+
+<p>The <code>get_alos_palsar_imagery()</code> function is designed to download ALOS PALSAR
+annual mosaic data from the Microsoft Planetary Computer STAC API. Data are
+returned as a digital number (which is appropriate for some applications
+and indices). To convert to backscatter (decibels) use the following formula:
+<code>10 * log10(dn) - 83.0</code> where dn is the radar band in digital number.</p>
     </div>
 
     <div class="section level2">

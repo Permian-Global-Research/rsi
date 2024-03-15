@@ -327,7 +327,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpqlnmHE/file1fc017388acc.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpUF3WIb/file1ef823d0bd9c.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -552,11 +552,19 @@ and all others are masked out:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_band"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "qa_pixel"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_function"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; function (raster) </span></span>
+<span><span class="co">#&gt; function (raster, include = c("land", "water", "both")) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     raster == 21824</span></span>
+<span><span class="co">#&gt;     if (missing(include)) </span></span>
+<span><span class="co">#&gt;         include &lt;- include[[1]]</span></span>
+<span><span class="co">#&gt;     include &lt;- rlang::arg_match(include, multiple = TRUE)</span></span>
+<span><span class="co">#&gt;     classes &lt;- numeric()</span></span>
+<span><span class="co">#&gt;     if (any(c("land", "both") %in% include)) </span></span>
+<span><span class="co">#&gt;         classes &lt;- c(classes, 21824)</span></span>
+<span><span class="co">#&gt;     if (any(c("water", "both") %in% include)) </span></span>
+<span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
+<span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5de2329f6170&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5d92c361e170&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -656,7 +664,7 @@ parentheses:</p>
 <span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
 <span><span class="co">#&gt;     items</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5de238100de8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5d92c1fabaa0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
