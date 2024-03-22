@@ -611,7 +611,10 @@ get_naip_imagery <- function(aoi,
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
-  do.call(get_stac_data, args)
+  suppressWarnings(
+    do.call(get_stac_data, args),
+    classes = "rsi_band_name_length_mismatch"
+  )
 }
 
 #' @rdname get_stac_data
