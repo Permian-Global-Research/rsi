@@ -279,6 +279,8 @@ get_stac_data <- function(aoi,
     end_date <- process_dates(end_date)
   }
 
+  if (is.null(item_filter_function)) item_filter_function <- \(x, ...) identity(x)
+
   items <- query_function(
     bbox = sf::st_bbox(sf::st_transform(aoi, 4326)),
     stac_source = stac_source,
@@ -287,11 +289,8 @@ get_stac_data <- function(aoi,
     end_date = end_date,
     limit = limit,
     ...
-  )
-
-  if (!is.null(item_filter_function)) {
-    items <- item_filter_function(items, ...)
-  }
+  ) |>
+    item_filter_function(...)
 
   if (!length(items$features)) {
     rlang::abort(
