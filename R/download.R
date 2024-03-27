@@ -1,10 +1,29 @@
 rsi_download_rasters <- function(items,
-                                  sign_function,
-                                  asset_names,
-                                  gdalwarp_options,
-                                  aoi_bbox,
-                                  gdal_config_options,
-                                  merge_assets) {
+                                 aoi,
+                                 asset_names,
+                                 sign_function = NULL,
+                                 merge_assets = FALSE,
+                                 gdalwarp_options = c(
+                                   "-r", "bilinear",
+                                   "-multi",
+                                   "-overwrite",
+                                   "-co", "COMPRESS=DEFLATE",
+                                   "-co", "PREDICTOR=2",
+                                   "-co", "NUM_THREADS=ALL_CPUS"
+                                 ),
+                                 gdal_config_options = c(
+                                   VSI_CACHE = "TRUE",
+                                   GDAL_CACHEMAX = "30%",
+                                   VSI_CACHE_SIZE = "10000000",
+                                   GDAL_HTTP_MULTIPLEX = "YES",
+                                   GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+                                   GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+                                   GDAL_HTTP_VERSION = "2",
+                                   GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+                                   GDAL_NUM_THREADS = "ALL_CPUS"
+                                 )) {
+  if (class(aoi) != "bbox") aoi <- sf::st_bbox(aoi)
+
   n_tiles_out <- ifelse(merge_assets, 1L, length(items$features))
   p <- build_progressr(length(names(asset_names)) * n_tiles_out)
 
@@ -21,7 +40,7 @@ rsi_download_rasters <- function(items,
   names(download_locations) <- names(asset_names)
 
   if (merge_assets) {
-    gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
+    gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi, NULL)
   }
 
   asset_iterator <- ifelse(
@@ -49,7 +68,7 @@ rsi_download_rasters <- function(items,
 
             if (!merge_assets) {
               item_bbox <- items$features[[which_item]]$bbox
-              current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
+              current_options <- set_gdalwarp_extent(gdalwarp_options, aoi, item_bbox)
             }
 
             sf::gdal_utils(

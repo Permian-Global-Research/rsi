@@ -337,13 +337,13 @@ get_stac_data <- function(aoi,
   # download_results is a data frame with names corresponding to "final" band
   # names and rows corresponding to individual STAC items
   download_results <- rsi_download_rasters(
-    items,
-    sign_function,
-    stats::setNames(nm = names(items_urls)),
-    gdalwarp_options,
-    aoi_bbox,
-    gdal_config_options,
-    merge_assets = merge_assets
+    items = items,
+    aoi = aoi_bbox,
+    asset_names = stats::setNames(nm = names(items_urls)),
+    sign_function = sign_function,
+    merge_assets = merge_assets,
+    gdalwarp_options = gdalwarp_options,
+    gdal_config_options = gdal_config_options
   )
   # mask
   if (!is.null(mask_band)) {
