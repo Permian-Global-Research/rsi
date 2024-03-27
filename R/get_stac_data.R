@@ -353,7 +353,6 @@ get_stac_data <- function(aoi,
   } else {
     download_results <- complex_download(
       items,
-      items_urls,
       download_locations,
       sign_function,
       asset_names,

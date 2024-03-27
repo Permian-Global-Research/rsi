@@ -31,7 +31,6 @@ simple_download <- function(items,
 }
 
 complex_download <- function(items,
-                             items_urls,
                              download_locations,
                              sign_function,
                              asset_names,
@@ -87,8 +86,6 @@ complex_download <- function(items,
       )
     }
   )
-  download_locations <- stats::na.omit(download_locations)
-  names(download_locations) <- names(items_urls)
-  download_locations
+  stats::na.omit(download_locations)
 }
 
