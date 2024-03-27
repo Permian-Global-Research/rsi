@@ -228,7 +228,9 @@ get_stac_data <- function(aoi,
       "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
       i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
       i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
-    ))
+    ),
+    class = "rsi_default_pixel_size_geographic_coords"
+    )
   }
 
   if (!is.null(composite_function)) {
@@ -316,28 +318,22 @@ get_stac_data <- function(aoi,
     !is.null(composite_function) &&
     composite_function == "merge"
 
-  if (use_simple_download) {
-    download_results <- simple_download(
-      items,
-      sign_function,
-      asset_names,
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options
-    )
-  } else {
-    download_results <- complex_download(
-      items,
-      sign_function,
-      stats::setNames(c(asset_names, mask_band), c(names(asset_names), mask_band)),
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options
-    )
-    if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_results)
+  download_results <- rsi_download_function(
+    items,
+    sign_function,
+    stats::setNames(nm = names(items_urls)),
+    gdalwarp_options,
+    aoi_bbox,
+    gdal_config_options,
+    merge_assets = use_simple_download
+  )
+
+  if (!use_simple_download) {
+    if (!is.null(mask_band)) {
+      apply_masks(mask_band, mask_function, download_results)
+    }
 
     download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
-
     download_results <- make_composite_bands(download_results, composite_function)
 
     scale_strings <- character()
@@ -354,9 +350,9 @@ get_stac_data <- function(aoi,
     }
 
     if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings)
-
-    on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
+
+  on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
 
   if (drop_mask_band) items_urls[[mask_band]] <- NULL
 

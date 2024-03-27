@@ -1,3 +1,33 @@
+rsi_download_function <- function(items,
+                                  sign_function,
+                                  asset_names,
+                                  gdalwarp_options,
+                                  aoi_bbox,
+                                  gdal_config_options,
+                                  merge_assets) {
+  if (merge_assets) {
+    simple_download(
+      items,
+      sign_function,
+      asset_names,
+      gdalwarp_options,
+      aoi_bbox,
+      gdal_config_options
+    )
+  } else {
+    complex_download(
+      items,
+      sign_function,
+      asset_names,
+      gdalwarp_options,
+      aoi_bbox,
+      gdal_config_options
+    )
+  }
+
+}
+
+
 simple_download <- function(items,
                             sign_function,
                             asset_names,
