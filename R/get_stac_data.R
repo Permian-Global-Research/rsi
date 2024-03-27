@@ -215,7 +215,7 @@ get_stac_data <- function(aoi,
                             GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                             GDAL_NUM_THREADS = "ALL_CPUS"
                           )) {
-  # query |> filter |> download |> build_tiles |> composite |> rescale
+  # query |> filter |> download |> mask |> composite |> rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
@@ -284,6 +284,7 @@ get_stac_data <- function(aoi,
 
   if (is.null(item_filter_function)) item_filter_function <- \(x, ...) identity(x)
 
+  # query
   items <- query_function(
     bbox = sf::st_bbox(sf::st_transform(aoi, 4326)),
     stac_source = stac_source,
@@ -293,6 +294,7 @@ get_stac_data <- function(aoi,
     limit = limit,
     ...
   )
+  # filter
   items <- item_filter_function(items, ...)
 
   if (!length(items$features)) {
@@ -331,6 +333,7 @@ get_stac_data <- function(aoi,
     !is.null(composite_function) &&
     composite_function == "merge"
 
+  # download
   download_results <- rsi_download_function(
     items,
     sign_function,
@@ -342,13 +345,17 @@ get_stac_data <- function(aoi,
   )
 
   if (!use_simple_download) {
+    # mask
     if (!is.null(mask_band)) {
       apply_masks(mask_band, mask_function, download_results)
     }
 
     download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
+
+    # composite
     download_results <- make_composite_bands(download_results, composite_function)
 
+    # rescale
     if (rescale_bands) {
       lapply(download_results$final_bands, rescale_band, scale_strings)
     }

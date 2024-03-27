@@ -55,6 +55,7 @@ simple_download <- function(items,
     },
     future.seed = TRUE
   )
+  names(out) <- names(asset_names)
   list(
     final_bands = list(out),
     out_vrt = tempfile(fileext = ".vrt")
