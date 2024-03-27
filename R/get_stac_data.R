@@ -328,12 +328,14 @@ get_stac_data <- function(aoi,
     rescale_bands <- FALSE
   }
 
-  use_simple_download <- is.null(mask_function) &&
+  merge_assets <- is.null(mask_function) &&
     !rescale_bands &&
     !is.null(composite_function) &&
     composite_function == "merge"
 
   # download
+  # download_results is a data frame with names corresponding to "final" band
+  # names and rows corresponding to individual STAC items
   download_results <- rsi_download_function(
     items,
     sign_function,
@@ -341,7 +343,7 @@ get_stac_data <- function(aoi,
     gdalwarp_options,
     aoi_bbox,
     gdal_config_options,
-    merge_assets = use_simple_download
+    merge_assets = merge_assets
   )
   # mask
   if (!is.null(mask_band)) {
@@ -354,11 +356,13 @@ get_stac_data <- function(aoi,
   output_vrt <- tempfile(fileext = ".vrt")
   if (is.null(composite_function)) {
     output_vrt <- replicate(nrow(download_results), tempfile(fileext = ".vrt"))
+    # turn each row of the DF into its own character vector, stored in a list
     download_results <- apply(download_results, 1, identity, simplify = FALSE)
-  } else if (!use_simple_download) {
+  } else if (!merge_assets) {
     download_results <- make_composite_bands(download_results, composite_function)
   } else {
-    download_results <- list(download_results)
+    # turn DF into a character vector inside a list
+    download_results <- list(unlist(download_results))
   }
   # rescale
   if (rescale_bands) {
