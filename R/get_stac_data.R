@@ -313,6 +313,19 @@ get_stac_data <- function(aoi,
     drop_mask_band <- TRUE
   }
 
+  scale_strings <- character()
+  if (rescale_bands) {
+    scale_strings <- calc_scale_strings(names(items_urls), items)
+  }
+  if (length(scale_strings)) {
+    scale_strings <- stats::setNames(
+      paste("function(x) x", scale_strings),
+      names(scale_strings)
+    )
+  } else {
+    rescale_bands <- FALSE
+  }
+
   use_simple_download <- is.null(mask_function) &&
     !rescale_bands &&
     !is.null(composite_function) &&
@@ -336,20 +349,9 @@ get_stac_data <- function(aoi,
     download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
     download_results <- make_composite_bands(download_results, composite_function)
 
-    scale_strings <- character()
     if (rescale_bands) {
-      scale_strings <- calc_scale_strings(names(items_urls), items)
+      lapply(download_results$final_bands, rescale_band, scale_strings)
     }
-    if (length(scale_strings)) {
-      scale_strings <- stats::setNames(
-        paste("function(x) x", scale_strings),
-        names(scale_strings)
-      )
-    } else {
-      rescale_bands <- FALSE
-    }
-
-    if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings)
   }
 
   on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
