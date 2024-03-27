@@ -56,10 +56,7 @@ simple_download <- function(items,
     future.seed = TRUE
   )
   names(out) <- names(asset_names)
-  list(
-    final_bands = list(out),
-    out_vrt = tempfile(fileext = ".vrt")
-  )
+  as.data.frame(as.list(out))
 }
 
 complex_download <- function(items,
@@ -126,7 +123,7 @@ complex_download <- function(items,
       )
     }
   )
-  stats::na.omit(download_locations)
+  as.data.frame(as.list(stats::na.omit(download_locations)))
 }
 
 extract_urls <- function(asset_names, items) {

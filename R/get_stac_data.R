@@ -343,25 +343,29 @@ get_stac_data <- function(aoi,
     gdal_config_options,
     merge_assets = use_simple_download
   )
-
-  if (!use_simple_download) {
-    # mask
-    if (!is.null(mask_band)) {
-      apply_masks(mask_band, mask_function, download_results)
-    }
-
-    download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
-
-    # composite
-    download_results <- make_composite_bands(download_results, composite_function)
-
-    # rescale
-    if (rescale_bands) {
-      lapply(download_results$final_bands, rescale_band, scale_strings)
-    }
+  # mask
+  if (!is.null(mask_band)) {
+    apply_masks(mask_band, mask_function, download_results)
   }
 
-  on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
+  download_results <- download_results[names(download_results) %in% names(asset_names)]
+
+  # composite
+  output_vrt <- tempfile(fileext = ".vrt")
+  if (is.null(composite_function)) {
+    output_vrt <- replicate(nrow(download_results), tempfile(fileext = ".vrt"))
+    download_results <- apply(download_results, 1, identity, simplify = FALSE)
+  } else if (!use_simple_download) {
+    download_results <- make_composite_bands(download_results, composite_function)
+  } else {
+    download_results <- list(download_results)
+  }
+  # rescale
+  if (rescale_bands) {
+    lapply(download_results, rescale_band, scale_strings)
+  }
+
+  on.exit(file.remove(unlist(download_results)), add = TRUE)
 
   if (drop_mask_band) items_urls[[mask_band]] <- NULL
 
@@ -373,17 +377,17 @@ get_stac_data <- function(aoi,
         band_names = remap_band_names(names(items_urls), asset_names)
       )
     },
-    in_bands = download_results[["final_bands"]],
-    vrt = download_results[["out_vrt"]]
+    in_bands = download_results,
+    vrt = output_vrt
   )
 
-  on.exit(file.remove(download_results[["out_vrt"]]), add = TRUE)
+  on.exit(file.remove(output_vrt), add = TRUE)
 
   if (is.null(composite_function)) {
     app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
     app <- gsub(":", "", app) # #29, #32
     if (any(is.na(app))) app <- NULL
-    app <- app %||% seq_along(download_results[["final_bands"]])
+    app <- app %||% seq_along(download_results)
 
     output_filename <- paste0(
       tools::file_path_sans_ext(output_filename),
@@ -404,7 +408,7 @@ get_stac_data <- function(aoi,
       )
       out
     },
-    vrt = download_results[["out_vrt"]],
+    vrt = output_vrt,
     out = output_filename
   )
 
@@ -712,15 +716,6 @@ apply_masks <- function(mask_band, mask_function, download_locations) {
 make_composite_bands <- function(downloaded_bands, composite_function) {
   p <- build_progressr(length(names(downloaded_bands)))
 
-  if (is.null(composite_function)) {
-    return(
-      list(
-        out_vrt = replicate(nrow(downloaded_bands), tempfile(fileext = ".tif")),
-        final_bands = apply(downloaded_bands, 1, identity, simplify = FALSE)
-      )
-    )
-  }
-
   download_dir <- file.path(tempdir(), "composite_dir")
   if (!dir.exists(download_dir)) dir.create(download_dir)
 
@@ -758,10 +753,7 @@ make_composite_bands <- function(downloaded_bands, composite_function) {
     character(1)
   )
 
-  list(
-    out_vrt = tempfile(fileext = ".vrt"),
-    final_bands = list(out)
-  )
+  list(out)
 }
 calc_scale_strings <- function(asset_names, items) {
   # Assign scale, offset attributes if they exist
