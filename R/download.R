@@ -1,123 +1,72 @@
-rsi_download_function <- function(items,
+rsi_download_rasters <- function(items,
                                   sign_function,
                                   asset_names,
                                   gdalwarp_options,
                                   aoi_bbox,
                                   gdal_config_options,
                                   merge_assets) {
-  if (merge_assets) {
-    simple_download(
-      items,
-      sign_function,
-      asset_names,
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options
-    )
-  } else {
-    complex_download(
-      items,
-      sign_function,
-      asset_names,
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options
-    )
-  }
-
-}
-
-
-simple_download <- function(items,
-                            sign_function,
-                            asset_names,
-                            gdalwarp_options,
-                            aoi_bbox,
-                            gdal_config_options) {
-  p <- build_progressr(length(names(asset_names)))
-  gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
-  out <- future.apply::future_lapply(
-    names(asset_names),
-    function(asset) {
-      p(glue::glue("Downloading {asset}"))
-      signed_items <- maybe_sign_items(items, sign_function)
-      item_urls <- rstac::assets_url(signed_items, asset)
-      out_file <- tempfile(fileext = ".tif")
-      sf::gdal_utils(
-        "warp",
-        source = paste0("/vsicurl/", item_urls),
-        destination = out_file,
-        options = gdalwarp_options,
-        quiet = TRUE,
-        config_options = gdal_config_options
-      )
-      out_file
-    },
-    future.seed = TRUE
-  )
-  names(out) <- names(asset_names)
-  as.data.frame(as.list(out))
-}
-
-complex_download <- function(items,
-                             sign_function,
-                             asset_names,
-                             gdalwarp_options,
-                             aoi_bbox,
-                             gdal_config_options) {
-  p <- build_progressr(length(items$features) * length(asset_names))
+  n_tiles_out <- ifelse(merge_assets, 1L, length(items$features))
+  p <- build_progressr(length(names(asset_names)) * n_tiles_out)
 
   download_locations <- data.frame(
     matrix(
       data = replicate(
-        length(asset_names) * length(items$features),
+        length(asset_names) * n_tiles_out,
         tempfile(fileext = ".tif")
       ),
       ncol = length(asset_names),
-      nrow = length(items$features)
+      nrow = n_tiles_out
     )
   )
   names(download_locations) <- names(asset_names)
 
-  feature_iterator <- ifelse(
-    length(items$features) > ncol(download_locations),
+  if (merge_assets) {
+    gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
+  }
+
+  asset_iterator <- ifelse(
+    merge_assets || (n_tiles_out < ncol(download_locations)),
     function(...) future.apply::future_lapply(..., future.seed = TRUE),
     lapply
   )
-  feature_iterator(
-    seq_along(items$features),
-    function(i) {
-      item <- items$features[[i]]
 
-      item <- maybe_sign_items(item, sign_function)
+  current_options <- gdalwarp_options
 
-      item_urls <- extract_urls(asset_names, item)
-
-      item_bbox <- item$bbox
-      current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
+  asset_iterator(
+    names(download_locations),
+    function(asset) {
+      feature_iter <- seq_len(length(items$features))
+      if (length(download_locations[[asset]]) == 1) {
+        feature_iter <- list(feature_iter)
+      }
 
       tryCatch({
-        destinations <- unlist(download_locations[i, , drop = FALSE])
         future.apply::future_mapply(
-          function(url, destination) {
-            p("Downloading assets")
+          function(which_item, dl_location) {
+            p(glue::glue("Downloading {asset}"))
+            signed_items <- maybe_sign_items(items, sign_function)
+            url <- rstac::assets_url(signed_items, asset)[which_item]
+
+            if (!merge_assets) {
+              item_bbox <- items$features[[which_item]]$bbox
+              current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
+            }
+
             sf::gdal_utils(
               "warp",
               paste0("/vsicurl/", url),
-              destination,
+              dl_location,
               options = current_options,
               quiet = TRUE,
               config_options = gdal_config_options
             )
           },
-          url = unlist(item_urls),
-          destination = destinations,
+          which_item = feature_iter,
+          dl_location = download_locations[[asset]],
           future.seed = TRUE
-        )
-        destinations
-        },
+        )},
         error = function(e) {
-          rlang::warn(glue::glue("Failed to download {item$id %||% 'UNKNOWN'} from {item$properties$datetime %||% 'UNKNOWN'}"))
+          rlang::warn(glue::glue("Failed to download {items$features[[i]]$id %||% 'UNKNOWN'} from {items$features[[i]]$properties$datetime %||% 'UNKNOWN'}"))
           download_locations[i, ] <- NA
         }
       )
@@ -126,22 +75,9 @@ complex_download <- function(items,
   as.data.frame(as.list(stats::na.omit(download_locations)))
 }
 
-extract_urls <- function(asset_names, items) {
-  items_urls <- lapply(
-    names(asset_names),
-    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
-  )
-  names(items_urls) <- names(asset_names)
-
-  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
-
-  items_urls
-}
-
 maybe_sign_items <- function(items, sign_function) {
   if (!is.null(sign_function)) {
     items <- sign_function(items)
   }
   items
 }
-

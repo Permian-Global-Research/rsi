@@ -336,7 +336,7 @@ get_stac_data <- function(aoi,
   # download
   # download_results is a data frame with names corresponding to "final" band
   # names and rows corresponding to individual STAC items
-  download_results <- rsi_download_function(
+  download_results <- rsi_download_rasters(
     items,
     sign_function,
     stats::setNames(nm = names(items_urls)),
@@ -896,4 +896,16 @@ get_rescaling_formula <- function(items, band_name, element) {
 
 is_pc <- function(url) {
   grepl("planetarycomputer.microsoft.com/api/stac/v1", url)
+}
+
+extract_urls <- function(asset_names, items) {
+  items_urls <- lapply(
+    names(asset_names),
+    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
+  )
+  names(items_urls) <- names(asset_names)
+
+  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
+
+  items_urls
 }
