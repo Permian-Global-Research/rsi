@@ -32,13 +32,24 @@ simple_download <- function(items,
 }
 
 complex_download <- function(items,
-                             download_locations,
                              sign_function,
                              asset_names,
                              gdalwarp_options,
                              aoi_bbox,
                              gdal_config_options) {
   p <- build_progressr(length(items$features) * length(asset_names))
+
+  download_locations <- data.frame(
+    matrix(
+      data = replicate(
+        length(asset_names) * length(items$features),
+        tempfile(fileext = ".tif")
+      ),
+      ncol = length(asset_names),
+      nrow = length(items$features)
+    )
+  )
+  names(download_locations) <- names(asset_names)
 
   feature_iterator <- ifelse(
     length(items$features) > ncol(download_locations),

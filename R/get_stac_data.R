@@ -311,31 +311,6 @@ get_stac_data <- function(aoi,
     drop_mask_band <- TRUE
   }
 
-  download_locations <- data.frame(
-    matrix(
-      data = replicate(
-        length(items_urls) * length(items$features),
-        tempfile(fileext = ".tif")
-      ),
-      ncol = length(items_urls),
-      nrow = length(items$features)
-    )
-  )
-  names(download_locations) <- names(items_urls)
-
-  scale_strings <- character()
-  if (rescale_bands) {
-    scale_strings <- calc_scale_strings(download_locations, items)
-  }
-  if (length(scale_strings)) {
-    scale_strings <- stats::setNames(
-      paste("function(x) x", scale_strings),
-      names(scale_strings)
-    )
-  } else {
-    rescale_bands <- FALSE
-  }
-
   use_simple_download <- is.null(mask_function) &&
     !rescale_bands &&
     !is.null(composite_function) &&
@@ -353,9 +328,8 @@ get_stac_data <- function(aoi,
   } else {
     download_results <- complex_download(
       items,
-      download_locations,
       sign_function,
-      c(asset_names, mask_band),
+      stats::setNames(c(asset_names, mask_band), c(names(asset_names), mask_band)),
       gdalwarp_options,
       aoi_bbox,
       gdal_config_options
@@ -365,6 +339,19 @@ get_stac_data <- function(aoi,
     download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
 
     download_results <- make_composite_bands(download_results, composite_function)
+
+    scale_strings <- character()
+    if (rescale_bands) {
+      scale_strings <- calc_scale_strings(names(items_urls), items)
+    }
+    if (length(scale_strings)) {
+      scale_strings <- stats::setNames(
+        paste("function(x) x", scale_strings),
+        names(scale_strings)
+      )
+    } else {
+      rescale_bands <- FALSE
+    }
 
     if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings)
 
@@ -376,7 +363,7 @@ get_stac_data <- function(aoi,
   mapply(
     function(in_bands, vrt) {
       stack_rasters(
-        in_bands,
+        in_bands[names(items_urls)],
         vrt,
         band_names = remap_band_names(names(items_urls), asset_names)
       )
@@ -771,17 +758,17 @@ make_composite_bands <- function(downloaded_bands, composite_function) {
     final_bands = list(out)
   )
 }
-calc_scale_strings <- function(download_locations, items) {
+calc_scale_strings <- function(asset_names, items) {
   # Assign scale, offset attributes if they exist
   scales <- vapply(
-    names(download_locations),
+    asset_names,
     get_rescaling_formula,
     items = items,
     element = "scale",
     numeric(1)
   )
   offsets <- vapply(
-    names(download_locations),
+    asset_names,
     get_rescaling_formula,
     items = items,
     element = "offset",
