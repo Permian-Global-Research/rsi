@@ -215,6 +215,7 @@ get_stac_data <- function(aoi,
                             GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                             GDAL_NUM_THREADS = "ALL_CPUS"
                           )) {
+  # query |> filter |> download |> build_tiles |> composite |> rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
@@ -289,8 +290,8 @@ get_stac_data <- function(aoi,
     end_date = end_date,
     limit = limit,
     ...
-  ) |>
-    item_filter_function(...)
+  )
+  items <- item_filter_function(items, ...)
 
   if (!length(items$features)) {
     rlang::abort(
@@ -377,12 +378,20 @@ get_stac_data <- function(aoi,
       aoi_bbox,
       gdal_config_options,
       p,
-      mask_function,
-      composite_function,
-      output_filename,
-      rescale_bands,
-      scale_strings
+      output_filename
     )
+    if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_results, p)
+
+    download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
+
+    download_results <- make_composite_bands(
+      download_results,
+      composite_function,
+      p
+    )
+
+    if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings, p)
+
     on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
 
@@ -703,35 +712,6 @@ get_dem <- function(aoi,
   do.call(get_stac_data, args)
 }
 
-download_assets <- function(urls,
-                            destinations,
-                            gdalwarp_options,
-                            gdal_config_options,
-                            progressor) {
-  if (length(urls) != length(destinations)) {
-    rlang::abort("`urls` and `destinations` must be the same length.")
-  }
-
-  future.apply::future_mapply(
-    function(url, destination) {
-      progressor("Downloading assets")
-      sf::gdal_utils(
-        "warp",
-        paste0("/vsicurl/", url),
-        destination,
-        options = gdalwarp_options,
-        quiet = TRUE,
-        config_options = gdal_config_options
-      )
-    },
-    url = urls,
-    destination = destinations,
-    future.seed = TRUE
-  )
-
-  destinations
-}
-
 apply_masks <- function(mask_band, mask_function, download_locations, p) {
   apply(
     download_locations,
@@ -758,102 +738,6 @@ apply_masks <- function(mask_band, mask_function, download_locations, p) {
     }
   )
 }
-
-simple_download <- function(items,
-                            sign_function,
-                            asset_names,
-                            gdalwarp_options,
-                            aoi_bbox,
-                            gdal_config_options,
-                            p) {
-  gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
-  out <- future.apply::future_lapply(
-    names(asset_names),
-    function(asset) {
-      p(glue::glue("Downloading {asset}"))
-      signed_items <- maybe_sign_items(items, sign_function)
-      item_urls <- paste0("/vsicurl/", rstac::assets_url(signed_items, asset))
-      out_file <- tempfile(fileext = ".tif")
-      sf::gdal_utils(
-        "warp",
-        source = item_urls,
-        destination = out_file,
-        options = gdalwarp_options,
-        config_options = gdal_config_options
-      )
-      out_file
-    },
-    future.seed = TRUE
-  )
-  list(
-    final_bands = list(out),
-    out_vrt = tempfile(fileext = ".vrt")
-  )
-}
-
-complex_download <- function(items,
-                             items_urls,
-                             download_locations,
-                             sign_function,
-                             asset_names,
-                             mask_band,
-                             gdalwarp_options,
-                             aoi_bbox,
-                             gdal_config_options,
-                             p,
-                             mask_function,
-                             composite_function,
-                             output_filename,
-                             rescale_bands,
-                             scale_strings) {
-  feature_iterator <- ifelse(
-    length(items$features) > ncol(download_locations),
-    function(...) future.apply::future_lapply(..., future.seed = TRUE),
-    lapply
-  )
-  feature_iterator(
-    seq_along(items$features),
-    function(i) {
-      item <- items$features[[i]]
-
-      item <- maybe_sign_items(item, sign_function)
-
-      item_urls <- extract_urls(asset_names, item)
-      if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
-
-      item_bbox <- item$bbox
-      current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
-
-      tryCatch(
-        download_assets(
-          unlist(item_urls),
-          unlist(download_locations[i, , drop = FALSE]),
-          current_options,
-          gdal_config_options,
-          p
-        ),
-        error = function(e) {
-          rlang::warn(glue::glue("Failed to download {item$id %||% 'UNKNOWN'} from {item$properties$datetime %||% 'UNKNOWN'}"))
-          download_locations[i, ] <- NA
-        }
-      )
-    }
-  )
-  download_locations <- stats::na.omit(download_locations)
-  names(download_locations) <- names(items_urls)
-
-  if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_locations, p)
-
-  out <- make_composite_bands(
-    download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
-    composite_function,
-    p
-  )
-
-  if (rescale_bands) lapply(out$final_bands, rescale_band, scale_strings, p)
-  out
-}
-
 
 make_composite_bands <- function(downloaded_bands, composite_function, p) {
   if (is.null(composite_function)) {
