@@ -35,7 +35,6 @@ complex_download <- function(items,
                              download_locations,
                              sign_function,
                              asset_names,
-                             mask_band,
                              gdalwarp_options,
                              aoi_bbox,
                              gdal_config_options) {
@@ -54,7 +53,6 @@ complex_download <- function(items,
       item <- maybe_sign_items(item, sign_function)
 
       item_urls <- extract_urls(asset_names, item)
-      if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
 
       item_bbox <- item$bbox
       current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
