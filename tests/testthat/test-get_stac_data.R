@@ -271,7 +271,8 @@ test_that("no-composite paths work on Windows #29, #32", {
       aoi = aoi,
       start_date = "2022-06-01",
       end_date = "2022-08-01",
-      composite_function = NULL
+      composite_function = NULL,
+      output_filename = tempfile(fileext = ".tif")
     )
   )
 })
@@ -295,7 +296,8 @@ test_that("no-composites return the same data", {
           aoi = aoi,
           start_date = "2022-07-01",
           end_date = "2022-07-05",
-          composite_function = NULL
+          composite_function = NULL,
+          output_filename = tempfile(fileext = ".tif")
         )
       )
     ),
