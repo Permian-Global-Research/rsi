@@ -32,3 +32,11 @@ print.rsi_band_mapping <- function(x, ...) {
   names(x) <- x_names
   print(x)
 }
+
+build_progressr <- function(n) {
+  if (rlang::is_installed("progressr")) {
+    progressr::progressor(n)
+  } else {
+    function(...) NULL
+  }
+}

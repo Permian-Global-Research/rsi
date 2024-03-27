@@ -336,21 +336,6 @@ get_stac_data <- function(aoi,
     rescale_bands <- FALSE
   }
 
-  if (rlang::is_installed("progressr")) {
-    length_progress <- figure_out_progress_length(
-      items_urls,
-      mask_band,
-      composite_function,
-      mask_function,
-      download_locations,
-      rescale_bands,
-      scale_strings
-    )
-    p <- progressr::progressor(length_progress)
-  } else {
-    p <- function(...) NULL
-  }
-
   use_simple_download <- is.null(mask_function) &&
     !rescale_bands &&
     !is.null(composite_function) &&
@@ -363,8 +348,7 @@ get_stac_data <- function(aoi,
       asset_names,
       gdalwarp_options,
       aoi_bbox,
-      gdal_config_options,
-      p
+      gdal_config_options
     )
   } else {
     download_results <- complex_download(
@@ -377,20 +361,15 @@ get_stac_data <- function(aoi,
       gdalwarp_options,
       aoi_bbox,
       gdal_config_options,
-      p,
       output_filename
     )
-    if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_results, p)
+    if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_results)
 
     download_results <- download_results[, names(download_results) %in% names(asset_names), drop = FALSE]
 
-    download_results <- make_composite_bands(
-      download_results,
-      composite_function,
-      p
-    )
+    download_results <- make_composite_bands(download_results, composite_function)
 
-    if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings, p)
+    if (rescale_bands) lapply(download_results$final_bands, rescale_band, scale_strings)
 
     on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
@@ -712,7 +691,9 @@ get_dem <- function(aoi,
   do.call(get_stac_data, args)
 }
 
-apply_masks <- function(mask_band, mask_function, download_locations, p) {
+apply_masks <- function(mask_band, mask_function, download_locations) {
+  p <- build_progressr(nrow(download_locations) + (nrow(download_locations) * (ncol(download_locations) - 1)))
+
   apply(
     download_locations,
     1,
@@ -739,7 +720,9 @@ apply_masks <- function(mask_band, mask_function, download_locations, p) {
   )
 }
 
-make_composite_bands <- function(downloaded_bands, composite_function, p) {
+make_composite_bands <- function(downloaded_bands, composite_function) {
+  p <- build_progressr(length(names(downloaded_bands)))
+
   if (is.null(composite_function)) {
     return(
       list(
@@ -831,7 +814,9 @@ calc_scale_strings <- function(download_locations, items) {
   scale_strings
 }
 
-rescale_band <- function(composited_bands, scale_strings, p) {
+rescale_band <- function(composited_bands, scale_strings) {
+  p <- build_progressr(length(names(scale_strings)))
+
   for (band in names(scale_strings)) {
     p(glue::glue("Rescaling band {band}"))
     rescaled_file <- tempfile(fileext = ".tif")
@@ -941,33 +926,6 @@ get_rescaling_formula <- function(items, band_name, element) {
   }
   elements <- unique(elements)
   elements
-}
-
-figure_out_progress_length <- function(items_urls, mask_band, composite_function, mask_function, download_locations, rescale_bands, scale_strings) {
-  # this is frankly ridiculous
-
-  # How many steps do we walk through:
-  # 1. Must download all items, including the masks
-  length_progress <- length(unlist(items_urls))
-  # 2. If masking, we are going to either run a mask function or actually mask
-  # all downloads (*2)
-  if (!is.null(mask_band)) length_progress <- length_progress * 2
-  # 3. Compositing complicates things:
-  if (!is.null(composite_function)) {
-    # 3.1 We'll add 1x the number of bands:
-    composite_multiplier <- 1
-    length_progress <- length_progress + (length(items_urls) * composite_multiplier)
-    # 4. But not the mask band if it exists:
-    if (!is.null(mask_function)) length_progress <- length_progress - 1
-  } else {
-    # If rescaling, we'll need to scale each image separately:
-    composite_multiplier <- nrow(download_locations)
-  }
-  # 5. If rescaling, add one step for each rescale:
-  if (rescale_bands) {
-    length_progress <- length_progress + (length(scale_strings) * composite_multiplier)
-  }
-  length_progress
 }
 
 is_pc <- function(url) {

@@ -3,8 +3,8 @@ simple_download <- function(items,
                             asset_names,
                             gdalwarp_options,
                             aoi_bbox,
-                            gdal_config_options,
-                            p) {
+                            gdal_config_options) {
+  p <- build_progressr(length(names(asset_names)))
   gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
   out <- future.apply::future_lapply(
     names(asset_names),
@@ -39,8 +39,9 @@ complex_download <- function(items,
                              gdalwarp_options,
                              aoi_bbox,
                              gdal_config_options,
-                             p,
                              output_filename) {
+  p <- build_progressr(length(items$features) * length(asset_names))
+
   feature_iterator <- ifelse(
     length(items$features) > ncol(download_locations),
     function(...) future.apply::future_lapply(..., future.seed = TRUE),
