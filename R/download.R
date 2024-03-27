@@ -11,13 +11,14 @@ simple_download <- function(items,
     function(asset) {
       p(glue::glue("Downloading {asset}"))
       signed_items <- maybe_sign_items(items, sign_function)
-      item_urls <- paste0("/vsicurl/", rstac::assets_url(signed_items, asset))
+      item_urls <- rstac::assets_url(signed_items, asset)
       out_file <- tempfile(fileext = ".tif")
       sf::gdal_utils(
         "warp",
-        source = item_urls,
+        source = paste0("/vsicurl/", item_urls),
         destination = out_file,
         options = gdalwarp_options,
+        quiet = TRUE,
         config_options = gdal_config_options
       )
       out_file
@@ -37,8 +38,7 @@ complex_download <- function(items,
                              mask_band,
                              gdalwarp_options,
                              aoi_bbox,
-                             gdal_config_options,
-                             output_filename) {
+                             gdal_config_options) {
   p <- build_progressr(length(items$features) * length(asset_names))
 
   feature_iterator <- ifelse(
@@ -87,5 +87,24 @@ complex_download <- function(items,
     }
   )
   stats::na.omit(download_locations)
+}
+
+extract_urls <- function(asset_names, items) {
+  items_urls <- lapply(
+    names(asset_names),
+    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
+  )
+  names(items_urls) <- names(asset_names)
+
+  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
+
+  items_urls
+}
+
+maybe_sign_items <- function(items, sign_function) {
+  if (!is.null(sign_function)) {
+    items <- sign_function(items)
+  }
+  items
 }
 

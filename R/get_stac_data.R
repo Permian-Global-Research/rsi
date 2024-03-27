@@ -359,8 +359,7 @@ get_stac_data <- function(aoi,
       mask_band,
       gdalwarp_options,
       aoi_bbox,
-      gdal_config_options,
-      output_filename
+      gdal_config_options
     )
     if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_results)
 
@@ -885,25 +884,6 @@ process_dates <- function(date) {
   date <- as.POSIXct(date, "UTC")
   date <- strftime(date, "%Y-%m-%dT%H:%M:%S%Z", "UTC")
   gsub("UTC", "Z", date)
-}
-
-extract_urls <- function(asset_names, items) {
-  items_urls <- lapply(
-    names(asset_names),
-    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
-  )
-  names(items_urls) <- names(asset_names)
-
-  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
-
-  items_urls
-}
-
-maybe_sign_items <- function(items, sign_function) {
-  if (!is.null(sign_function)) {
-    items <- sign_function(items)
-  }
-  items
 }
 
 get_rescaling_formula <- function(items, band_name, element) {
