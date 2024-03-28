@@ -2,19 +2,25 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "rsi",
-  "description": "Tools for downloading spatial data from spatiotemporal asset catalogs ('STAC') and computing standard spectral indices from raster data.",
-  "name": "rsi: Utilities for Retrieving Satellite Imagery, Calculating Spectral\n    Indices, and Wrangling the Outputs",
+  "description": "Downloads spatial data from spatiotemporal asset catalogs ('STAC'), computes standard spectral indices from the Awesome Spectral Indices project (Montero et al. (2023) <doi:10.1038/s41597-023-02096-0>) against raster data, and glues the outputs together into predictor bricks. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from 'sf' and 'terra', and data downloading functions support complex 'CQL2' queries using 'rstac'.",
+  "name": "rsi: Efficiently Retrieve and Process Satellite Imagery",
   "relatedLink": "https://permian-global-research.github.io/rsi/",
   "codeRepository": "https://github.com/Permian-Global-Research/rsi",
   "issueTracker": "https://github.com/Permian-Global-Research/rsi/issues",
-  "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.0.9000",
+  "license": "Apache License 2",
+  "version": "0.1.2.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.0 (2023-04-21)",
+  "runtimePlatform": "R version 4.3.3 (2024-02-29)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -48,6 +54,54 @@
   "softwareSuggestions": [
     {
       "@type": "SoftwareApplication",
+      "identifier": "curl",
+      "name": "curl",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=curl"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "progressr",
+      "name": "progressr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=progressr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
       "version": ">= 3.0.0",
@@ -77,9 +131,21 @@
       "@type": "SoftwareApplication",
       "identifier": "R",
       "name": "R",
-      "version": ">= 2.10"
+      "version": ">= 4.0"
     },
     "2": {
+      "@type": "SoftwareApplication",
+      "identifier": "future.apply",
+      "name": "future.apply",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=future.apply"
+    },
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -91,7 +157,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "3": {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "jsonlite",
       "name": "jsonlite",
@@ -103,7 +169,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=jsonlite"
     },
-    "4": {
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "lifecycle",
+      "name": "lifecycle",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+    },
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "proceduralnames",
       "name": "proceduralnames",
@@ -115,7 +193,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=proceduralnames"
     },
-    "5": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -127,7 +205,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "6": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "rstac",
       "name": "rstac",
@@ -139,7 +217,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rstac"
     },
-    "7": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -151,7 +229,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "8": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "terra",
       "name": "terra",
@@ -163,7 +241,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=terra"
     },
-    "9": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -177,8 +255,8 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "838.617KB",
-  "releaseNotes": "https://github.com/Permian-Global-Research/rsi/blob/master/NEWS.md",
-  "readme": "https://github.com/Permian-Global-Research/rsi/blob/main/README.md",
-  "contIntegration": ["https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main"]
+  "fileSize": "813.706KB",
+  "releaseNotes": "https://github.com/Permian-Global-Research/rsi/blob/main/NEWS.md",
+  "contIntegration": ["https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main"],
+  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#maturing", "https://www.repostatus.org/#active"]
 }
