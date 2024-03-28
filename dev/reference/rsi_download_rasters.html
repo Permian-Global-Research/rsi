@@ -135,6 +135,23 @@ correspond to distinct items, and cells contain file paths to the downloaded
 data.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
+<span class="r-in"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">landsat_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">aoi</span>,</span></span>
+<span class="r-in"><span>  start_date <span class="op">=</span> <span class="st">"2022-06-01"</span>,</span></span>
+<span class="r-in"><span>  end_date <span class="op">=</span> <span class="st">"2022-08-30"</span>,</span></span>
+<span class="r-in"><span>  download_function <span class="op">=</span> <span class="va">rsi_download_rasters</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
