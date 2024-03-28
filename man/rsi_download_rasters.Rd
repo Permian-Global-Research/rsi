@@ -20,7 +20,7 @@ rsi_download_rasters(
 )
 }
 \arguments{
-\item{items}{A \code{StacItemCollection} object, as returned by \code{rsi_query_api()}.}
+\item{items}{A \code{StacItemCollection} object, as returned by \code{\link[=rsi_query_api]{rsi_query_api()}}.}
 
 \item{aoi}{Either an sf(c) object outlining the area of interest to get
 imagery for, or a \code{bbox} image containing the bounding box of your AOI.}
@@ -50,6 +50,11 @@ varying data types.}
 \code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
 
 \item{...}{Passed to \code{item_filter_function}.}
+}
+\value{
+A data frame  where columns correspond to distinct assets, rows
+correspond to distinct items, and cells contain file paths to the downloaded
+data.
 }
 \description{
 Download specific assets from a set of STAC items

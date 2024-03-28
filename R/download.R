@@ -1,6 +1,6 @@
 #' Download specific assets from a set of STAC items
 #'
-#' @param items A `StacItemCollection` object, as returned by `rsi_query_api()`.
+#' @param items A `StacItemCollection` object, as returned by [rsi_query_api()].
 #' @param aoi Either an sf(c) object outlining the area of interest to get
 #' imagery for, or a `bbox` image containing the bounding box of your AOI.
 #' @param merge Logical: for each asset, should data from multiple items be
@@ -10,6 +10,10 @@
 #' downloaded. This is fast, but precludes per-item masking and compositing.
 #' If `FALSE`, each asset from each item is saved as a separate file.
 #' @inheritParams get_stac_data
+#'
+#' @returns A data frame  where columns correspond to distinct assets, rows
+#' correspond to distinct items, and cells contain file paths to the downloaded
+#' data.
 #'
 #' @export
 rsi_download_rasters <- function(items,
@@ -78,23 +82,23 @@ rsi_download_rasters <- function(items,
         feature_iter <- list(feature_iter)
       }
 
-      tryCatch(
-        {
-          future.apply::future_mapply(
-            function(which_item, dl_location) {
-              p(glue::glue("Downloading {asset}"))
-              signed_items <- maybe_sign_items(items, sign_function)
-              url <- rstac::assets_url(signed_items, asset)[which_item]
+      future.apply::future_mapply(
+        function(which_item, dl_location) {
+          p(glue::glue("Downloading {asset}"))
+          signed_items <- maybe_sign_items(items, sign_function)
+          url <- rstac::assets_url(signed_items, asset)[which_item]
 
-              if (!merge) {
-                item_bbox <- items$features[[which_item]]$bbox
-                current_options <- set_gdalwarp_extent(
-                  gdalwarp_options,
-                  aoi,
-                  item_bbox
-                )
-              }
+          if (!merge) {
+            item_bbox <- items$features[[which_item]]$bbox
+            current_options <- set_gdalwarp_extent(
+              gdalwarp_options,
+              aoi,
+              item_bbox
+            )
+          }
 
+          tryCatch(
+            {
               sf::gdal_utils(
                 "warp",
                 paste0("/vsicurl/", url),
@@ -104,19 +108,19 @@ rsi_download_rasters <- function(items,
                 config_options = gdal_config_options
               )
             },
-            which_item = feature_iter,
-            dl_location = download_locations[[asset]],
-            future.seed = TRUE
+            error = function(e) {
+              rlang::warn(
+                glue::glue(
+                  "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint
+                )
+              )
+              download_locations[which_item, ] <- NA
+            }
           )
         },
-        error = function(e) {
-          rlang::warn(
-            glue::glue(
-              "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint
-            )
-          )
-          download_locations[which_item, ] <- NA
-        }
+        which_item = feature_iter,
+        dl_location = download_locations[[asset]],
+        future.seed = TRUE
       )
     }
   )
