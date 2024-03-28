@@ -4,7 +4,7 @@
   "identifier": "rsi",
   "description": "Downloads spatial data from spatiotemporal asset catalogs ('STAC'), computes standard spectral indices from the Awesome Spectral Indices project (Montero et al. (2023) <doi:10.1038/s41597-023-02096-0>) against raster data, and glues the outputs together into predictor bricks. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from 'sf' and 'terra', and data downloading functions support complex 'CQL2' queries using 'rstac'.",
   "name": "rsi: Efficiently Retrieve and Process Satellite Imagery",
-  "relatedLink": "https://permian-global-research.github.io/rsi/",
+  "relatedLink": ["https://permian-global-research.github.io/rsi/", "https://CRAN.R-project.org/package=rsi"],
   "codeRepository": "https://github.com/Permian-Global-Research/rsi",
   "issueTracker": "https://github.com/Permian-Global-Research/rsi/issues",
   "license": "Apache License 2",
@@ -159,6 +159,18 @@
     },
     "4": {
       "@type": "SoftwareApplication",
+      "identifier": "httr",
+      "name": "httr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=httr"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
       "identifier": "jsonlite",
       "name": "jsonlite",
       "provider": {
@@ -169,7 +181,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=jsonlite"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -181,7 +193,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lifecycle"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "proceduralnames",
       "name": "proceduralnames",
@@ -193,7 +205,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=proceduralnames"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -205,7 +217,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "rstac",
       "name": "rstac",
@@ -217,7 +229,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rstac"
     },
-    "9": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -229,7 +241,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "10": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "terra",
       "name": "terra",
@@ -241,7 +253,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=terra"
     },
-    "11": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -255,7 +267,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "813.706KB",
+  "fileSize": "816.232KB",
   "releaseNotes": "https://github.com/Permian-Global-Research/rsi/blob/main/NEWS.md",
   "contIntegration": ["https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main"],
   "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#maturing", "https://www.repostatus.org/#active"]
