@@ -104,6 +104,9 @@
 #' [rsi_query_api()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
+#' @param download_function A function that takes the output from
+#' `query_function` and downloads the assets attached to those items. See
+#' [rsi_download_rasters()] for an example.
 #' @param sign_function A function that takes the output from `query_function`
 #' and signs the item URLs, if necessary.
 #' @param ... Passed to `item_filter_function`.
@@ -188,6 +191,7 @@ get_stac_data <- function(aoi,
                           collection,
                           ...,
                           query_function = rsi_query_api,
+                          download_function = rsi_download_rasters,
                           sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
@@ -337,14 +341,15 @@ get_stac_data <- function(aoi,
   # download
   # download_results is a data frame with names corresponding to "final" band
   # names and rows corresponding to individual STAC items
-  download_results <- rsi_download_rasters(
+  download_results <- download_function(
     items = items,
     aoi = aoi_bbox,
     asset_names = stats::setNames(nm = names(items_urls)),
     sign_function = sign_function,
-    merge_assets = merge_assets,
+    merge = merge_assets,
     gdalwarp_options = gdalwarp_options,
-    gdal_config_options = gdal_config_options
+    gdal_config_options = gdal_config_options,
+    ...
   )
   # mask
   if (!is.null(mask_band)) {
@@ -437,6 +442,7 @@ get_sentinel1_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  download_function = attr(asset_names, "download_function"),
                                   sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
@@ -482,6 +488,7 @@ get_sentinel2_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  download_function = attr(asset_names, "download_function"),
                                   sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
@@ -528,6 +535,7 @@ get_landsat_imagery <- function(aoi,
                                 stac_source = attr(asset_names, "stac_source"),
                                 collection = attr(asset_names, "collection_name"),
                                 query_function = attr(asset_names, "query_function"),
+                                download_function = attr(asset_names, "download_function"),
                                 sign_function = attr(asset_names, "sign_function"),
                                 rescale_bands = TRUE,
                                 item_filter_function = landsat_platform_filter,
@@ -573,6 +581,7 @@ get_naip_imagery <- function(aoi,
                              stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
                              collection = "naip",
                              query_function = rsi_query_api,
+                             download_function = rsi_download_rasters,
                              sign_function = sign_planetary_computer,
                              rescale_bands = FALSE,
                              output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
@@ -615,6 +624,7 @@ get_alos_palsar_imagery <- function(aoi,
                                     stac_source = attr(asset_names, "stac_source"),
                                     collection = attr(asset_names, "collection_name"),
                                     query_function = attr(asset_names, "query_function"),
+                                    download_function = attr(asset_names, "download_function"),
                                     sign_function = attr(asset_names, "sign_function"),
                                     rescale_bands = FALSE,
                                     item_filter_function = NULL,
@@ -660,6 +670,7 @@ get_dem <- function(aoi,
                     stac_source = attr(asset_names, "stac_source"),
                     collection = attr(asset_names, "collection_name"),
                     query_function = attr(asset_names, "query_function"),
+                    download_function = attr(asset_names, "download_function"),
                     sign_function = attr(asset_names, "sign_function"),
                     rescale_bands = FALSE,
                     item_filter_function = NULL,
