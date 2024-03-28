@@ -37,7 +37,7 @@ rsi_download_rasters <- function(items,
                                    GDAL_NUM_THREADS = "ALL_CPUS"
                                  ),
                                  ...) {
-  if (class(aoi) != "bbox") aoi <- sf::st_bbox(aoi)
+  if (!inherits(aoi, "bbox")) aoi <- sf::st_bbox(aoi)
 
   check_type_and_length(
     merge = logical(1)
@@ -112,10 +112,10 @@ rsi_download_rasters <- function(items,
         error = function(e) {
           rlang::warn(
             glue::glue(
-              "Failed to download {items$features[[i]]$id %||% 'UNKNOWN'} from {items$features[[i]]$properties$datetime %||% 'UNKNOWN'}" # nolint
+              "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint
             )
           )
-          download_locations[i, ] <- NA
+          download_locations[which_item, ] <- NA
         }
       )
     }
