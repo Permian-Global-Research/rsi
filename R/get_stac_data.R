@@ -224,12 +224,13 @@ get_stac_data <- function(aoi,
   }
 
   if (sf::st_is_longlat(aoi) && !(is.null(pixel_x_size) || is.null(pixel_y_size)) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
-    rlang::warn(c(
-      "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
-      i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
-      i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
-    ),
-    class = "rsi_default_pixel_size_geographic_coords"
+    rlang::warn(
+      c(
+        "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
+        i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
+        i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
+      ),
+      class = "rsi_default_pixel_size_geographic_coords"
     )
   }
 
@@ -347,7 +348,11 @@ get_stac_data <- function(aoi,
   )
   # mask
   if (!is.null(mask_band)) {
-    apply_masks(mask_band, mask_function, download_results)
+    rsi_apply_masks(
+      download_locations = download_results,
+      mask_band = mask_band,
+      mask_function = mask_function
+    )
   }
 
   download_results <- download_results[names(download_results) %in% names(asset_names)]
@@ -359,7 +364,7 @@ get_stac_data <- function(aoi,
     # turn each row of the DF into its own character vector, stored in a list
     download_results <- apply(download_results, 1, identity, simplify = FALSE)
   } else if (!merge_assets) {
-    download_results <- make_composite_bands(download_results, composite_function)
+    download_results <- rsi_composite_bands(download_results, composite_function)
   } else {
     # turn DF into a character vector inside a list
     download_results <- list(unlist(download_results))
@@ -688,7 +693,7 @@ get_dem <- function(aoi,
   do.call(get_stac_data, args)
 }
 
-apply_masks <- function(mask_band, mask_function, download_locations) {
+rsi_apply_masks <- function(download_locations, mask_band, mask_function) {
   p <- build_progressr(nrow(download_locations) + (nrow(download_locations) * (ncol(download_locations) - 1)))
 
   apply(
@@ -717,25 +722,28 @@ apply_masks <- function(mask_band, mask_function, download_locations) {
   )
 }
 
-make_composite_bands <- function(downloaded_bands, composite_function) {
-  p <- build_progressr(length(names(downloaded_bands)))
+rsi_composite_bands <- function(download_locations,
+                                composite_function = c("merge", "median", "mean", "sum", "min", "max")) {
+  composite_function <- rlang::arg_match(composite_function)
+
+  p <- build_progressr(length(names(download_locations)))
 
   download_dir <- file.path(tempdir(), "composite_dir")
   if (!dir.exists(download_dir)) dir.create(download_dir)
 
   out <- vapply(
-    names(downloaded_bands),
+    names(download_locations),
     function(band_name) {
       p(glue::glue("Compositing {band_name}"))
       out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
-      if (length(downloaded_bands[[band_name]]) == 1) {
-        file.copy(downloaded_bands[[band_name]], out_file)
+      if (length(download_locations[[band_name]]) == 1) {
+        file.copy(download_locations[[band_name]], out_file)
       } else if (composite_function == "merge") {
         do.call(
           terra::merge,
           list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
             filename = out_file,
             overwrite = TRUE
           )
@@ -744,7 +752,7 @@ make_composite_bands <- function(downloaded_bands, composite_function) {
         do.call(
           terra::mosaic,
           list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
             fun = composite_function,
             filename = out_file,
             overwrite = TRUE

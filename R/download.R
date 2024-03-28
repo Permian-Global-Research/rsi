@@ -59,33 +59,43 @@ rsi_download_rasters <- function(items,
         feature_iter <- list(feature_iter)
       }
 
-      tryCatch({
-        future.apply::future_mapply(
-          function(which_item, dl_location) {
-            p(glue::glue("Downloading {asset}"))
-            signed_items <- maybe_sign_items(items, sign_function)
-            url <- rstac::assets_url(signed_items, asset)[which_item]
+      tryCatch(
+        {
+          future.apply::future_mapply(
+            function(which_item, dl_location) {
+              p(glue::glue("Downloading {asset}"))
+              signed_items <- maybe_sign_items(items, sign_function)
+              url <- rstac::assets_url(signed_items, asset)[which_item]
 
-            if (!merge_assets) {
-              item_bbox <- items$features[[which_item]]$bbox
-              current_options <- set_gdalwarp_extent(gdalwarp_options, aoi, item_bbox)
-            }
+              if (!merge_assets) {
+                item_bbox <- items$features[[which_item]]$bbox
+                current_options <- set_gdalwarp_extent(
+                  gdalwarp_options,
+                  aoi,
+                  item_bbox
+                )
+              }
 
-            sf::gdal_utils(
-              "warp",
-              paste0("/vsicurl/", url),
-              dl_location,
-              options = current_options,
-              quiet = TRUE,
-              config_options = gdal_config_options
-            )
-          },
-          which_item = feature_iter,
-          dl_location = download_locations[[asset]],
-          future.seed = TRUE
-        )},
+              sf::gdal_utils(
+                "warp",
+                paste0("/vsicurl/", url),
+                dl_location,
+                options = current_options,
+                quiet = TRUE,
+                config_options = gdal_config_options
+              )
+            },
+            which_item = feature_iter,
+            dl_location = download_locations[[asset]],
+            future.seed = TRUE
+          )
+        },
         error = function(e) {
-          rlang::warn(glue::glue("Failed to download {items$features[[i]]$id %||% 'UNKNOWN'} from {items$features[[i]]$properties$datetime %||% 'UNKNOWN'}"))
+          rlang::warn(
+            glue::glue(
+              "Failed to download {items$features[[i]]$id %||% 'UNKNOWN'} from {items$features[[i]]$properties$datetime %||% 'UNKNOWN'}" # nolint
+            )
+          )
           download_locations[i, ] <- NA
         }
       )
