@@ -248,7 +248,8 @@ get_stac_data <- function(aoi,
         c(
           "`mask_function` was NULL, but `mask_band` was not `NULL`.",
           i = "`mask_band` will be ignored (not downloaded or used)."
-        )
+        ),
+        class = "rsi_ignored_mask_band"
       )
     }
     mask_band <- NULL
@@ -317,7 +318,9 @@ get_stac_data <- function(aoi,
         "`asset_names` was `NULL`, so rsi is attempting to download all assets in items in this collection.",
         i = "This includes multiple assets, so rsi is attempting to download all of them using the same download function.",
         i = "This might cause errors or not be what you want! Specify `asset_names` to fix this (and to silence this warning)."
-      ))
+      ),
+      class = "rsi_missing_asset_names"
+    )
     }
   }
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
@@ -920,7 +923,9 @@ get_rescaling_formula <- function(items, band_name, element) {
     rlang::warn(c(
       glue::glue("Images in band {band_name} have different {element}s."),
       i = "Returning images without rescaling."
-    ))
+    ),
+    class = "rsi_multiple_scaling_formulas"
+    )
     elements <- NA_real_
   }
   elements <- unique(elements)

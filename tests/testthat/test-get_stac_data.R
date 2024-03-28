@@ -340,3 +340,46 @@ test_that("get_alos_palsar_imagery() is stable", {
   )
   expect_no_error(terra::rast(out))
 })
+
+test_that("non-sf AOI throws an error", {
+  expect_error(
+    get_stac_data(2),
+    class = "rsi_aoi_not_sf"
+  )
+})
+
+test_that("Providing pixel sizes with geographic coords fires the expected warning", {
+  skip_on_cran()
+  skip_if_offline()
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+
+  expect_error(
+    tryCatch(
+      get_stac_data(aoi, pixel_x_size = 30, pixel_y_size = 30),
+      rsi_default_pixel_size_geographic_coords = stop("The warning fired")
+    )
+  )
+})
+
+test_that("Providing no asset names fires the expected warning", {
+  skip_on_cran()
+  skip_if_offline()
+  aoi <- sf::st_point(c(-74.912131, 44.080410))
+  aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+  aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
+
+  expect_error(
+    tryCatch(
+      get_stac_data(
+        aoi,
+        start_date = "2022-01-01",
+        end_date = "2022-12-31",
+        stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
+        collection = "usgs-lcmap-conus-v13",
+        output_filename = tempfile(fileext = ".tif"),
+      ),
+      rsi_missing_asset_names = stop("The warning fired")
+    )
+  )
+})

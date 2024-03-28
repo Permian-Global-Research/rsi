@@ -37,6 +37,6 @@ build_progressr <- function(n) {
   if (rlang::is_installed("progressr")) {
     progressr::progressor(n, on_exit = FALSE)
   } else {
-    function(...) NULL
+    function(...) NULL # nocov
   }
 }
