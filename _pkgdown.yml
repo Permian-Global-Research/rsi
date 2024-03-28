@@ -37,6 +37,6 @@ reference:
     contents:
       - ends_with("mask_function")
       - landsat_platform_filter
-      - default_query_function
+      - starts_with("rsi")
       - sign_planetary_computer
       - stack_rasters

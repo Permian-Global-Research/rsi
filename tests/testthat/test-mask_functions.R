@@ -35,5 +35,4 @@ test_that("landsat_mask_function arguments work", {
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), c("land", "water"))))
   )
-
 })

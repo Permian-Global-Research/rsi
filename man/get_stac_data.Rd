@@ -20,7 +20,8 @@ get_stac_data(
   stac_source,
   collection,
   ...,
-  query_function = default_query_function,
+  query_function = rsi_query_api,
+  download_function = rsi_download_rasters,
   sign_function = NULL,
   rescale_bands = TRUE,
   item_filter_function = NULL,
@@ -48,6 +49,7 @@ get_sentinel1_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  download_function = attr(asset_names, "download_function"),
   sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
@@ -75,6 +77,7 @@ get_sentinel2_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  download_function = attr(asset_names, "download_function"),
   sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
@@ -103,6 +106,7 @@ get_landsat_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  download_function = attr(asset_names, "download_function"),
   sign_function = attr(asset_names, "sign_function"),
   rescale_bands = TRUE,
   item_filter_function = landsat_platform_filter,
@@ -129,7 +133,8 @@ get_naip_imagery(
   asset_names = "image",
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
   collection = "naip",
-  query_function = default_query_function,
+  query_function = rsi_query_api,
+  download_function = rsi_download_rasters,
   sign_function = sign_planetary_computer,
   rescale_bands = FALSE,
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
@@ -154,6 +159,7 @@ get_alos_palsar_imagery(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  download_function = attr(asset_names, "download_function"),
   sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
@@ -181,6 +187,7 @@ get_dem(
   stac_source = attr(asset_names, "stac_source"),
   collection = attr(asset_names, "collection_name"),
   query_function = attr(asset_names, "query_function"),
+  download_function = attr(asset_names, "download_function"),
   sign_function = attr(asset_names, "sign_function"),
   rescale_bands = FALSE,
   item_filter_function = NULL,
@@ -224,9 +231,13 @@ images from.}
 
 \item{query_function}{A function that takes the output from
 \code{\link[rstac:stac_search]{rstac::stac_search()}} and executes the request. See
-\code{\link[=default_query_function]{default_query_function()}} and the \code{query_function} slots of
+\code{\link[=rsi_query_api]{rsi_query_api()}} and the \code{query_function} slots of
 \link{sentinel1_band_mapping}, \link{sentinel2_band_mapping}, and
 \link{landsat_band_mapping}.}
+
+\item{download_function}{A function that takes the output from
+\code{query_function} and downloads the assets attached to those items. See
+\code{\link[=rsi_download_rasters]{rsi_download_rasters()}} for an example.}
 
 \item{sign_function}{A function that takes the output from \code{query_function}
 and signs the item URLs, if necessary.}
@@ -394,7 +405,7 @@ get_stac_data(aoi,
   ),
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
-  query_function = default_query_function,
+  query_function = rsi_query_api,
   sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,

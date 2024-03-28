@@ -1,5 +1,19 @@
 # rsi (development version)
 
+* Progress bars have been split into separate bars for downloading, masking, 
+  compositing and so on. 
+
+* `get_stac_data()` gains an argument, `download_function`, which takes a 
+  `STACItemCollection` object and returns a data frame, where columns correspond
+  to distinct assets, rows correspond to distinct items, and cells contain file
+  paths to the downloaded data.
+
+* `rsi_download_rasters()` is a new function that exposes how `get_stac_data()`
+  downloads assets. 
+
+* `default_query_function()` has been renamed to `rsi_query_api()`. Please 
+  update any code using the old name; it will be removed in a future release.
+
 * `get_alos_palsar_imagery()` and `alos_palsar_mask_function()` are new 
   functions to help you get and mask ALOS PALSAR imagery, respectively.
 

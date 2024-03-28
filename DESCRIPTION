@@ -20,6 +20,7 @@ Imports:
     future.apply,
     glue,
     jsonlite,
+    lifecycle,
     proceduralnames,
     rlang,
     rstac,

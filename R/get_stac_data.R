@@ -101,9 +101,12 @@
 #' images from.
 #' @param query_function A function that takes the output from
 #' [rstac::stac_search()] and executes the request. See
-#' [default_query_function()] and the `query_function` slots of
+#' [rsi_query_api()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
+#' @param download_function A function that takes the output from
+#' `query_function` and downloads the assets attached to those items. See
+#' [rsi_download_rasters()] for an example.
 #' @param sign_function A function that takes the output from `query_function`
 #' and signs the item URLs, if necessary.
 #' @param ... Passed to `item_filter_function`.
@@ -162,7 +165,7 @@
 #'   ),
 #'   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
 #'   collection = "landsat-c2-l2",
-#'   query_function = default_query_function,
+#'   query_function = rsi_query_api,
 #'   sign_function = sign_planetary_computer,
 #'   mask_band = "qa_pixel",
 #'   mask_function = landsat_mask_function,
@@ -187,7 +190,8 @@ get_stac_data <- function(aoi,
                           stac_source,
                           collection,
                           ...,
-                          query_function = default_query_function,
+                          query_function = rsi_query_api,
+                          download_function = rsi_download_rasters,
                           sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
@@ -215,6 +219,7 @@ get_stac_data <- function(aoi,
                             GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
                             GDAL_NUM_THREADS = "ALL_CPUS"
                           )) {
+  # query |> filter |> download |> mask |> composite |> rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
@@ -223,11 +228,14 @@ get_stac_data <- function(aoi,
   }
 
   if (sf::st_is_longlat(aoi) && !(is.null(pixel_x_size) || is.null(pixel_y_size)) && all(c(pixel_x_size, pixel_y_size) %in% c(10, 30))) {
-    rlang::warn(c(
-      "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
-      i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
-      i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
-    ))
+    rlang::warn(
+      c(
+        "The default pixel size arguments are intended for use with projected AOIs, but `aoi` appears to be in geographic coordinates.",
+        i = glue::glue("Pixel X size: {pixel_x_size}. Pixel Y size: {pixel_y_size}."),
+        i = glue::glue("These dimensions will be interpreted in the same units as `aoi` (likely degrees), which may cause errors.")
+      ),
+      class = "rsi_default_pixel_size_geographic_coords"
+    )
   }
 
   if (!is.null(composite_function)) {
@@ -279,6 +287,9 @@ get_stac_data <- function(aoi,
     end_date <- process_dates(end_date)
   }
 
+  if (is.null(item_filter_function)) item_filter_function <- \(x, ...) identity(x)
+
+  # query
   items <- query_function(
     bbox = sf::st_bbox(sf::st_transform(aoi, 4326)),
     stac_source = stac_source,
@@ -288,10 +299,8 @@ get_stac_data <- function(aoi,
     limit = limit,
     ...
   )
-
-  if (!is.null(item_filter_function)) {
-    items <- item_filter_function(items, ...)
-  }
+  # filter
+  items <- item_filter_function(items, ...)
 
   if (!length(items$features)) {
     rlang::abort(
@@ -301,7 +310,16 @@ get_stac_data <- function(aoi,
   }
 
   if (missing(asset_names)) asset_names <- NULL
-  if (is.null(asset_names)) asset_names <- rstac::items_assets(items)
+  if (is.null(asset_names)) {
+    asset_names <- rstac::items_assets(items)
+    if (length(asset_names) > 1) {
+      rlang::warn(c(
+        "`asset_names` was `NULL`, so rsi is attempting to download all assets in items in this collection.",
+        i = "This includes multiple assets, so rsi is attempting to download all of them using the same download function.",
+        i = "This might cause errors or not be what you want! Specify `asset_names` to fix this (and to silence this warning)."
+      ))
+    }
+  }
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
 
   items_urls <- extract_urls(asset_names, items)
@@ -311,21 +329,9 @@ get_stac_data <- function(aoi,
     drop_mask_band <- TRUE
   }
 
-  download_locations <- data.frame(
-    matrix(
-      data = replicate(
-        length(items_urls) * length(items$features),
-        tempfile(fileext = ".tif")
-      ),
-      ncol = length(items_urls),
-      nrow = length(items$features)
-    )
-  )
-  names(download_locations) <- names(items_urls)
-
   scale_strings <- character()
   if (rescale_bands) {
-    scale_strings <- calc_scale_strings(download_locations, items)
+    scale_strings <- calc_scale_strings(names(items_urls), items)
   }
   if (length(scale_strings)) {
     scale_strings <- stats::setNames(
@@ -336,78 +342,75 @@ get_stac_data <- function(aoi,
     rescale_bands <- FALSE
   }
 
-  if (rlang::is_installed("progressr")) {
-    length_progress <- figure_out_progress_length(
-      items_urls,
-      mask_band,
-      composite_function,
-      mask_function,
-      download_locations,
-      rescale_bands,
-      scale_strings
-    )
-    p <- progressr::progressor(length_progress)
-  } else {
-    p <- function(...) NULL
-  }
-
-  use_simple_download <- is.null(mask_function) &&
+  merge_assets <- is.null(mask_function) &&
     !rescale_bands &&
     !is.null(composite_function) &&
     composite_function == "merge"
 
-  if (use_simple_download) {
-    download_results <- simple_download(
-      items,
-      sign_function,
-      asset_names,
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options,
-      p
+  # download
+  # download_results is a data frame with names corresponding to "final" band
+  # names and rows corresponding to individual STAC items
+  download_results <- download_function(
+    items = items,
+    aoi = aoi_bbox,
+    asset_names = stats::setNames(nm = names(items_urls)),
+    sign_function = sign_function,
+    merge = merge_assets,
+    gdalwarp_options = gdalwarp_options,
+    gdal_config_options = gdal_config_options,
+    ...
+  )
+  # mask
+  if (!is.null(mask_band)) {
+    download_results <- rsi_apply_masks(
+      download_locations = download_results,
+      mask_band = mask_band,
+      mask_function = mask_function
     )
-  } else {
-    download_results <- complex_download(
-      items,
-      items_urls,
-      download_locations,
-      sign_function,
-      asset_names,
-      mask_band,
-      gdalwarp_options,
-      aoi_bbox,
-      gdal_config_options,
-      p,
-      mask_function,
-      composite_function,
-      output_filename,
-      rescale_bands,
-      scale_strings
-    )
-    on.exit(file.remove(unlist(download_results[["final_bands"]])), add = TRUE)
   }
+
+  download_results <- download_results[names(download_results) %in% names(asset_names)]
+
+  # composite
+  output_vrt <- tempfile(fileext = ".vrt")
+  if (is.null(composite_function)) {
+    output_vrt <- replicate(nrow(download_results), tempfile(fileext = ".vrt"))
+    # turn each row of the DF into its own character vector, stored in a list
+    download_results <- apply(download_results, 1, identity, simplify = FALSE)
+  } else if (!merge_assets) {
+    download_results <- rsi_composite_bands(download_results, composite_function)
+  } else {
+    # turn DF into a character vector inside a list
+    download_results <- list(unlist(download_results))
+  }
+  # rescale
+  if (rescale_bands) {
+    lapply(download_results, rescale_band, scale_strings)
+  }
+
+  on.exit(file.remove(unlist(download_results)), add = TRUE)
 
   if (drop_mask_band) items_urls[[mask_band]] <- NULL
 
   mapply(
     function(in_bands, vrt) {
       stack_rasters(
-        in_bands,
+        in_bands[names(items_urls)],
         vrt,
         band_names = remap_band_names(names(items_urls), asset_names)
       )
     },
-    in_bands = download_results[["final_bands"]],
-    vrt = download_results[["out_vrt"]]
+    in_bands = download_results,
+    vrt = output_vrt
   )
 
-  on.exit(file.remove(download_results[["out_vrt"]]), add = TRUE)
+  on.exit(file.remove(output_vrt), add = TRUE)
 
   if (is.null(composite_function)) {
     app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
     app <- gsub(":", "", app) # #29, #32
     if (any(is.na(app))) app <- NULL
-    app <- app %||% seq_along(download_results[["final_bands"]])
+    app <- app %||% seq_along(download_results)
 
     output_filename <- paste0(
       tools::file_path_sans_ext(output_filename),
@@ -428,7 +431,7 @@ get_stac_data <- function(aoi,
       )
       out
     },
-    vrt = download_results[["out_vrt"]],
+    vrt = output_vrt,
     out = output_filename
   )
 
@@ -448,6 +451,7 @@ get_sentinel1_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  download_function = attr(asset_names, "download_function"),
                                   sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
@@ -493,6 +497,7 @@ get_sentinel2_imagery <- function(aoi,
                                   stac_source = attr(asset_names, "stac_source"),
                                   collection = attr(asset_names, "collection_name"),
                                   query_function = attr(asset_names, "query_function"),
+                                  download_function = attr(asset_names, "download_function"),
                                   sign_function = attr(asset_names, "sign_function"),
                                   rescale_bands = FALSE,
                                   item_filter_function = NULL,
@@ -539,6 +544,7 @@ get_landsat_imagery <- function(aoi,
                                 stac_source = attr(asset_names, "stac_source"),
                                 collection = attr(asset_names, "collection_name"),
                                 query_function = attr(asset_names, "query_function"),
+                                download_function = attr(asset_names, "download_function"),
                                 sign_function = attr(asset_names, "sign_function"),
                                 rescale_bands = TRUE,
                                 item_filter_function = landsat_platform_filter,
@@ -583,7 +589,8 @@ get_naip_imagery <- function(aoi,
                              asset_names = "image",
                              stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
                              collection = "naip",
-                             query_function = default_query_function,
+                             query_function = rsi_query_api,
+                             download_function = rsi_download_rasters,
                              sign_function = sign_planetary_computer,
                              rescale_bands = FALSE,
                              output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
@@ -629,6 +636,7 @@ get_alos_palsar_imagery <- function(aoi,
                                     stac_source = attr(asset_names, "stac_source"),
                                     collection = attr(asset_names, "collection_name"),
                                     query_function = attr(asset_names, "query_function"),
+                                    download_function = attr(asset_names, "download_function"),
                                     sign_function = attr(asset_names, "sign_function"),
                                     rescale_bands = FALSE,
                                     item_filter_function = NULL,
@@ -674,6 +682,7 @@ get_dem <- function(aoi,
                     stac_source = attr(asset_names, "stac_source"),
                     collection = attr(asset_names, "collection_name"),
                     query_function = attr(asset_names, "query_function"),
+                    download_function = attr(asset_names, "download_function"),
                     sign_function = attr(asset_names, "sign_function"),
                     rescale_bands = FALSE,
                     item_filter_function = NULL,
@@ -707,36 +716,9 @@ get_dem <- function(aoi,
   do.call(get_stac_data, args)
 }
 
-download_assets <- function(urls,
-                            destinations,
-                            gdalwarp_options,
-                            gdal_config_options,
-                            progressor) {
-  if (length(urls) != length(destinations)) {
-    rlang::abort("`urls` and `destinations` must be the same length.")
-  }
+rsi_apply_masks <- function(download_locations, mask_band, mask_function) {
+  p <- build_progressr(nrow(download_locations) + (nrow(download_locations) * (ncol(download_locations) - 1)))
 
-  future.apply::future_mapply(
-    function(url, destination) {
-      progressor("Downloading assets")
-      sf::gdal_utils(
-        "warp",
-        paste0("/vsicurl/", url),
-        destination,
-        options = gdalwarp_options,
-        quiet = TRUE,
-        config_options = gdal_config_options
-      )
-    },
-    url = urls,
-    destination = destinations,
-    future.seed = TRUE
-  )
-
-  destinations
-}
-
-apply_masks <- function(mask_band, mask_function, download_locations, p) {
   apply(
     download_locations,
     1,
@@ -761,130 +743,32 @@ apply_masks <- function(mask_band, mask_function, download_locations, p) {
       )
     }
   )
+
+  download_locations
 }
 
-simple_download <- function(items,
-                            sign_function,
-                            asset_names,
-                            gdalwarp_options,
-                            aoi_bbox,
-                            gdal_config_options,
-                            p) {
-  gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, NULL)
-  out <- future.apply::future_lapply(
-    names(asset_names),
-    function(asset) {
-      p(glue::glue("Downloading {asset}"))
-      signed_items <- maybe_sign_items(items, sign_function)
-      item_urls <- paste0("/vsicurl/", rstac::assets_url(signed_items, asset))
-      out_file <- tempfile(fileext = ".tif")
-      sf::gdal_utils(
-        "warp",
-        source = item_urls,
-        destination = out_file,
-        options = gdalwarp_options,
-        config_options = gdal_config_options
-      )
-      out_file
-    },
-    future.seed = TRUE
-  )
-  list(
-    final_bands = list(out),
-    out_vrt = tempfile(fileext = ".vrt")
-  )
-}
+rsi_composite_bands <- function(download_locations,
+                                composite_function = c("merge", "median", "mean", "sum", "min", "max")) {
+  composite_function <- rlang::arg_match(composite_function)
 
-complex_download <- function(items,
-                             items_urls,
-                             download_locations,
-                             sign_function,
-                             asset_names,
-                             mask_band,
-                             gdalwarp_options,
-                             aoi_bbox,
-                             gdal_config_options,
-                             p,
-                             mask_function,
-                             composite_function,
-                             output_filename,
-                             rescale_bands,
-                             scale_strings) {
-  feature_iterator <- ifelse(
-    length(items$features) > ncol(download_locations),
-    function(...) future.apply::future_lapply(..., future.seed = TRUE),
-    lapply
-  )
-  feature_iterator(
-    seq_along(items$features),
-    function(i) {
-      item <- items$features[[i]]
-
-      item <- maybe_sign_items(item, sign_function)
-
-      item_urls <- extract_urls(asset_names, item)
-      if (!is.null(mask_band)) item_urls[[mask_band]] <- rstac::assets_url(item, mask_band)
-
-      item_bbox <- item$bbox
-      current_options <- set_gdalwarp_extent(gdalwarp_options, aoi_bbox, item_bbox)
-
-      tryCatch(
-        download_assets(
-          unlist(item_urls),
-          unlist(download_locations[i, , drop = FALSE]),
-          current_options,
-          gdal_config_options,
-          p
-        ),
-        error = function(e) {
-          rlang::warn(glue::glue("Failed to download {item$id %||% 'UNKNOWN'} from {item$properties$datetime %||% 'UNKNOWN'}"))
-          download_locations[i, ] <- NA
-        }
-      )
-    }
-  )
-  download_locations <- stats::na.omit(download_locations)
-  names(download_locations) <- names(items_urls)
-
-  if (!is.null(mask_band)) apply_masks(mask_band, mask_function, download_locations, p)
-
-  out <- make_composite_bands(
-    download_locations[, names(download_locations) %in% names(asset_names), drop = FALSE],
-    composite_function,
-    p
-  )
-
-  if (rescale_bands) lapply(out$final_bands, rescale_band, scale_strings, p)
-  out
-}
-
-
-make_composite_bands <- function(downloaded_bands, composite_function, p) {
-  if (is.null(composite_function)) {
-    return(
-      list(
-        out_vrt = replicate(nrow(downloaded_bands), tempfile(fileext = ".tif")),
-        final_bands = apply(downloaded_bands, 1, identity, simplify = FALSE)
-      )
-    )
-  }
+  p <- build_progressr(length(names(download_locations)))
 
   download_dir <- file.path(tempdir(), "composite_dir")
   if (!dir.exists(download_dir)) dir.create(download_dir)
 
   out <- vapply(
-    names(downloaded_bands),
+    names(download_locations),
     function(band_name) {
       p(glue::glue("Compositing {band_name}"))
       out_file <- file.path(download_dir, paste0(toupper(band_name), ".tif"))
 
-      if (length(downloaded_bands[[band_name]]) == 1) {
-        file.copy(downloaded_bands[[band_name]], out_file)
+      if (length(download_locations[[band_name]]) == 1) {
+        file.copy(download_locations[[band_name]], out_file)
       } else if (composite_function == "merge") {
         do.call(
           terra::merge,
           list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
             filename = out_file,
             overwrite = TRUE
           )
@@ -893,7 +777,7 @@ make_composite_bands <- function(downloaded_bands, composite_function, p) {
         do.call(
           terra::mosaic,
           list(
-            x = terra::sprc(lapply(downloaded_bands[[band_name]], terra::rast)),
+            x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
             fun = composite_function,
             filename = out_file,
             overwrite = TRUE
@@ -906,22 +790,19 @@ make_composite_bands <- function(downloaded_bands, composite_function, p) {
     character(1)
   )
 
-  list(
-    out_vrt = tempfile(fileext = ".vrt"),
-    final_bands = list(out)
-  )
+  list(out)
 }
-calc_scale_strings <- function(download_locations, items) {
+calc_scale_strings <- function(asset_names, items) {
   # Assign scale, offset attributes if they exist
   scales <- vapply(
-    names(download_locations),
+    asset_names,
     get_rescaling_formula,
     items = items,
     element = "scale",
     numeric(1)
   )
   offsets <- vapply(
-    names(download_locations),
+    asset_names,
     get_rescaling_formula,
     items = items,
     element = "offset",
@@ -951,7 +832,9 @@ calc_scale_strings <- function(download_locations, items) {
   scale_strings
 }
 
-rescale_band <- function(composited_bands, scale_strings, p) {
+rescale_band <- function(composited_bands, scale_strings) {
+  p <- build_progressr(length(names(scale_strings)))
+
   for (band in names(scale_strings)) {
     p(glue::glue("Rescaling band {band}"))
     rescaled_file <- tempfile(fileext = ".tif")
@@ -1023,25 +906,6 @@ process_dates <- function(date) {
   gsub("UTC", "Z", date)
 }
 
-extract_urls <- function(asset_names, items) {
-  items_urls <- lapply(
-    names(asset_names),
-    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
-  )
-  names(items_urls) <- names(asset_names)
-
-  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
-
-  items_urls
-}
-
-maybe_sign_items <- function(items, sign_function) {
-  if (!is.null(sign_function)) {
-    items <- sign_function(items)
-  }
-  items
-}
-
 get_rescaling_formula <- function(items, band_name, element) {
   elements <- vapply(
     items$features,
@@ -1063,33 +927,18 @@ get_rescaling_formula <- function(items, band_name, element) {
   elements
 }
 
-figure_out_progress_length <- function(items_urls, mask_band, composite_function, mask_function, download_locations, rescale_bands, scale_strings) {
-  # this is frankly ridiculous
-
-  # How many steps do we walk through:
-  # 1. Must download all items, including the masks
-  length_progress <- length(unlist(items_urls))
-  # 2. If masking, we are going to either run a mask function or actually mask
-  # all downloads (*2)
-  if (!is.null(mask_band)) length_progress <- length_progress * 2
-  # 3. Compositing complicates things:
-  if (!is.null(composite_function)) {
-    # 3.1 We'll add 1x the number of bands:
-    composite_multiplier <- 1
-    length_progress <- length_progress + (length(items_urls) * composite_multiplier)
-    # 4. But not the mask band if it exists:
-    if (!is.null(mask_function)) length_progress <- length_progress - 1
-  } else {
-    # If rescaling, we'll need to scale each image separately:
-    composite_multiplier <- nrow(download_locations)
-  }
-  # 5. If rescaling, add one step for each rescale:
-  if (rescale_bands) {
-    length_progress <- length_progress + (length(scale_strings) * composite_multiplier)
-  }
-  length_progress
-}
-
 is_pc <- function(url) {
   grepl("planetarycomputer.microsoft.com/api/stac/v1", url)
+}
+
+extract_urls <- function(asset_names, items) {
+  items_urls <- lapply(
+    names(asset_names),
+    function(asset_name) suppressWarnings(rstac::assets_url(items, asset_name))
+  )
+  names(items_urls) <- names(asset_names)
+
+  items_urls <- items_urls[!vapply(items_urls, is.null, logical(1))]
+
+  items_urls
 }
