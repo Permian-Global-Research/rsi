@@ -51,7 +51,8 @@ rsi_download_rasters <- function(items,
                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
                                    GDAL_HTTP_VERSION = "2",
                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                   GDAL_NUM_THREADS = "ALL_CPUS"
+                                   GDAL_NUM_THREADS = "ALL_CPUS",
+                                   GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
                                  ),
                                  ...) {
   if (!inherits(aoi, "bbox")) aoi <- sf::st_bbox(aoi)

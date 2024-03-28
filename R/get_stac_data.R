@@ -217,7 +217,8 @@ get_stac_data <- function(aoi,
                             GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
                             GDAL_HTTP_VERSION = "2",
                             GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                            GDAL_NUM_THREADS = "ALL_CPUS"
+                            GDAL_NUM_THREADS = "ALL_CPUS",
+                            GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
                           )) {
   # query |> filter |> download |> mask |> composite |> rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
