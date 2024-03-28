@@ -101,7 +101,7 @@
 #' images from.
 #' @param query_function A function that takes the output from
 #' [rstac::stac_search()] and executes the request. See
-#' [default_query_function()] and the `query_function` slots of
+#' [rsi_query_api()] and the `query_function` slots of
 #' [sentinel1_band_mapping], [sentinel2_band_mapping], and
 #' [landsat_band_mapping].
 #' @param sign_function A function that takes the output from `query_function`
@@ -162,7 +162,7 @@
 #'   ),
 #'   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
 #'   collection = "landsat-c2-l2",
-#'   query_function = default_query_function,
+#'   query_function = rsi_query_api,
 #'   sign_function = sign_planetary_computer,
 #'   mask_band = "qa_pixel",
 #'   mask_function = landsat_mask_function,
@@ -187,7 +187,7 @@ get_stac_data <- function(aoi,
                           stac_source,
                           collection,
                           ...,
-                          query_function = default_query_function,
+                          query_function = rsi_query_api,
                           sign_function = NULL,
                           rescale_bands = TRUE,
                           item_filter_function = NULL,
@@ -572,7 +572,7 @@ get_naip_imagery <- function(aoi,
                              asset_names = "image",
                              stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
                              collection = "naip",
-                             query_function = default_query_function,
+                             query_function = rsi_query_api,
                              sign_function = sign_planetary_computer,
                              rescale_bands = FALSE,
                              output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),

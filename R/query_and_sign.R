@@ -35,17 +35,17 @@
 #'   aoi,
 #'   start_date = "2022-06-01",
 #'   end_date = "2022-08-30",
-#'   query_function = default_query_function
+#'   query_function = rsi_query_api
 #' )
 #'
 #' @export
-default_query_function <- function(bbox,
-                                   stac_source,
-                                   collection,
-                                   start_date,
-                                   end_date,
-                                   limit,
-                                   ...) {
+rsi_query_api <- function(bbox,
+                          stac_source,
+                          collection,
+                          start_date,
+                          end_date,
+                          limit,
+                          ...) {
   if (!is.null(start_date)) {
     datetime <- paste0(start_date, "/", end_date)
   } else {
@@ -72,7 +72,7 @@ default_query_function <- function(bbox,
 
 #' Sign STAC items retrieved from the Planetary Computer
 #'
-#' @param items A STACItemCollection, as returned by `default_query_function`.
+#' @param items A STACItemCollection, as returned by `rsi_query_api`.
 #' @param subscription_key Optionally, a subscription key associated with your
 #' Planetary Computer account. At the time of writing, this is required for
 #' downloading Sentinel 1 RTC products, as well as NAIP imagery. This key will

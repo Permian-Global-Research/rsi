@@ -20,7 +20,7 @@ get_stac_data(
   stac_source,
   collection,
   ...,
-  query_function = default_query_function,
+  query_function = rsi_query_api,
   sign_function = NULL,
   rescale_bands = TRUE,
   item_filter_function = NULL,
@@ -129,7 +129,7 @@ get_naip_imagery(
   asset_names = "image",
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
   collection = "naip",
-  query_function = default_query_function,
+  query_function = rsi_query_api,
   sign_function = sign_planetary_computer,
   rescale_bands = FALSE,
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
@@ -224,7 +224,7 @@ images from.}
 
 \item{query_function}{A function that takes the output from
 \code{\link[rstac:stac_search]{rstac::stac_search()}} and executes the request. See
-\code{\link[=default_query_function]{default_query_function()}} and the \code{query_function} slots of
+\code{\link[=rsi_query_api]{rsi_query_api()}} and the \code{query_function} slots of
 \link{sentinel1_band_mapping}, \link{sentinel2_band_mapping}, and
 \link{landsat_band_mapping}.}
 
@@ -394,7 +394,7 @@ get_stac_data(aoi,
   ),
   stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
   collection = "landsat-c2-l2",
-  query_function = default_query_function,
+  query_function = rsi_query_api,
   sign_function = sign_planetary_computer,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,

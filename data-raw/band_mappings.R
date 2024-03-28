@@ -21,7 +21,7 @@ sentinel2_band_mapping <- list(
     mask_function = sentinel2_mask_function,
     stac_source = "https://earth-search.aws.element84.com/v0/",
     collection_name = "sentinel-s2-l2a-cogs",
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     class = "rsi_band_mapping"
   ),
   aws_v1 = structure(
@@ -43,7 +43,7 @@ sentinel2_band_mapping <- list(
     mask_function = sentinel2_mask_function,
     stac_source = "https://earth-search.aws.element84.com/v1/",
     collection_name = "sentinel-2-l2a",
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     class = "rsi_band_mapping"
   )
 )
@@ -52,7 +52,7 @@ sentinel2_band_mapping$planetary_computer_v1 <- sentinel2_band_mapping$aws_v0
 attr(sentinel2_band_mapping$planetary_computer_v1, "scl_name") <- "SCL"
 attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source") <- "https://planetarycomputer.microsoft.com/api/stac/v1/"
 attr(sentinel2_band_mapping$planetary_computer_v1, "collection_name") <- "sentinel-2-l2a"
-attr(sentinel2_band_mapping$planetary_computer_v1, "query_function") <- default_query_function
+attr(sentinel2_band_mapping$planetary_computer_v1, "query_function") <- rsi_query_api
 attr(sentinel2_band_mapping$planetary_computer_v1, "sign_function") <- sign_planetary_computer
 
 usethis::use_data(sentinel2_band_mapping, overwrite = TRUE)
@@ -74,7 +74,7 @@ landsat_band_mapping <- list(
     mask_function = landsat_mask_function,
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "landsat-c2-l2",
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
@@ -92,7 +92,7 @@ sentinel1_band_mapping <- list(
     ),
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "sentinel-1-grd",
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
@@ -113,7 +113,7 @@ alos_palsar_band_mapping <- list(
     mask_function = alos_palsar_mask_function,
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = "alos-palsar-mosaic",
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     sign_function = sign_planetary_computer,
     class = "rsi_band"
   )
@@ -127,7 +127,7 @@ pc_dem_mapping <- function(assets, collection_name) {
     assets,
     stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1/",
     collection_name = collection_name,
-    query_function = default_query_function,
+    query_function = rsi_query_api,
     sign_function = sign_planetary_computer,
     class = "rsi_band_mapping"
   )
