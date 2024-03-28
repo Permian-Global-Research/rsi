@@ -146,3 +146,32 @@ maybe_sign_items <- function(items, sign_function) {
   }
   items
 }
+
+set_gdalwarp_extent <- function(gdalwarp_options, aoi_bbox, item_bbox = NULL) {
+  if (!("-te" %in% gdalwarp_options)) {
+    if (!is.null(item_bbox)) {
+      class(item_bbox) <- "bbox"
+      item_bbox <- sf::st_as_sfc(item_bbox)
+      item_bbox <- sf::st_set_crs(item_bbox, 4326)
+      item_bbox <- sf::st_transform(item_bbox, sf::st_crs(aoi_bbox))
+      item_bbox <- sf::st_bbox(item_bbox)
+
+      aoi_bbox <- c(
+        xmin = max(aoi_bbox[[1]], item_bbox[[1]]),
+        ymin = max(aoi_bbox[[2]], item_bbox[[2]]),
+        xmax = min(aoi_bbox[[3]], item_bbox[[3]]),
+        ymax = min(aoi_bbox[[4]], item_bbox[[4]])
+      )
+
+      aoi_bbox <- c(
+        xmin = min(aoi_bbox[["xmin"]], aoi_bbox[["xmax"]]),
+        ymin = min(aoi_bbox[["ymin"]], aoi_bbox[["ymax"]]),
+        xmax = max(aoi_bbox[["xmin"]], aoi_bbox[["xmax"]]),
+        ymax = max(aoi_bbox[["ymin"]], aoi_bbox[["ymax"]])
+      )
+    }
+
+    gdalwarp_options <- c(gdalwarp_options, "-te", aoi_bbox)
+  }
+  gdalwarp_options
+}

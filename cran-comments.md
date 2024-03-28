@@ -1,4 +1,4 @@
-This is the third CRAN release of rsi. This version should fix all identified issues with web resources; apologies, I had fixed errors related to R-Devel in the last release and missed that one of the checks also had issues with web resources!
+This is the fourth CRAN release of rsi. This version simplifies package internals, provides access to new data sources and download methods, and fixes several minor bugs.
 
 ## R CMD check results
 
