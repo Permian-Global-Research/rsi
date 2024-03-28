@@ -16,6 +16,9 @@
     <loc>https://permian-global-research.github.io/rsi/articles/Downloading-data-from-STAC-APIs-using-rsi.html</loc>
   </url>
   <url>
+    <loc>https://permian-global-research.github.io/rsi/articles/How-can-I-.html</loc>
+  </url>
+  <url>
     <loc>https://permian-global-research.github.io/rsi/articles/index.html</loc>
   </url>
   <url>
@@ -31,13 +34,19 @@
     <loc>https://permian-global-research.github.io/rsi/news/index.html</loc>
   </url>
   <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_band_mapping.html</loc>
+  </url>
+  <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_mask_function.html</loc>
+  </url>
+  <url>
     <loc>https://permian-global-research.github.io/rsi/reference/calculate_indices.html</loc>
   </url>
   <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/default_query_function.html</loc>
+    <loc>https://permian-global-research.github.io/rsi/reference/dem_band_mapping.html</loc>
   </url>
   <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/dem_band_mapping.html</loc>
+    <loc>https://permian-global-research.github.io/rsi/reference/deprecated.html</loc>
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/filters.html</loc>
@@ -59,6 +68,12 @@
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/rsi-package.html</loc>
+  </url>
+  <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/rsi_download_rasters.html</loc>
+  </url>
+  <url>
+    <loc>https://permian-global-research.github.io/rsi/reference/rsi_query_api.html</loc>
   </url>
   <url>
     <loc>https://permian-global-research.github.io/rsi/reference/sentinel1_band_mapping.html</loc>
