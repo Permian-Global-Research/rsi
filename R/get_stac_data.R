@@ -310,7 +310,16 @@ get_stac_data <- function(aoi,
   }
 
   if (missing(asset_names)) asset_names <- NULL
-  if (is.null(asset_names)) asset_names <- rstac::items_assets(items)
+  if (is.null(asset_names)) {
+    asset_names <- rstac::items_assets(items)
+    if (length(asset_names) > 1) {
+      rlang::warn(c(
+        "`asset_names` was `NULL`, so rsi is attempting to download all assets in items in this collection.",
+        i = "This includes multiple assets, so rsi is attempting to download all of them using the same download function.",
+        i = "This might cause errors or not be what you want! Specify `asset_names` to fix this (and to silence this warning)."
+      ))
+    }
+  }
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
 
   items_urls <- extract_urls(asset_names, items)
