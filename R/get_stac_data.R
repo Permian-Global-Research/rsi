@@ -353,7 +353,7 @@ get_stac_data <- function(aoi,
   )
   # mask
   if (!is.null(mask_band)) {
-    rsi_apply_masks(
+    download_results <- rsi_apply_masks(
       download_locations = download_results,
       mask_band = mask_band,
       mask_function = mask_function
@@ -731,6 +731,8 @@ rsi_apply_masks <- function(download_locations, mask_band, mask_function) {
       )
     }
   )
+
+  download_locations
 }
 
 rsi_composite_bands <- function(download_locations,
