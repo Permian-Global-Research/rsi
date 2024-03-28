@@ -54,6 +54,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/Downloading-data-from-STAC-APIs-using-rsi.html">Downloading data from STAC APIs using rsi</a>
+    <a class="dropdown-item" href="../articles/How-can-I-.html">How can I...?</a>
   </div>
 </li>
 <li class="nav-item">
@@ -197,7 +198,7 @@ API, which lists all the collections available from this API:</p>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Collections</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (123 item(s)):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (124 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
@@ -208,7 +209,7 @@ API, which lists all the collections available from this API:</p>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
 <span><span class="co">#&gt;   - daymet-annual-hi</span></span>
-<span><span class="co">#&gt;   - ... with 113 more collection(s).</span></span>
+<span><span class="co">#&gt;   - ... with 114 more collection(s).</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
 Computer data catalog</a>; the Planetary Computer is organized so that
@@ -327,7 +328,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmpry0Gzd/file1ef061f47f3.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpnsuNsZ/file1f4951afed8b.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -444,6 +445,9 @@ defaults have been changed:</p>
 <span><span class="co">#&gt; $query_function</span></span>
 <span><span class="co">#&gt; attr(asset_names, "query_function")</span></span>
 <span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $download_function</span></span>
+<span><span class="co">#&gt; attr(asset_names, "download_function")</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $sign_function</span></span>
 <span><span class="co">#&gt; attr(asset_names, "sign_function")</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -477,7 +481,7 @@ Computer:</p>
 <code class="sourceCode R"><span><span class="va">landsat_band_mapping</span></span>
 <span><span class="co">#&gt; $planetary_computer_v1</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
-<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function sign_function class</span></span>
+<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function download_function sign_function class</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; coastal    blue   green     red   nir08  swir16  swir22    lwir  lwir11 </span></span>
 <span><span class="co">#&gt;     "A"     "B"     "G"     "R"     "N"    "S1"    "S2"     "T"    "T1"</span></span></code></pre></div>
@@ -495,7 +499,7 @@ API provided by Amazon Web Services’ Open Data portal:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $aws_v1</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
-<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function class</span></span>
+<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function download_function class</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     blue  coastal    green      nir    nir08    nir09      red rededge1 </span></span>
 <span><span class="co">#&gt;      "B"      "A"      "G"      "N"     "N2"     "WV"      "R"    "RE1" </span></span>
@@ -504,7 +508,7 @@ API provided by Amazon Web Services’ Open Data portal:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $planetary_computer_v1</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
-<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function class scl_name sign_function</span></span>
+<span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function class scl_name download_function sign_function</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   B01   B02   B03   B04   B05   B06   B07   B08   B8A   B09   B11   B12 </span></span>
 <span><span class="co">#&gt;   "A"   "B"   "G"   "R" "RE1" "RE2" "RE3"   "N"  "N2"  "WV"  "S1"  "S2"</span></span></code></pre></div>
@@ -564,7 +568,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x56143e89f788&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x565089bc6ec0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -576,7 +580,7 @@ only download the A band (what Planetary Computer calls
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span><span class="op">[</span><span class="st">"coastal"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
-<span><span class="co">#&gt; mask_band mask_function stac_source collection_name query_function sign_function class names</span></span>
+<span><span class="co">#&gt; mask_band mask_function stac_source collection_name query_function download_function sign_function class names</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; coastal </span></span>
 <span><span class="co">#&gt;     "A"</span></span></code></pre></div>
@@ -644,7 +648,7 @@ images:</p>
 <p>How the heck do we use that query inside <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code>
 and friends?</p>
 <p>Well, by default rsi uses a query function called
-<code><a href="../reference/default_query_function.html">default_query_function()</a></code>. This function is exported, which
+<code><a href="../reference/deprecated.html">default_query_function()</a></code>. This function is exported, which
 means you can see its source code by calling the function without
 parentheses:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
@@ -652,19 +656,13 @@ parentheses:</p>
 <span><span class="co">#&gt; function (bbox, stac_source, collection, start_date, end_date, </span></span>
 <span><span class="co">#&gt;     limit, ...) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     if (!is.null(start_date)) {</span></span>
-<span><span class="co">#&gt;         datetime &lt;- paste0(start_date, "/", end_date)</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     else {</span></span>
-<span><span class="co">#&gt;         datetime &lt;- NULL</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     items &lt;- rstac::stac_search(rstac::stac(stac_source), collections = collection, </span></span>
-<span><span class="co">#&gt;         bbox = c(bbox["xmin"], bbox["ymin"], bbox["xmax"], bbox["ymax"]), </span></span>
-<span><span class="co">#&gt;         datetime = datetime, limit = limit)</span></span>
-<span><span class="co">#&gt;     items &lt;- rstac::items_fetch(rstac::get_request(items))</span></span>
-<span><span class="co">#&gt;     items</span></span>
+<span><span class="co">#&gt;     lifecycle::deprecate_warn("0.2.0", "default_query_function()", </span></span>
+<span><span class="co">#&gt;         "rsi_query_api()")</span></span>
+<span><span class="co">#&gt;     rsi_query_api(bbox = bbox, stac_source = stac_source, collection = collection, </span></span>
+<span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
+<span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5614403edfb0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x56508dd239c0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list

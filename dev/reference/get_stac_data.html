@@ -38,6 +38,7 @@ STAC sources."><meta property="og:image" content="https://permian-global-researc
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/Downloading-data-from-STAC-APIs-using-rsi.html">Downloading data from STAC APIs using rsi</a>
+    <a class="dropdown-item" href="../articles/How-can-I-.html">How can I...?</a>
   </div>
 </li>
 <li class="nav-item">
@@ -85,7 +86,8 @@ STAC sources.</p>
 <span>  <span class="va">stac_source</span>,</span>
 <span>  <span class="va">collection</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  query_function <span class="op">=</span> <span class="va">default_query_function</span>,</span>
+<span>  query_function <span class="op">=</span> <span class="va">rsi_query_api</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="va">rsi_download_rasters</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -113,6 +115,7 @@ STAC sources.</p>
 <span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
 <span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"download_function"</span><span class="op">)</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -140,6 +143,7 @@ STAC sources.</p>
 <span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
 <span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"download_function"</span><span class="op">)</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -168,6 +172,7 @@ STAC sources.</p>
 <span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
 <span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"download_function"</span><span class="op">)</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="va">landsat_platform_filter</span>,</span>
@@ -194,7 +199,8 @@ STAC sources.</p>
 <span>  asset_names <span class="op">=</span> <span class="st">"image"</span>,</span>
 <span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1"</span>,</span>
 <span>  collection <span class="op">=</span> <span class="st">"naip"</span>,</span>
-<span>  query_function <span class="op">=</span> <span class="va">default_query_function</span>,</span>
+<span>  query_function <span class="op">=</span> <span class="va">rsi_query_api</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="va">rsi_download_rasters</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="va">sign_planetary_computer</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">proceduralnames</span><span class="fu">::</span><span class="fu"><a href="https://mikemahoney218.github.io/proceduralnames/reference/make_english_names.html" class="external-link">make_english_names</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, <span class="st">".tif"</span><span class="op">)</span>,</span>
@@ -219,6 +225,7 @@ STAC sources.</p>
 <span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
 <span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"download_function"</span><span class="op">)</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -246,6 +253,7 @@ STAC sources.</p>
 <span>  stac_source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"stac_source"</span><span class="op">)</span>,</span>
 <span>  collection <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"collection_name"</span><span class="op">)</span>,</span>
 <span>  query_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"query_function"</span><span class="op">)</span>,</span>
+<span>  download_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"download_function"</span><span class="op">)</span>,</span>
 <span>  sign_function <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">asset_names</span>, <span class="st">"sign_function"</span><span class="op">)</span>,</span>
 <span>  rescale_bands <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  item_filter_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -306,9 +314,15 @@ images from.</p></dd>
 <dt>query_function</dt>
 <dd><p>A function that takes the output from
 <code><a href="https://brazil-data-cube.github.io/rstac/reference/stac_search.html" class="external-link">rstac::stac_search()</a></code> and executes the request. See
-<code><a href="default_query_function.html">default_query_function()</a></code> and the <code>query_function</code> slots of
+<code><a href="rsi_query_api.html">rsi_query_api()</a></code> and the <code>query_function</code> slots of
 <a href="sentinel1_band_mapping.html">sentinel1_band_mapping</a>, <a href="sentinel2_band_mapping.html">sentinel2_band_mapping</a>, and
 <a href="landsat_band_mapping.html">landsat_band_mapping</a>.</p></dd>
+
+
+<dt>download_function</dt>
+<dd><p>A function that takes the output from
+<code>query_function</code> and downloads the assets attached to those items. See
+<code><a href="rsi_download_rasters.html">rsi_download_rasters()</a></code> for an example.</p></dd>
 
 
 <dt>sign_function</dt>
@@ -498,7 +512,7 @@ and indices). To convert to backscatter (decibels) use the following formula:
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  stac_source <span class="op">=</span> <span class="st">"https://planetarycomputer.microsoft.com/api/stac/v1/"</span>,</span></span>
 <span class="r-in"><span>  collection <span class="op">=</span> <span class="st">"landsat-c2-l2"</span>,</span></span>
-<span class="r-in"><span>  query_function <span class="op">=</span> <span class="va">default_query_function</span>,</span></span>
+<span class="r-in"><span>  query_function <span class="op">=</span> <span class="va">rsi_query_api</span>,</span></span>
 <span class="r-in"><span>  sign_function <span class="op">=</span> <span class="va">sign_planetary_computer</span>,</span></span>
 <span class="r-in"><span>  mask_band <span class="op">=</span> <span class="st">"qa_pixel"</span>,</span></span>
 <span class="r-in"><span>  mask_function <span class="op">=</span> <span class="va">landsat_mask_function</span>,</span></span>
