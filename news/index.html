@@ -76,6 +76,7 @@
 <li><p>Functions will no longer error if you construct their arguments with <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> (or otherwise if they have more than one class).</p></li>
 <li><p><code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> will only rename bands if <code>band_names</code> is the same length as the number of bands in the output raster (or missing, or defined by a function). It will now warn you if these lengths are different. Previously, if you provided more than the required number of band names, <code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> would silently ignore the extra names, and would error if you provided fewer names than bands.</p></li>
 <li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> now warns if <code>asset_names</code> is <code>NULL</code> and there is more than one asset per item.</p></li>
+<li><p>Functions sending HTTP requests now set a user agent of <code>rsi (https://permian-global-research.github.io/rsi/)</code></p></li>
 </ul></div>
 </div>
     <div class="section level2">

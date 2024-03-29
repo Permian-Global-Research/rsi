@@ -327,7 +327,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpmMxrhb/file1f406dbec138.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/Rtmpjkq3TE/file1fa35916798b.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -457,7 +457,13 @@ defaults have been changed:</p>
 <span><span class="co">#&gt; attr(asset_names, "mask_function")</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $composite_function</span></span>
-<span><span class="co">#&gt; [1] "median"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "median"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $gdal_config_options</span></span>
+<span><span class="co">#&gt; c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30%", VSI_CACHE_SIZE = "10000000", </span></span>
+<span><span class="co">#&gt;     GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000", </span></span>
+<span><span class="co">#&gt;     GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2", </span></span>
+<span><span class="co">#&gt;     GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")</span></span></code></pre></div>
 <p>Some of these defaults make sense: we can see that our function is
 going to be downloading data from Landsat-9 and Landsat-8, at a 30 meter
 resolution, and compositing images by calculating the median of each
@@ -567,7 +573,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55a7a6b19778&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55bb698d0700&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -661,7 +667,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55a7a1949de0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55bb6ebbc558&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
