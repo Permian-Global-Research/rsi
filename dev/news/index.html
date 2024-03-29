@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.1.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,16 +56,32 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsi-development-version">rsi (development version)<a class="anchor" aria-label="anchor" href="#rsi-development-version"></a></h2>
-<ul><li><p>Progress bars have been split into separate bars for downloading, masking, compositing and so on.</p></li>
-<li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> gains an argument, <code>download_function</code>, which takes a <code>STACItemCollection</code> object and returns a data frame, where columns correspond to distinct assets, rows correspond to distinct items, and cells contain file paths to the downloaded data.</p></li>
-<li><p><code><a href="../reference/rsi_download_rasters.html">rsi_download_rasters()</a></code> is a new function that exposes how <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> downloads assets.</p></li>
-<li><p><code><a href="../reference/deprecated.html">default_query_function()</a></code> has been renamed to <code><a href="../reference/rsi_query_api.html">rsi_query_api()</a></code>. Please update any code using the old name; it will be removed in a future release.</p></li>
-<li><p><code><a href="../reference/get_stac_data.html">get_alos_palsar_imagery()</a></code> and <code><a href="../reference/alos_palsar_mask_function.html">alos_palsar_mask_function()</a></code> are new functions to help you get and mask ALOS PALSAR imagery, respectively.</p></li>
-<li><p>Functions will no longer error if you construct their arguments with <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> (or otherwise if they have more than one class).</p></li>
-<li><p><code><a href="../reference/landsat_mask_function.html">landsat_mask_function()</a></code> gains an argument, <code>include</code>, which lets you specify whether you’d like to include pixels that represent land (<code>"land"</code>), water (<code>"water"</code>), or both (<code>"both"</code>). Thanks to <a href="https://github.com/mateuszrydzik" class="external-link">@mateuszrydzik</a> for the report via <a href="https://github.com/Permian-Global-Research/rsi/issues/37" class="external-link">#37</a> (<a href="https://github.com/Permian-Global-Research/rsi/issues/46" class="external-link">#46</a>).</p></li>
-<li><p>Added <code>get_naip_data()</code>, a function for getting National Agricultural Imagery Program data from (by default) Planetary Computer. Data covers the continental United States.</p></li>
-<li><p><code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> will only rename bands if <code>band_names</code> is the same length as the number of bands in the output raster (or missing, or defined by a function). It will now warn you if these lengths are different. Previously, if you provided more than the required number of band names, <code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> would silently ignore the extra names, and would error if you provided fewer names than bands.</p></li>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="rsi-020">rsi 0.2.0<a class="anchor" aria-label="anchor" href="#rsi-020"></a></h2>
+<div class="section level3">
+<h3 id="deprecations-0-2-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-2-0"></a></h3>
+<ul><li>
+<code><a href="../reference/deprecated.html">default_query_function()</a></code> has been renamed to <code><a href="../reference/rsi_query_api.html">rsi_query_api()</a></code>. Please update any code using the old name; it will be removed in a future release.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="new-features-0-2-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
+<ul><li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> gains an argument, <code>download_function</code>, which takes a <code>STACItemCollection</code> object and returns a data frame, where columns correspond to distinct assets, rows correspond to distinct items, and cells contain file paths to the downloaded data.</p></li>
+<li><p><code><a href="../reference/rsi_download_rasters.html">rsi_download_rasters()</a></code> is a new function that exposes how <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> downloads assets.</p></li>
+<li><p><code><a href="../reference/get_stac_data.html">get_alos_palsar_imagery()</a></code> and <code><a href="../reference/alos_palsar_mask_function.html">alos_palsar_mask_function()</a></code> are new functions to help you get and mask ALOS PALSAR imagery, respectively. Thanks to <a href="https://github.com/h-a-graham" class="external-link">@h-a-graham</a> via <a href="https://github.com/Permian-Global-Research/rsi/issues/48" class="external-link">#48</a> and <a href="https://github.com/Permian-Global-Research/rsi/issues/50" class="external-link">#50</a>.</p></li>
+<li><p><code>get_naip_data()</code> is a function for getting National Agricultural Imagery Program data from (by default) Planetary Computer. Data covers the continental United States.</p></li>
+<li><p><code><a href="../reference/landsat_mask_function.html">landsat_mask_function()</a></code> gains an argument, <code>include</code>, which lets you specify whether you’d like to include pixels that represent land (<code>"land"</code>), water (<code>"water"</code>), or both (<code>"both"</code>). Thanks to <a href="https://github.com/mateuszrydzik" class="external-link">@mateuszrydzik</a> for the report via <a href="https://github.com/Permian-Global-Research/rsi/issues/37" class="external-link">#37</a> (<a href="https://github.com/Permian-Global-Research/rsi/issues/46" class="external-link">#46</a>).</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-and-other-changes-0-2-0">Bug fixes and other changes<a class="anchor" aria-label="anchor" href="#bug-fixes-and-other-changes-0-2-0"></a></h3>
+<ul><li><p>Progress bars have been split into separate bars for downloading, masking, compositing and so on.</p></li>
+<li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> no longer errors in (rare) circumstances where calculating the intersection of bounding boxes between your AOI and an individual item, performed when setting <code>composite_function = NULL</code>, produces a bounding box with <code>ymin</code> or <code>xmin</code> higher than <code>ymax</code> or <code>xmax</code>.</p></li>
+<li><p>Functions will no longer error if you construct their arguments with <code><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue::glue()</a></code> (or otherwise if they have more than one class).</p></li>
+<li><p><code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> will only rename bands if <code>band_names</code> is the same length as the number of bands in the output raster (or missing, or defined by a function). It will now warn you if these lengths are different. Previously, if you provided more than the required number of band names, <code><a href="../reference/stack_rasters.html">stack_rasters()</a></code> would silently ignore the extra names, and would error if you provided fewer names than bands.</p></li>
+<li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> now warns if <code>asset_names</code> is <code>NULL</code> and there is more than one asset per item.</p></li>
+<li><p>Functions sending HTTP requests now set a user agent of <code>rsi (https://permian-global-research.github.io/rsi/)</code></p></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="rsi-012">rsi 0.1.2<a class="anchor" aria-label="anchor" href="#rsi-012"></a></h2><p class="text-muted">CRAN release: 2024-02-13</p>
 <ul><li>
