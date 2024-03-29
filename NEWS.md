@@ -50,6 +50,9 @@
   
 * `get_stac_data()` now warns if `asset_names` is `NULL` and there is more 
   than one asset per item.
+  
+* Functions sending HTTP requests now set a user agent of 
+  `rsi (https://permian-global-research.github.io/rsi/)`
 
 # rsi 0.1.2
 
