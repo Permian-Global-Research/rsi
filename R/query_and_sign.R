@@ -65,7 +65,10 @@ rsi_query_api <- function(bbox,
     limit = limit
   )
 
-  items <- rstac::items_fetch(rstac::get_request(items))
+  items <- rstac::items_fetch(
+    rstac::get_request(items, rsi_user_agent),
+    rsi_user_agent
+  )
 
   items
 }
@@ -96,11 +99,12 @@ rsi_query_api <- function(bbox,
 sign_planetary_computer <- function(items,
                                     subscription_key = Sys.getenv("rsi_pc_key")) {
   if (subscription_key == "") {
-    rstac::items_sign(items, rstac::sign_planetary_computer())
+    rstac::items_sign(items, rstac::sign_planetary_computer(rsi_user_agent))
   } else {
     rstac::items_sign(
       items,
       rstac::sign_planetary_computer(
+        rsi_user_agent,
         headers = c("Ocp-Apim-Subscription-Key" = subscription_key)
       )
     )
