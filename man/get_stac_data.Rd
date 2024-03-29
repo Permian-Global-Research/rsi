@@ -35,7 +35,8 @@ get_stac_data(
   gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
     "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
     GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS",
+    GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)")
 )
 
 get_sentinel1_imagery(

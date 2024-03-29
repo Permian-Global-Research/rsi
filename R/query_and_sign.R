@@ -67,8 +67,7 @@ rsi_query_api <- function(bbox,
 
   items <- rstac::items_fetch(
     rstac::get_request(
-      items,
-      rsi_user_agent,
+      items
     ),
     rsi_user_agent
   )
