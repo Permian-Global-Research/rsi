@@ -23,9 +23,9 @@ stack_rasters(
 }
 \arguments{
 \item{rasters}{A list of rasters to combine into a single multi-band raster,
-either as SpatRaster objects from \code{\link[terra:rast]{terra::rast()}} or character file paths
-to files that can be read by \code{\link[terra:rast]{terra::rast()}}. Rasters will be "stacked" upon
-one another, preserving values. They must share CRS.}
+as character file paths to files that can be read by \code{\link[terra:rast]{terra::rast()}}.
+Rasters will be "stacked" upon one another, preserving values. They must
+share CRS.}
 
 \item{output_filename}{The location to save the final "stacked" raster. If
 this filename has a "vrt" extension as determined by \code{tools::file_ext()},

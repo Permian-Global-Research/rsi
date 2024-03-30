@@ -9,9 +9,9 @@
 #' this file may take a long time and a large amount of disk space.
 #'
 #' @param rasters A list of rasters to combine into a single multi-band raster,
-#' either as SpatRaster objects from [terra::rast()] or character file paths
-#' to files that can be read by [terra::rast()]. Rasters will be "stacked" upon
-#' one another, preserving values. They must share CRS.
+#' as character file paths to files that can be read by [terra::rast()].
+#' Rasters will be "stacked" upon one another, preserving values. They must
+#' share CRS.
 #' @param output_filename The location to save the final "stacked" raster. If
 #' this filename has a "vrt" extension as determined by `tools::file_ext()`,
 #' then this function exits after creating a VRT; otherwise, this function will
