@@ -1,0 +1,11 @@
+bibentry(
+  bibtype = "Misc",
+  key = "rsi",
+  title = "rsi: Efficiently Retrieve and Process Satellite Imagery",
+  author = person(given = "Michael",
+                  family = "Mahoney"),
+  url = "https://permian-global-research.github.io/rsi/",
+  doi = "10.5281/zenodo.10926857",
+  version = "0.2.0.9000",
+  header = "To cite ‘rsi’ in publications, please use:"
+)

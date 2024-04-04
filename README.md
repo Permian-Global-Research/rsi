@@ -17,6 +17,7 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
+[![DOI](https://zenodo.org/badge/682237263.svg)](https://zenodo.org/doi/10.5281/zenodo.10926857)
 <!-- badges: end -->
 
 The goal of rsi is to address several **r**epeated **s**patial
