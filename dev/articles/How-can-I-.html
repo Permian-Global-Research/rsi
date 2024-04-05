@@ -137,9 +137,9 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpBAt4n4/file27f8beb36ff.tif" </span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmpBAt4n4/file27f83e1f0f44.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpBAt4n4/file27f85935a760.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpgHYZ10/file26e541589357.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpgHYZ10/file26e574fffa04.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpgHYZ10/file26e5f4791c6.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -226,6 +226,96 @@ to see how many images are filtered out by our CQL2 query:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">filtered_landsat_images</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 7</span></span></code></pre></div>
 <p>We only wind up downloading about half the number of images!</p>
+</div>
+<div class="section level2">
+<h2 id="calculate-all-possible-indices-using-a-certain-data-set">Calculate all possible indices using a certain data set?<a class="anchor" aria-label="anchor" href="#calculate-all-possible-indices-using-a-certain-data-set"></a>
+</h2>
+<p>Say you’ve got some imagery:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
+<span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">our_imagery</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
+<span>  <span class="va">aoi</span>,</span>
+<span>  start_date <span class="op">=</span> <span class="st">"2023-06-01"</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="st">"2023-07-01"</span>,</span>
+<span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>You want to calculate some indices from this imagery. Specifically,
+you want to calculate all the indices you can from this imagery – you’re
+doing some sort of machine learning/data mining work, and you want to
+throw as many indices in the mix as possible.</p>
+<p>To do that using <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code>, you’re going to
+need to only provide formulas for the indices that can be calculated
+from your particular data source. We might look at the columns available
+for filtering from <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> vegetation         <span style="color: #949494;">&lt;chr [2]&gt;</span> https://githu… 2021-11-17       (N - 0… Aerosol …</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: platforms &lt;list&gt;, reference &lt;chr&gt;, short_name &lt;chr&gt;</span></span></span></code></pre></div>
+<p>It might seem like we’d want to use the <code>platforms</code> column
+here: we just downloaded a bunch of data from the Landsat-OLI platform,
+so we probably want to calculate indices that correspond to this
+platform. Unfortunately, if we use <code><a href="../reference/filters.html">filter_platforms()</a></code> to do
+this filtering, we’ll get an error inside of
+<code><a href="../reference/calculate_indices.html">calculate_indices()</a></code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
+<span>    <span class="va">our_imagery</span>,</span>
+<span>    <span class="fu"><a href="../reference/filters.html">filter_platforms</a></span><span class="op">(</span>platforms <span class="op">=</span> <span class="st">"Landsat-OLI"</span><span class="op">)</span>,</span>
+<span>    output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in eval(calc) : object 'gamma' not found</span></span></code></pre></div>
+<p>The issue is that a number of the indices in <a href="https://github.com/davemlz/awesome-spectral-indices" class="external-link">the Awesome
+Spectral Indices project</a> have formulas that require additional data.
+You can see a list of them in the ASI documentation described as
+“additional index parameters”, and they range from wavelength values to
+exponentiation factors to weighting parameters and so on.</p>
+<p>If you care about using a specific index, then it’s your job to
+figure out what extra parameters that index requires and how you’ll
+provide them. The <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code> table also includes a
+DOI to the authoritative reference (as listed in the ASI project) which
+can hopefully help with this.</p>
+<p>However, if you’re looking to automatically calculate just the
+indices that don’t require external parameters, you can do that as well.
+Rather than use <code><a href="../reference/filters.html">filter_platforms()</a></code>, we’ll use
+<code><a href="../reference/filters.html">filter_bands()</a></code> to retrieve all the spectral indices that
+can be calculated using the bands available in our raster.</p>
+<p>Assuming you used one of the wrapper functions in rsi, like
+<code>get_landsat_data()</code> or <code>get_sentinel2_data()</code>,
+your raster bands should automatically be named to match the band names
+used in the ASI project. That means we can pass the names of your raster
+directly to <code><a href="../reference/filters.html">filter_bands()</a></code>:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> vegetation         <span style="color: #949494;">&lt;chr [2]&gt;</span> https://githu… 2021-11-17       (N - 0… Aerosol …</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: platforms &lt;list&gt;, reference &lt;chr&gt;, short_name &lt;chr&gt;</span></span></span></code></pre></div>
+<p>And we can pass the outputs of that function to
+<code><a href="../reference/calculate_indices.html">calculate_indices()</a></code> to only calculate this subset of
+indices:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
+<span>    <span class="va">our_imagery</span>,</span>
+<span>    <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in x@cpp$writeStop(): GDAL Message 1:</span></span>
+<span><span class="co">#&gt; /tmp/RtmpgHYZ10/file26e532897e20.tif: Metadata exceeding 32000 bytes cannot be</span></span>
+<span><span class="co">#&gt; written into GeoTIFF. Transferred to PAM instead.</span></span></code></pre></div>
+<p><img src="How-can-I-_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
