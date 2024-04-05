@@ -1,5 +1,9 @@
 # rsi (development version)
 
+* Added a new section to the "How can I?" article on the pkgdown site, with
+  pointers on how to "Calculate all possible indices using a certain data set".
+  Thanks to @alkimj in #60 (#61).
+
 # rsi 0.2.0
 
 ## Deprecations

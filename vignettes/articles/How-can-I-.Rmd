@@ -122,3 +122,66 @@ length(filtered_landsat_images)
 ```
 
 We only wind up downloading about half the number of images!
+
+## Calculate all possible indices using a certain data set?
+
+Say you've got some imagery:
+
+```{r}
+aoi <- sf::st_point(c(-74.912131, 44.080410))
+aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
+
+our_imagery <- get_landsat_imagery(
+  aoi,
+  start_date = "2023-06-01",
+  end_date = "2023-07-01",
+  output_filename = tempfile(fileext = ".tif")
+)
+```
+
+You want to calculate some indices from this imagery. Specifically, you want to calculate all the indices you can from this imagery -- you're doing some sort of machine learning/data mining work, and you want to throw as many indices in the mix as possible.
+
+To do that using `calculate_indices()`, you're going to need to only provide formulas for the indices that can be calculated from your particular data source. We might look at the columns available for filtering from `spectral_indices()`:
+
+```{r}
+spectral_indices() |> 
+  head(1)
+```
+
+It might seem like we'd want to use the `platforms` column here: we just downloaded a bunch of data from the Landsat-OLI platform, so we probably want to calculate indices that correspond to this platform. Unfortunately, if we use `filter_platforms()` to do this filtering, we'll get an error inside of `calculate_indices()`:
+
+```{r}
+try(
+  calculate_indices(
+    our_imagery,
+    filter_platforms(platforms = "Landsat-OLI"),
+    output_filename = tempfile(fileext = ".tif")
+  )
+)
+```
+
+The issue is that a number of the indices in [the Awesome Spectral Indices project](https://github.com/davemlz/awesome-spectral-indices) have formulas that require additional data. You can see a list of them in the ASI documentation described as "additional index parameters", and they range from wavelength values to exponentiation factors to weighting parameters and so on.
+
+If you care about using a specific index, then it's your job to figure out what extra parameters that index requires and how you'll provide them. The `spectral_indices()` table also includes a DOI to the authoritative reference (as listed in the ASI project) which can hopefully help with this.
+
+However, if you're looking to automatically calculate just the indices that don't require external parameters, you can do that as well. Rather than use `filter_platforms()`, we'll use `filter_bands()` to retrieve all the spectral indices that can be calculated using the bands available in our raster.
+
+Assuming you used one of the wrapper functions in rsi, like `get_landsat_data()` or `get_sentinel2_data()`, your raster bands should automatically be named to match the band names used in the ASI project. That means we can pass the names of your raster directly to `filter_bands()`:
+
+```{r}
+filter_bands(bands = names(terra::rast(our_imagery))) |> 
+  head(1)
+```
+
+And we can pass the outputs of that function to `calculate_indices()` to only calculate this subset of indices:
+
+```{r}
+calculate_indices(
+    our_imagery,
+    filter_bands(bands = names(terra::rast(our_imagery))),
+    output_filename = tempfile(fileext = ".tif")
+  ) |> 
+  terra::rast() |> 
+  terra::plot()
+```
