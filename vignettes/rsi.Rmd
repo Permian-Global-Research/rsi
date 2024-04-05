@@ -21,6 +21,8 @@ The rsi package aims to help you download data from STAC APIs, to compute spectr
 library(rsi)
 ```
 
+## Downloading data
+
 In order to download data from a STAC API, we're going to need to specify both a spatial and temporal area of interest. To define our spatial area of interest, we'll first mock up a small bounding box in northern Massachusetts (in a planar CRS appropriate for the region):
 
 ```{r}
@@ -68,6 +70,8 @@ terra::rast(our_dem) |>
 
 Under the hood, both of these functions (and their friends, `get_sentinel2_imagery()` and `get_sentinel1_imagery()`) are powered by a lower-level `get_stac_data()` function, which should theoretically work with any imagery provided by any STAC API, anywhere. These functions simply provide user-friendly defaults to make it faster to get the data you care about.
 
+## Finding spectral indices
+
 In addition to these STAC-focused data-downloading functions, rsi also has an interface to the [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices) project via the `spectral_indices()` function:
 
 ```{r}
@@ -91,6 +95,8 @@ filter_bands(bands = c("R", "B"))
 ```
 
 Arguments to these functions let you control whether you're looking for indices that match _all_ platforms and bands you've specified, or _any_ of them.
+
+## Calculating indices
 
 But rsi doesn't simply make these formulas available in R, it also helps you compute these indices from imagery, via the `calculate_indices()` function. This function takes your imagery and a subset of `spectral_indices()` as arguments, and creates a raster containing all of those indices as an output. We can use `filter_bands()` to quickly get a list of the indices we can compute from our Landsat imagery, and then `calculate_indices()` to compute all 128 of those indices from our images:
 
@@ -119,6 +125,8 @@ try(
 ```
 
 But it's worth scanning your formulas before running `calculate_indices()`, just to make sure you aren't going to be accidentally running something surprising!
+
+## Stacking rasters
 
 Last but not least, rsi also provides a way to combine disparate data sets covering the same geographic region into a single VRT, quickly creating a file that you can treat as a single raster without taking up much additional storage space. This is a great way to create predictor bricks from your indices and downloaded data which you can then use for model fitting and prediction:
 

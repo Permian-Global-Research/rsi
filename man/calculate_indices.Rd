@@ -50,9 +50,10 @@ workload.
 }
 
 \examples{
+our_raster <- system.file("rasters/example_sentinel1.tif", package = "rsi")
 calculate_indices(
-  system.file("rasters/example_sentinel1.tif", package = "rsi"),
-  filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)"),
+  our_raster,
+  filter_bands(bands = names(terra::rast(our_raster))),
   tempfile(fileext = ".tif"),
   names_suffix = "sentinel1"
 )
