@@ -18,6 +18,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rsi)](https://CRAN.R-project.org/package=rsi)
 [![DOI](https://zenodo.org/badge/682237263.svg)](https://zenodo.org/doi/10.5281/zenodo.10926857)
+[![Status at rOpenSci Software Peer
+Review](https://badges.ropensci.org/636_status.svg)](https://github.com/ropensci/software-review/issues/636)
 <!-- badges: end -->
 
 The goal of rsi is to address several **r**epeated **s**patial
@@ -208,6 +210,16 @@ terra::plot(terra::rast(raster_stack))
 
 This can be extremely useful as a way to create predictor bricks and
 other multi-band rasters from various data sources.
+
+## Contributing
+
+We love contributions! See our [contribution
+guide](https://github.com/Permian-Global-Research/rsi/blob/main/.github/CONTRIBUTING.md)
+for pointers on how to make your contribution as easy to accept as
+possible – in particular, consider [opening an
+issue](https://github.com/Permian-Global-Research/rsi/issues/new/choose)
+with a [minimal reprex](https://www.tidyverse.org/help/#reprex) to make
+sure that we understand what your changes are meant to do.
 
 ## License
 
