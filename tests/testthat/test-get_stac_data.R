@@ -357,8 +357,9 @@ test_that("Providing pixel sizes with geographic coords fires the expected warni
   expect_error(
     tryCatch(
       get_stac_data(aoi, pixel_x_size = 30, pixel_y_size = 30),
-      rsi_default_pixel_size_geographic_coords = stop("The warning fired")
-    )
+      rsi_default_pixel_size_geographic_coords = rlang::abort("The warning fired", class = "success")
+    ),
+    class = "success"
   )
 })
 
@@ -379,7 +380,8 @@ test_that("Providing no asset names fires the expected warning", {
         collection = "usgs-lcmap-conus-v13",
         output_filename = tempfile(fileext = ".tif"),
       ),
-      rsi_missing_asset_names = stop("The warning fired")
+      rsi_missing_asset_names = rlang::abort("The warning fired", class = "success"),
+      class = "success"
     )
   )
 })
