@@ -38,7 +38,7 @@ downloaded_years <- vapply(
       asset_names = "lcpri",
       stac_source = "https://planetarycomputer.microsoft.com/api/stac/v1",
       collection = "usgs-lcmap-conus-v13",
-      output_filename = tempfile(year, fileext = ".tif")
+      output_filename = file.path(tempdir(), glue::glue("{year}.tif"))
     )
   },
   character(1)
