@@ -328,7 +328,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpRmeHru/file205154a007d8.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpO2jQ19/file1f3f1fc53fa9.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -560,8 +560,9 @@ band indicates that they were “clear with lows set”</a> are accepted,
 and all others are masked out:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_band"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "qa_pixel"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_function"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "qa_pixel"</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_function"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; function (raster, include = c("land", "water", "both")) </span></span>
 <span><span class="co">#&gt; {</span></span>
 <span><span class="co">#&gt;     if (missing(include)) </span></span>
@@ -574,7 +575,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x563c68eeb3c8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x557e72fb8658&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -583,7 +584,7 @@ and all others are masked out:</p>
 the object that’s passed to <code>asset_names</code>. For instance, to
 only download the A band (what Planetary Computer calls
 <code>coastal</code>), we could subset our object like this:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span><span class="op">[</span><span class="st">"coastal"</span><span class="op">]</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
 <span><span class="co">#&gt; mask_band mask_function stac_source collection_name query_function download_function sign_function class names</span></span>
@@ -594,7 +595,7 @@ only download the A band (what Planetary Computer calls
 we could set the <code>composite_function</code> argument to
 <code>NULL</code> in order to download each image in our spatiotemporal
 AOI separately:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
 <span>  aoi <span class="op">=</span> <span class="va">projected_ashe</span>,</span>
 <span>  start_date <span class="op">=</span> <span class="st">"2021-06-01"</span>,</span>
@@ -628,7 +629,7 @@ images:</p>
 <li>with less than 50% cloud cover,</li>
 </ul>
 <p>We could write a filter that looks something like this:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">geometry</span> <span class="op">&lt;-</span> <span class="va">ashe</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -657,7 +658,7 @@ and friends?</p>
 <code><a href="../reference/deprecated.html">default_query_function()</a></code>. This function is exported, which
 means you can see its source code by calling the function without
 parentheses:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">default_query_function</span></span>
 <span><span class="co">#&gt; function (bbox, stac_source, collection, start_date, end_date, </span></span>
 <span><span class="co">#&gt;     limit, ...) </span></span>
@@ -668,7 +669,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x563c6376df50&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x557e6f83e8b0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
@@ -680,7 +681,7 @@ complicated query we can provide our own custom query function in its
 place. For instance, to perform the same CQL2 query as before, we can
 effectively copy and paste our code from above into a new query function
 and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_imagery()</a></code>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">custom_query_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">bbox</span>,</span>
 <span>                                  <span class="va">stac_source</span>,</span>
 <span>                                  <span class="va">collection</span>,</span>
