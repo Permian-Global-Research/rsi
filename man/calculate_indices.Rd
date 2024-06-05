@@ -4,7 +4,14 @@
 \alias{calculate_indices}
 \title{Calculate indices from the bands of a raster}
 \usage{
-calculate_indices(raster, indices, output_filename, ..., names_suffix = NULL)
+calculate_indices(
+  raster,
+  indices,
+  output_filename,
+  ...,
+  wopt = list(),
+  names_suffix = NULL
+)
 }
 \arguments{
 \item{raster}{The raster (either as a SpatRaster or object readable by
@@ -20,6 +27,8 @@ name) will work.}
 \item{output_filename}{The filename to write the computed metrics to.}
 
 \item{...}{These dots are for future extensions and must be empty.}
+
+\item{wopt}{list with named options for writing files as in \code{\link[terra]{writeRaster}}}
 
 \item{names_suffix}{If not \code{NULL}, will be used (with \code{\link[=paste]{paste()}}) to add a
 suffix to each of the band names returned.}

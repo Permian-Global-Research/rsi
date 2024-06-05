@@ -29,6 +29,7 @@
 #' name) will work.
 #' @param output_filename The filename to write the computed metrics to.
 #' @inheritParams rlang::args_dots_empty
+#' @inheritParams terra::predict
 #' @param names_suffix If not `NULL`, will be used (with [paste()]) to add a
 #' suffix to each of the band names returned.
 #'
@@ -59,6 +60,7 @@ calculate_indices <- function(raster,
                               indices,
                               output_filename,
                               ...,
+                              wopt = list(),
                               names_suffix = NULL) {
   rlang::check_dots_empty()
   rlang::check_installed("terra")
@@ -105,6 +107,7 @@ calculate_indices <- function(raster,
       paste_names = paste_names,
       raster = raster,
       output_filename = output_filename,
+      wopt = wopt,
       names_suffix = names_suffix
     )
   )
@@ -131,7 +134,8 @@ calculate_indices <- function(raster,
           }
           out
         },
-        filename = output_filename
+        filename = output_filename,
+        wopt = wopt
       )
     },
     envir = exec_env
