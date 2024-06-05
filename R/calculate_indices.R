@@ -60,6 +60,7 @@ calculate_indices <- function(raster,
                               indices,
                               output_filename,
                               ...,
+                              cores = 1L,
                               wopt = list(),
                               names_suffix = NULL) {
   rlang::check_dots_empty()
@@ -108,6 +109,7 @@ calculate_indices <- function(raster,
       raster = raster,
       output_filename = output_filename,
       wopt = wopt,
+      cores = cores,
       names_suffix = names_suffix
     )
   )
@@ -135,7 +137,8 @@ calculate_indices <- function(raster,
           out
         },
         filename = output_filename,
-        wopt = wopt
+        wopt = wopt,
+        cores = cores
       )
     },
     envir = exec_env

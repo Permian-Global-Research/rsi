@@ -1,7 +1,7 @@
 # rsi (development version)
 
-* `calculate_indices()` gains a new argument, `wopt`, which is passed directly
-  to `terra::predict()`.
+* `calculate_indices()` gains two new arguments, `wopt` and `cores`, which are 
+  passed directly to `terra::predict()`.
 
 * Added a new section to the "How can I?" article on the pkgdown site, with
   pointers on how to "Calculate all possible indices using a certain data set".
