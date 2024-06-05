@@ -9,6 +9,7 @@ calculate_indices(
   indices,
   output_filename,
   ...,
+  cores = 1L,
   wopt = list(),
   names_suffix = NULL
 )
@@ -27,6 +28,8 @@ name) will work.}
 \item{output_filename}{The filename to write the computed metrics to.}
 
 \item{...}{These dots are for future extensions and must be empty.}
+
+\item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used}
 
 \item{wopt}{list with named options for writing files as in \code{\link[terra]{writeRaster}}}
 
