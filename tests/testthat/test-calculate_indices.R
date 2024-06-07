@@ -21,6 +21,32 @@ test_that("Index calculation is stable", {
   )
 })
 
+test_that("Extra objects can be passed to calculate_indices()", {
+  skip_if_not_installed("terra")
+  # covr can't instrument the local block properly
+  skip_if(nzchar(Sys.getenv("is_covr")))
+  skip_on_cran()
+  index_out <- tempfile(fileext = ".tif")
+
+  idx <- suppressWarnings(filter_platforms(spectral_indices(download_indices = FALSE, update_cache = FALSE), platforms = "Sentinel-1 (Dual Polarisation VV-VH)"))[1, ]
+  idx$formula <- "pmax(VH, 1000)"
+
+  expect_warning(
+    out <- calculate_indices(
+      system.file("rasters/example_sentinel1.tif", package = "rsi"),
+      idx,
+      index_out,
+      names_suffix = "sentinel1",
+      extra_objects = list(`pmax` = pmax)
+    ),
+    class = "rsi_extra_objects"
+  )
+
+  expect_true(
+    all(terra::values(terra::rast(out)) == 1000)
+  )
+})
+
 test_that("Index calculations fail when missing a column", {
   skip_on_cran()
   index_out <- tempfile(fileext = ".tif")
