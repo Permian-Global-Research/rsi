@@ -30,6 +30,13 @@
 #' @param output_filename The filename to write the computed metrics to.
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams terra::predict
+#' @param extra_objects A named list of additional objects to pass to the 
+#' minimal environment that formulas are executed in. For instance, if you
+#' need to use the `pmax` function in order to calculate an index, you can 
+#' make it available in the environment by setting 
+#' `extra_objects = list("pmax" = pmax)`. Providing extra functionality is 
+#' inherently less safe than the default minimal environment, and as such always 
+#' emits a warning, which you can suppress with `suppressWarnings()`.
 #' @param names_suffix If not `NULL`, will be used (with [paste()]) to add a
 #' suffix to each of the band names returned.
 #'
@@ -62,6 +69,7 @@ calculate_indices <- function(raster,
                               ...,
                               cores = 1L,
                               wopt = list(),
+                              extra_objects = list(),
                               names_suffix = NULL) {
   rlang::check_dots_empty()
   rlang::check_installed("terra")
@@ -78,41 +86,55 @@ calculate_indices <- function(raster,
   formulas <- lapply(indices[["formula"]], str2lang)
   paste_names <- !is.null(names_suffix) && names_suffix != ""
 
-  exec_env <- rlang::new_environment(
-    list(
-      # math functions
-      `-` = `-`,
-      `(` = `(`,
-      `*` = `*`,
-      `/` = `/`,
-      `^` = `^`,
-      `+` = `+`,
-      # necessary syntax
-      `<-` = `<-`,
-      `if` = `if`,
-      `{` = `{`,
-      `function` = `function`,
-      # renaming
-      names = names,
-      `names<-` = `names<-`,
-      paste = paste,
-      # pieces for predicting
-      predict = terra::predict,
-      list = list(),
-      lapply = lapply,
-      with = with,
-      eval = eval,
-      # user-provided variables
-      formulas = formulas,
-      short_names = indices[["short_name"]],
-      paste_names = paste_names,
-      raster = raster,
-      output_filename = output_filename,
-      wopt = wopt,
-      cores = cores,
-      names_suffix = names_suffix
-    )
+  exec_objects <- list(
+    # math functions
+    `-` = `-`,
+    `(` = `(`,
+    `*` = `*`,
+    `/` = `/`,
+    `^` = `^`,
+    `+` = `+`,
+    # necessary syntax
+    `<-` = `<-`,
+    `if` = `if`,
+    `{` = `{`,
+    `function` = `function`,
+    # renaming
+    names = names,
+    `names<-` = `names<-`,
+    paste = paste,
+    # pieces for predicting
+    predict = terra::predict,
+    list = list(),
+    lapply = lapply,
+    with = with,
+    eval = eval,
+    # user-provided variables
+    formulas = formulas,
+    short_names = indices[["short_name"]],
+    paste_names = paste_names,
+    raster = raster,
+    output_filename = output_filename,
+    wopt = wopt,
+    cores = cores,
+    names_suffix = names_suffix
   )
+
+  if (length(extra_objects)) {
+    rlang::warn(c(
+      "Providing extra objects can potentially make it easier for malicious code to impact your system.",
+      i = "Make sure you closely inspect the formulas you're running, before running them, and understand why they need extra objects!",
+      i = "This warning can be silenced using `suppressWarnings(..., classes = 'rsi_extra_objects')`"
+      ),
+      class = "rsi_extra_objects"
+    )
+    exec_objects <- c(
+      exec_objects,
+      extra_objects
+    )
+  }
+
+  exec_env <- rlang::new_environment(exec_objects)
 
   # covr can't instrument inside of our locked-down environment
   # so either we widen the environment (which seems like the wrong thing to do)

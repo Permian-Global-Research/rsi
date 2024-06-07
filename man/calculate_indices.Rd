@@ -11,6 +11,7 @@ calculate_indices(
   ...,
   cores = 1L,
   wopt = list(),
+  extra_objects = list(),
   names_suffix = NULL
 )
 }
@@ -32,6 +33,14 @@ name) will work.}
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used}
 
 \item{wopt}{list with named options for writing files as in \code{\link[terra]{writeRaster}}}
+
+\item{extra_objects}{A named list of additional objects to pass to the
+minimal environment that formulas are executed in. For instance, if you
+need to use the \code{pmax} function in order to calculate an index, you can
+make it available in the environment by setting
+\code{extra_objects = list("pmax" = pmax)}. Providing extra functionality is
+inherently less safe than the default minimal environment, and as such always
+emits a warning, which you can suppress with \code{suppressWarnings()}.}
 
 \item{names_suffix}{If not \code{NULL}, will be used (with \code{\link[=paste]{paste()}}) to add a
 suffix to each of the band names returned.}

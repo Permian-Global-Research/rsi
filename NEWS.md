@@ -1,5 +1,9 @@
 # rsi (development version)
 
+* `calculate_indices()` gains a new argument, `extra_objects`, which lets you
+  provide additional objects for calculating indices inside of the minimal 
+  environment used to isolate potentially untrustworthy code.
+
 * `calculate_indices()` gains two new arguments, `wopt` and `cores`, which are 
   passed directly to `terra::predict()`.
 
