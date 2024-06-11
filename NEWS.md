@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* `stack_rasters()` gains a new argument, `check_crs`, which can be set to `FALSE` 
+  to skip checking if all rasters share the same CRS.
+
 * `calculate_indices()` gains a new argument, `extra_objects`, which lets you
   provide additional objects for calculating indices inside of the minimal 
   environment used to isolate potentially untrustworthy code.

@@ -33,6 +33,9 @@
 #' @param band_names Either a character vector of band names, or a function that
 #' when given a character vector of band names, returns a character vector of
 #' the same length containing new band names.
+#' @param check_crs Logical: Should this function check that all `rasters` share
+#' the same CRS? Set to `FALSE` only if you are entirely confident that rasters 
+#' have equivalent CRS definitions, but not identical WKT strings.
 #' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
 #' argument of [sf::gdal_utils()]. This argument is ignored (with a warning)
 #' if `output_filename` is a VRT.
@@ -60,6 +63,7 @@ stack_rasters <- function(rasters,
                           reference_raster = 1,
                           resampling_method = "bilinear",
                           band_names,
+                          check_crs = TRUE,
                           gdalwarp_options = c(
                             "-multi",
                             "-overwrite",
@@ -164,7 +168,7 @@ stack_rasters <- function(rasters,
         r <- terra::rast(r)
         # this is the only place we instantiate these rasters, so may as well
         # check CRS alignment while we're here...
-        if (terra::crs(r) != ref_crs) {
+        if (check_crs && (terra::crs(r) != ref_crs)) {
           rlang::abort(
             c(
               "Rasters do not all share the reference raster's CRS.",
