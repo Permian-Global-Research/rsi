@@ -11,6 +11,7 @@ calculate_indices(
   ...,
   cores = 1L,
   wopt = list(),
+  overwrite = FALSE,
   extra_objects = list(),
   names_suffix = NULL
 )
@@ -33,6 +34,8 @@ name) will work.}
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used}
 
 \item{wopt}{list with named options for writing files as in \code{\link[terra]{writeRaster}}}
+
+\item{overwrite}{logical. If \code{TRUE}, \code{filename} is overwritten}
 
 \item{extra_objects}{A named list of additional objects to pass to the
 minimal environment that formulas are executed in. For instance, if you
