@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* `calculate_indices()` gains a new argument, `overwrite`, which is passed
+  directly to `terra::predict()`. Thanks to @Cidree in #69 (#70).
+
 * `stack_rasters()` gains a new argument, `check_crs`, which can be set to `FALSE` 
   to skip checking if all rasters share the same CRS.
 

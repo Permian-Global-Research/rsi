@@ -69,6 +69,7 @@ calculate_indices <- function(raster,
                               ...,
                               cores = 1L,
                               wopt = list(),
+                              overwrite = FALSE,
                               extra_objects = list(),
                               names_suffix = NULL) {
   rlang::check_dots_empty()
@@ -117,6 +118,7 @@ calculate_indices <- function(raster,
     output_filename = output_filename,
     wopt = wopt,
     cores = cores,
+    overwrite = overwrite,
     names_suffix = names_suffix
   )
 
@@ -160,7 +162,8 @@ calculate_indices <- function(raster,
         },
         filename = output_filename,
         wopt = wopt,
-        cores = cores
+        cores = cores,
+        overwrite = overwrite
       )
     },
     envir = exec_env
