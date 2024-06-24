@@ -23,6 +23,22 @@
 }
 
 #' @export
+c.rsi_band_mapping <- function(...) {
+  dots <- list(...)
+  x <- dots[[1]]
+  dots[[1]] <- as.vector(x)
+  names(dots[[1]]) <- names(x)
+  out <- do.call(c, dots)
+  out_names <- names(out)
+  mostattributes(out) <- attributes(x)
+  names(out) <- out_names
+  not_named <- which(names(out) == "")
+  names(out)[not_named] <- out[not_named]
+  class(out) <- class(x)
+  out
+}
+
+#' @export
 print.rsi_band_mapping <- function(x, ...) {
   cat("An rsi band mapping object with attributes:\n")
   cat(names(attributes(x)), sep = " ")

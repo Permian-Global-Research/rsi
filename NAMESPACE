@@ -2,6 +2,7 @@
 
 S3method("[",rsi_band_mapping)
 S3method("[[",rsi_band_mapping)
+S3method(c,rsi_band_mapping)
 S3method(print,rsi_band_mapping)
 export(alos_palsar_mask_function)
 export(calculate_indices)
