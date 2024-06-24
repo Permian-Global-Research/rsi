@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* Band mapping objects now have a `c()` method, making it easier to add assets
+  you wish to download to an existing object. Thanks to @laurenkwick in #71 (#72).
+
 * `calculate_indices()` gains a new argument, `overwrite`, which is passed
   directly to `terra::predict()`. Thanks to @Cidree in #69 (#70).
 
