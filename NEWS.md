@@ -1,20 +1,17 @@
 # rsi (development version)
 
+* `calculate_indices()` gains several new arguments:
+  * `overwrite`, which is passed directly to `terra::predict()`. 
+    Thanks to @Cidree in #69 (#70).
+  * `wopt` and `cores`, which are passed directly to `terra::predict()`.
+  * `extra_objects`, which lets you provide additional objects for calculating
+    indices inside of the minimal environment used to isolate potentially untrustworthy code.
+
 * Band mapping objects now have a `c()` method, making it easier to add assets
   you wish to download to an existing object. Thanks to @laurenkwick in #71 (#72).
 
-* `calculate_indices()` gains a new argument, `overwrite`, which is passed
-  directly to `terra::predict()`. Thanks to @Cidree in #69 (#70).
-
 * `stack_rasters()` gains a new argument, `check_crs`, which can be set to `FALSE` 
   to skip checking if all rasters share the same CRS.
-
-* `calculate_indices()` gains a new argument, `extra_objects`, which lets you
-  provide additional objects for calculating indices inside of the minimal 
-  environment used to isolate potentially untrustworthy code.
-
-* `calculate_indices()` gains two new arguments, `wopt` and `cores`, which are 
-  passed directly to `terra::predict()`.
 
 * Added a new section to the "How can I?" article on the pkgdown site, with
   pointers on how to "Calculate all possible indices using a certain data set".

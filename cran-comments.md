@@ -1,4 +1,5 @@
-This is the fourth CRAN release of rsi. This version simplifies package internals, provides access to new data sources and download methods, and fixes several minor bugs.
+This is the fifth CRAN release of rsi. This version adds several arguments 
+to package functions, making them more flexible for processing spatial data.
 
 ## R CMD check results
 
