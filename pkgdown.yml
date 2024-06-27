@@ -1,11 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   Downloading-data-from-STAC-APIs-using-rsi: Downloading-data-from-STAC-APIs-using-rsi.html
   How-can-I-: How-can-I-.html
   rsi: rsi.html
-last_built: 2024-04-04T13:06Z
+last_built: 2024-06-27T19:38Z
 urls:
   reference: https://permian-global-research.github.io/rsi/reference
   article: https://permian-global-research.github.io/rsi/articles
