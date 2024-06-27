@@ -42,19 +42,7 @@ You can install rsi via:
 install.packages("rsi")
 ```
 
-You can install the development version of rsi from [GitHub](https://github.com/Permian-Global-Research/rsi) with:
-
-``` r
-install.packages(
-  'rsi', 
-  repos = c(
-    'https://mikemahoney218.r-universe.dev', 
-    'https://cloud.r-project.org'
-  )
-)
-```
-
-Or, if you use [pak](https://pak.r-lib.org/):
+You can install the development version of rsi from [GitHub](https://github.com/Permian-Global-Research/rsi) using [pak](https://pak.r-lib.org/):
 
 ``` r
 # install.packages("pak")

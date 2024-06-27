@@ -48,19 +48,8 @@ install.packages("rsi")
 ```
 
 You can install the development version of rsi from
-[GitHub](https://github.com/Permian-Global-Research/rsi) with:
-
-``` r
-install.packages(
-  'rsi', 
-  repos = c(
-    'https://mikemahoney218.r-universe.dev', 
-    'https://cloud.r-project.org'
-  )
-)
-```
-
-Or, if you use [pak](https://pak.r-lib.org/):
+[GitHub](https://github.com/Permian-Global-Research/rsi) using
+[pak](https://pak.r-lib.org/):
 
 ``` r
 # install.packages("pak")
@@ -77,7 +66,7 @@ project](https://github.com/awesome-spectral-indices/awesome-spectral-indices):
 library(rsi)
 
 spectral_indices()
-#> # A tibble: 231 × 9
+#> # A tibble: 243 × 9
 #>    application_domain bands     contributor   date_of_addition formula long_name
 #>    <chr>              <list>    <chr>         <chr>            <chr>   <chr>    
 #>  1 vegetation         <chr [2]> https://gith… 2021-11-17       (N - 0… Aerosol …
@@ -90,7 +79,7 @@ spectral_indices()
 #>  8 vegetation         <chr [2]> https://gith… 2022-04-08       (N * (… Advanced…
 #>  9 water              <chr [4]> https://gith… 2021-09-18       4.0 * … Automate…
 #> 10 water              <chr [5]> https://gith… 2021-09-18       B + 2.… Automate…
-#> # ℹ 221 more rows
+#> # ℹ 233 more rows
 #> # ℹ 3 more variables: platforms <list>, reference <chr>, short_name <chr>
 ```
 
@@ -182,7 +171,6 @@ indices <- calculate_indices(
   available_indices,
   output_filename = tempfile(fileext = ".tif")
 )
-#> |---------|---------|---------|---------|=========================================                                          
 
 # Plot the first handful of spatial indices
 terra::plot(terra::rast(indices))
