@@ -1,4 +1,4 @@
-# rsi (development version)
+# rsi 0.2.1
 
 * `calculate_indices()` gains several new arguments:
   * `overwrite`, which is passed directly to `terra::predict()`. 
