@@ -1,5 +1,11 @@
 # rsi (development version)
 
+* `get_stac_data()` no longer fails if downloading an asset fails, but instead
+  returns a raster with all available data. This may still fail when a single 
+  asset fails to download while downloading multiple assets combined within a 
+  single raster; please open an issue if this happens to you! Thanks to 
+  @laurenkwick in #74 (#75).
+
 # rsi 0.2.1
 
 * `calculate_indices()` gains several new arguments:
