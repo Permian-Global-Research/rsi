@@ -139,9 +139,7 @@ rsi_download_rasters <- function(items,
     }
   )
   out <- stats::na.omit(download_locations)
-  if (!is.null(stats::na.action(out))) {
-    na_attr <- stats::na.action(out)
-  }
+  na_attr <- stats::na.action(out)
   out <- as.data.frame(as.list(out))
   attr(out, "na.action") <- na_attr
   out
