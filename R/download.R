@@ -128,7 +128,7 @@ rsi_download_rasters <- function(items,
                   "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint
                 )
               )
-              download_locations[which_item, ] <- NA
+              download_locations[which_item, ] <<- NA
             }
           )
         },
@@ -138,7 +138,11 @@ rsi_download_rasters <- function(items,
       )
     }
   )
-  as.data.frame(as.list(stats::na.omit(download_locations)))
+  out <- stats::na.omit(download_locations)
+  na_attr <- stats::na.action(out)
+  out <- as.data.frame(as.list(out))
+  attr(out, "na.action") <- na_attr
+  out
 }
 
 maybe_sign_items <- function(items, sign_function) {

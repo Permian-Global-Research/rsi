@@ -364,6 +364,9 @@ get_stac_data <- function(aoi,
     gdal_config_options = gdal_config_options,
     ...
   )
+  if (!is.null(stats::na.action(download_results))) {
+    items$features[stats::na.action(download_results)] <- NULL
+  }
   # mask
   if (!is.null(mask_band)) {
     download_results <- rsi_apply_masks(
