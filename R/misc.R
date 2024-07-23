@@ -56,3 +56,41 @@ build_progressr <- function(n) {
     function(...) NULL # nocov
   }
 }
+
+#' Default options for GDAL
+#' 
+#' These functions provide useful default options for GDAL functions,
+#' making downloading and warping (hopefully!) more efficient for
+#' most use cases. 
+#' 
+#' @returns A vector of options for GDAL commands.
+#' 
+#' @name rsi_gdal_options
+#' @export
+rsi_gdal_config_options <- function() {
+  c(
+    VSI_CACHE = "TRUE",
+    GDAL_CACHEMAX = "30%",
+    VSI_CACHE_SIZE = "10000000",
+    GDAL_HTTP_MULTIPLEX = "YES",
+    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+    GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+    GDAL_NUM_THREADS = "ALL_CPUS",
+    GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
+  )
+}
+
+#' @rdname rsi_gdal_options
+#' @export
+rsi_gdalwarp_options <- function() {
+  c(
+    "-r", "bilinear",
+    "-multi",
+    "-overwrite",
+    "-co", "COMPRESS=DEFLATE",
+    "-co", "PREDICTOR=2",
+    "-co", "NUM_THREADS=ALL_CPUS"
+  )
+}

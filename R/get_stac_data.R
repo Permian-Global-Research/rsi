@@ -140,9 +140,11 @@
 #' argument of [sf::gdal_utils()]. The same set of options are used for all
 #' downloaded data and the final output images; this means that some common
 #' options (for instance, `PREDICTOR=3`) may cause errors if bands are of
-#' varying data types.
+#' varying data types. The default values are provided by 
+#' [rsi_gdalwarp_options()].
 #' @param gdal_config_options Options passed to `gdalwarp` through the
-#' `config_options` argument of [sf::gdal_utils()].
+#' `config_options` argument of [sf::gdal_utils()]. The default values are
+#' provided by [rsi_gdal_config_options()].
 #' @param platforms The names of Landsat satellites to download imagery from.
 #' These do not correspond to the `platforms` column in [spectral_indices()];
 #' the default argument of `c("landsat-9", "landsat-8")` corresponds to
@@ -200,26 +202,8 @@ get_stac_data <- function(aoi,
                           output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                           composite_function = c("merge", "median", "mean", "sum", "min", "max"),
                           limit = 999,
-                          gdalwarp_options = c(
-                            "-r", "bilinear",
-                            "-multi",
-                            "-overwrite",
-                            "-co", "COMPRESS=DEFLATE",
-                            "-co", "PREDICTOR=2",
-                            "-co", "NUM_THREADS=ALL_CPUS"
-                          ),
-                          gdal_config_options = c(
-                            VSI_CACHE = "TRUE",
-                            GDAL_CACHEMAX = "30%",
-                            VSI_CACHE_SIZE = "10000000",
-                            GDAL_HTTP_MULTIPLEX = "YES",
-                            GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                            GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                            GDAL_HTTP_VERSION = "2",
-                            GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                            GDAL_NUM_THREADS = "ALL_CPUS",
-                            GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
-                          )) {
+                          gdalwarp_options = rsi_gdalwarp_options(),
+                          gdal_config_options = rsi_gdal_config_options()) {
   # query |> filter |> download |> mask |> composite |> rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
@@ -467,25 +451,8 @@ get_sentinel1_imagery <- function(aoi,
                                   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                                   composite_function = "median",
                                   limit = 999,
-                                  gdalwarp_options = c(
-                                    "-r", "bilinear",
-                                    "-multi",
-                                    "-overwrite",
-                                    "-co", "COMPRESS=DEFLATE",
-                                    "-co", "PREDICTOR=2",
-                                    "-co", "NUM_THREADS=ALL_CPUS"
-                                  ),
-                                  gdal_config_options = c(
-                                    VSI_CACHE = "TRUE",
-                                    GDAL_CACHEMAX = "30%",
-                                    VSI_CACHE_SIZE = "10000000",
-                                    GDAL_HTTP_MULTIPLEX = "YES",
-                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                    GDAL_HTTP_VERSION = "2",
-                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                    GDAL_NUM_THREADS = "ALL_CPUS"
-                                  )) {
+                                  gdalwarp_options = rsi_gdalwarp_options(),
+                                  gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
@@ -513,25 +480,8 @@ get_sentinel2_imagery <- function(aoi,
                                   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                                   composite_function = "median",
                                   limit = 999,
-                                  gdalwarp_options = c(
-                                    "-r", "bilinear",
-                                    "-multi",
-                                    "-overwrite",
-                                    "-co", "COMPRESS=DEFLATE",
-                                    "-co", "PREDICTOR=2",
-                                    "-co", "NUM_THREADS=ALL_CPUS"
-                                  ),
-                                  gdal_config_options = c(
-                                    VSI_CACHE = "TRUE",
-                                    GDAL_CACHEMAX = "30%",
-                                    VSI_CACHE_SIZE = "10000000",
-                                    GDAL_HTTP_MULTIPLEX = "YES",
-                                    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                    GDAL_HTTP_VERSION = "2",
-                                    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                    GDAL_NUM_THREADS = "ALL_CPUS"
-                                  )) {
+                                  gdalwarp_options = rsi_gdalwarp_options(),
+                                  gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
@@ -560,25 +510,8 @@ get_landsat_imagery <- function(aoi,
                                 output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                                 composite_function = "median",
                                 limit = 999,
-                                gdalwarp_options = c(
-                                  "-r", "bilinear",
-                                  "-multi",
-                                  "-overwrite",
-                                  "-co", "COMPRESS=DEFLATE",
-                                  "-co", "PREDICTOR=2",
-                                  "-co", "NUM_THREADS=ALL_CPUS"
-                                ),
-                                gdal_config_options = c(
-                                  VSI_CACHE = "TRUE",
-                                  GDAL_CACHEMAX = "30%",
-                                  VSI_CACHE_SIZE = "10000000",
-                                  GDAL_HTTP_MULTIPLEX = "YES",
-                                  GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                  GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                  GDAL_HTTP_VERSION = "2",
-                                  GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                  GDAL_NUM_THREADS = "ALL_CPUS"
-                                )) {
+                                gdalwarp_options = rsi_gdalwarp_options(),
+                                gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
@@ -603,25 +536,8 @@ get_naip_imagery <- function(aoi,
                              output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                              composite_function = "merge",
                              limit = 999,
-                             gdalwarp_options = c(
-                               "-r", "bilinear",
-                               "-multi",
-                               "-overwrite",
-                               "-co", "COMPRESS=DEFLATE",
-                               "-co", "PREDICTOR=2",
-                               "-co", "NUM_THREADS=ALL_CPUS"
-                             ),
-                             gdal_config_options = c(
-                               VSI_CACHE = "TRUE",
-                               GDAL_CACHEMAX = "30%",
-                               VSI_CACHE_SIZE = "10000000",
-                               GDAL_HTTP_MULTIPLEX = "YES",
-                               GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                               GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                               GDAL_HTTP_VERSION = "2",
-                               GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                               GDAL_NUM_THREADS = "ALL_CPUS"
-                             )) {
+                             gdalwarp_options = rsi_gdalwarp_options(),
+                             gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
@@ -652,25 +568,8 @@ get_alos_palsar_imagery <- function(aoi,
                                     output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                                     composite_function = "median",
                                     limit = 999,
-                                    gdalwarp_options = c(
-                                      "-r", "bilinear",
-                                      "-multi",
-                                      "-overwrite",
-                                      "-co", "COMPRESS=DEFLATE",
-                                      "-co", "PREDICTOR=2",
-                                      "-co", "NUM_THREADS=ALL_CPUS"
-                                    ),
-                                    gdal_config_options = c(
-                                      VSI_CACHE = "TRUE",
-                                      GDAL_CACHEMAX = "30%",
-                                      VSI_CACHE_SIZE = "10000000",
-                                      GDAL_HTTP_MULTIPLEX = "YES",
-                                      GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                      GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                      GDAL_HTTP_VERSION = "2",
-                                      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                      GDAL_NUM_THREADS = "ALL_CPUS"
-                                    )) {
+                                    gdalwarp_options = rsi_gdalwarp_options(),
+                                    gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
@@ -698,25 +597,8 @@ get_dem <- function(aoi,
                     output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
                     composite_function = "max",
                     limit = 999,
-                    gdalwarp_options = c(
-                      "-r", "bilinear",
-                      "-multi",
-                      "-overwrite",
-                      "-co", "COMPRESS=DEFLATE",
-                      "-co", "PREDICTOR=2",
-                      "-co", "NUM_THREADS=ALL_CPUS"
-                    ),
-                    gdal_config_options = c(
-                      VSI_CACHE = "TRUE",
-                      GDAL_CACHEMAX = "30%",
-                      VSI_CACHE_SIZE = "10000000",
-                      GDAL_HTTP_MULTIPLEX = "YES",
-                      GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                      GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                      GDAL_HTTP_VERSION = "2",
-                      GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                      GDAL_NUM_THREADS = "ALL_CPUS"
-                    )) {
+                    gdalwarp_options = rsi_gdalwarp_options(),
+                    gdal_config_options = rsi_gdal_config_options()) {
   args <- mget(names(formals()))
   args$`...` <- NULL
   args <- c(args, rlang::list2(...))
