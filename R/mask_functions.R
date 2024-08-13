@@ -93,7 +93,12 @@ landsat_mask_function <- function(raster, include = c("land", "water", "both")) 
 #'   aoi,
 #'   start_date = "2021-01-01",
 #'   end_date = "2021-12-31",
-#'   mask_function = alos_palsar_mask_function
+#'   mask_function = alos_palsar_mask_function,
+#'   output_file = tempfile(fileext = ".tif"),
+#'   gdalwarp_options = c(
+#'     rsi::rsi_gdalwarp_options(), 
+#'     "-srcnodata", "nan"
+#'   )
 #' )
 #'
 #' @export
