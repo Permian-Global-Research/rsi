@@ -82,9 +82,11 @@ calculate_indices(
   names_suffix = "sentinel1"
 )
 
-# Formulas aren't able to access most R functions or operators:
+# Formulas aren't able to access most R functions or operators,
+# in order to try and keep formulas from doing something bad:
 example_indices <- filter_platforms(platforms = "Sentinel-1 (Dual Polarisation VV-VH)")[1, ]
 example_indices$formula <- 'system("echo something bad")'
+# So this will error:
 try(
   calculate_indices(
     system.file("rasters/example_sentinel1.tif", package = "rsi"),
@@ -92,5 +94,25 @@ try(
     tempfile(fileext = ".tif")
   )
 )
+
+# Because of this, formulas which try to use most R functions
+# will wind up erroring as well:
+example_indices$formula <- "pmax(VH, VV)"
+try(
+  calculate_indices(
+    system.file("rasters/example_sentinel1.tif", package = "rsi"),
+    example_indices,
+    tempfile(fileext = ".tif")
+  )
+)
+
+# To fix this, pass the objects you want to use to `extra_objects`
+calculate_indices(
+  system.file("rasters/example_sentinel1.tif", package = "rsi"),
+  example_indices,
+  tempfile(fileext = ".tif"),
+  extra_objects = list(pmax = pmax)
+) |>
+  suppressWarnings(classes = "rsi_extra_objects")
 
 }
