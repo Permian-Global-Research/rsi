@@ -172,14 +172,16 @@
 #'   mask_band = "qa_pixel",
 #'   mask_function = landsat_mask_function,
 #'   item_filter_function = landsat_platform_filter,
-#'   platforms = c("landsat-9", "landsat-8")
+#'   platforms = c("landsat-9", "landsat-8"),
+#'   output_filename = tempfile(fileext = ".tif")
 #' )
 #'
 #' # or, mostly equivalently (will download more bands):
 #' landsat_image <- get_landsat_imagery(
 #'   aoi,
 #'   start_date = "2022-06-01",
-#'   end_date = "2022-08-30"
+#'   end_date = "2022-08-30",
+#'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' 
 #' # The `get_*_imagery()` functions will download 
@@ -188,7 +190,8 @@
 #' sentinel1_data <- get_sentinel1_imagery(
 #'   aoi,
 #'   start_date = "2022-06-01",
-#'   end_date = "2022-07-01"
+#'   end_date = "2022-07-01",
+#'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' names(terra::rast(sentinel1_data))
 #' 
@@ -207,7 +210,8 @@
 #'   aoi,
 #'   start_date = "2022-06-01",
 #'   end_date = "2022-07-01",
-#'   asset_names = sentinel2_band_mapping$planetary_computer_v1["B01"]
+#'   asset_names = sentinel2_band_mapping$planetary_computer_v1["B01"],
+#'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' names(terra::rast(sentinel2_imagery))
 #'
