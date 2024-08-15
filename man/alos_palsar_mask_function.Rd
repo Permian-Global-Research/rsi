@@ -31,7 +31,7 @@ palsar_image <- get_alos_palsar_imagery(
   mask_function = alos_palsar_mask_function,
   output_file = tempfile(fileext = ".tif"),
   gdalwarp_options = c(
-    rsi::rsi_gdalwarp_options(), 
+    rsi::rsi_gdalwarp_options(),
     "-srcnodata", "nan"
   )
 )

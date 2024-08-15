@@ -46,7 +46,12 @@ sentinel2_mask_function <- function(raster) {
 #' @param include Include pixels that represent land, water, or both? Passing
 #' `c("land", "water")` is identical to passing `"both"`.
 #' @inheritParams rlang::args_dots_empty
-#' @param masked_bits 
+#' @param masked_bits Optionally, a list of integer vectors representing the
+#' individual bits to mask out. Each vector is converted to an integer
+#' representation, and then pixels with matching `qa_pixel` values
+#' are preserved by the mask. Refer to the Landsat science product guide for
+#' further information on what bit values represent for your platform of
+#' interest.
 #'
 #' @returns A boolean raster to be used to mask a Landsat image
 #'
@@ -62,19 +67,19 @@ sentinel2_mask_function <- function(raster) {
 #'   mask_function = landsat_mask_function,
 #'   output_file = tempfile(fileext = ".tif")
 #' )
-#' 
+#'
 #' # Or, optionally pass the qa_pixel bits to mask out directly
 #' landsat_image <- get_landsat_imagery(
 #'   aoi,
 #'   start_date = "2022-06-01",
 #'   end_date = "2022-08-30",
 #'   mask_function = \(x) landsat_mask_function(
-#'     x, 
+#'     x,
 #'     masked_bits = list(c(0:5, 7, 9, 11, 13, 15))
 #'   ),
 #'   output_file = tempfile(fileext = ".tif")
-#' ) 
-#' 
+#' )
+#'
 #' # You can use this to specify multiple acceptable values
 #' # from the qa_pixel bitmask; names are optional
 #' landsat_image <- get_landsat_imagery(
@@ -82,7 +87,7 @@ sentinel2_mask_function <- function(raster) {
 #'   start_date = "2022-06-01",
 #'   end_date = "2022-08-30",
 #'   mask_function = \(x) landsat_mask_function(
-#'     x, 
+#'     x,
 #'     masked_bits = list(
 #'       clear_land = c(0:5, 7, 9, 11, 13, 15),
 #'       clear_water = c(0:5, 9, 11, 13, 15)
@@ -92,9 +97,9 @@ sentinel2_mask_function <- function(raster) {
 #' )
 #'
 #' @export
-landsat_mask_function <- function(raster, 
+landsat_mask_function <- function(raster,
                                   include = c("land", "water", "both"),
-                                  ..., 
+                                  ...,
                                   masked_bits) {
   rlang::check_dots_empty()
   if (missing(masked_bits)) {
@@ -115,7 +120,7 @@ landsat_mask_function <- function(raster,
       class = "rsi_masked_bits_and_include"
     )
   }
-  
+
   classes <- vapply(masked_bits, bits_to_int, integer(1), USE.NAMES = FALSE)
 
   terra::`%in%`(raster, classes)
@@ -147,7 +152,7 @@ bits_to_int <- function(vals) {
 #'   mask_function = alos_palsar_mask_function,
 #'   output_file = tempfile(fileext = ".tif"),
 #'   gdalwarp_options = c(
-#'     rsi::rsi_gdalwarp_options(), 
+#'     rsi::rsi_gdalwarp_options(),
 #'     "-srcnodata", "nan"
 #'   )
 #' )
