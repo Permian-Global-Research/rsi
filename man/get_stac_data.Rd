@@ -30,13 +30,8 @@ get_stac_data(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = c("merge", "median", "mean", "sum", "min", "max"),
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS",
-    GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_sentinel1_imagery(
@@ -59,12 +54,8 @@ get_sentinel1_imagery(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_sentinel2_imagery(
@@ -87,12 +78,8 @@ get_sentinel2_imagery(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_landsat_imagery(
@@ -116,12 +103,8 @@ get_landsat_imagery(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_naip_imagery(
@@ -141,12 +124,8 @@ get_naip_imagery(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "merge",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_alos_palsar_imagery(
@@ -169,12 +148,8 @@ get_alos_palsar_imagery(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "median",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 
 get_dem(
@@ -197,12 +172,8 @@ get_dem(
   output_filename = paste0(proceduralnames::make_english_names(1), ".tif"),
   composite_function = "max",
   limit = 999,
-  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
-    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
-  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30\%", VSI_CACHE_SIZE =
-    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
-    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS")
+  gdalwarp_options = rsi_gdalwarp_options(),
+  gdal_config_options = rsi_gdal_config_options()
 )
 }
 \arguments{
@@ -281,10 +252,12 @@ to return. If not informed, it defaults to the service implementation.}
 argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The same set of options are used for all
 downloaded data and the final output images; this means that some common
 options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
-varying data types.}
+varying data types. The default values are provided by
+\code{\link[=rsi_gdalwarp_options]{rsi_gdalwarp_options()}}.}
 
 \item{gdal_config_options}{Options passed to \code{gdalwarp} through the
-\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
+\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The default values are
+provided by \code{\link[=rsi_gdal_config_options]{rsi_gdal_config_options()}}.}
 
 \item{platforms}{The names of Landsat satellites to download imagery from.
 These do not correspond to the \code{platforms} column in \code{\link[=spectral_indices]{spectral_indices()}};
@@ -411,14 +384,47 @@ get_stac_data(aoi,
   mask_band = "qa_pixel",
   mask_function = landsat_mask_function,
   item_filter_function = landsat_platform_filter,
-  platforms = c("landsat-9", "landsat-8")
+  platforms = c("landsat-9", "landsat-8"),
+  output_filename = tempfile(fileext = ".tif")
 )
 
 # or, mostly equivalently (will download more bands):
 landsat_image <- get_landsat_imagery(
   aoi,
   start_date = "2022-06-01",
-  end_date = "2022-08-30"
+  end_date = "2022-08-30",
+  output_filename = tempfile(fileext = ".tif")
 )
+
+# The `get_*_imagery()` functions will download 
+# all available "data" assets by default
+# (usually including measured values, and excluding derived bands)
+sentinel1_data <- get_sentinel1_imagery(
+  aoi,
+  start_date = "2022-06-01",
+  end_date = "2022-07-01",
+  output_filename = tempfile(fileext = ".tif")
+)
+names(terra::rast(sentinel1_data))
+
+# You can see what bands will be downloaded by a function
+# by inspecting the corresponding `band_mapping` object:
+sentinel2_band_mapping$planetary_computer_v1
+
+# And you can add additional assets using `c()`:
+c(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "scl"
+)
+
+# Or subset the assets downloaded using `[` or `[[`:
+sentinel2_imagery <- get_sentinel2_imagery(
+  aoi,
+  start_date = "2022-06-01",
+  end_date = "2022-07-01",
+  asset_names = sentinel2_band_mapping$planetary_computer_v1["B01"],
+  output_filename = tempfile(fileext = ".tif")
+)
+names(terra::rast(sentinel2_imagery))
 \dontshow{\}) # examplesIf}
 }

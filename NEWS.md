@@ -1,5 +1,13 @@
 # rsi (development version)
 
+* `sentinel2_mask_function()` now masks out SCL values of 2, "DARK_AREA", by 
+  default.
+
+* `landsat_mask_function()` gains an argument, `masked_bits`, that allows you
+  to specify the values you wish to mask out by bit values rather than just 
+  integers. Refer to the Landsat science product guide for further information
+  on what bit values represent for your platform of interest.
+
 * `get_stac_data()` no longer fails if downloading an asset fails, but instead
   returns a raster with all available data. This may still fail when a single 
   asset fails to download while downloading multiple assets combined within a 

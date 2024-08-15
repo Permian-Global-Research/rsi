@@ -35,4 +35,19 @@ test_that("landsat_mask_function arguments work", {
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), c("land", "water"))))
   )
+
+  expect_equal(
+    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
+    sum(
+      terra::values(
+        landsat_mask_function(
+          terra::rast(boston_landsat), 
+          masked_bits = list(
+            clear_land = c(0:5, 7, 9, 11, 13, 15),
+            clear_water = c(0:5, 9, 11, 13, 15)
+          )
+        )
+      )
+    )
+  )  
 })

@@ -45,10 +45,12 @@ If \code{FALSE}, each asset from each item is saved as a separate file.}
 argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The same set of options are used for all
 downloaded data and the final output images; this means that some common
 options (for instance, \code{PREDICTOR=3}) may cause errors if bands are of
-varying data types.}
+varying data types. The default values are provided by
+\code{\link[=rsi_gdalwarp_options]{rsi_gdalwarp_options()}}.}
 
 \item{gdal_config_options}{Options passed to \code{gdalwarp} through the
-\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}.}
+\code{config_options} argument of \code{\link[sf:gdal_utils]{sf::gdal_utils()}}. The default values are
+provided by \code{\link[=rsi_gdal_config_options]{rsi_gdal_config_options()}}.}
 
 \item{...}{Passed to \code{item_filter_function}.}
 }
