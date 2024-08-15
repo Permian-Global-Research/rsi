@@ -39,8 +39,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsi-development-version">rsi (development version)<a class="anchor" aria-label="anchor" href="#rsi-development-version"></a></h2>
-<ul><li>
-<code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> no longer fails if downloading an asset fails, but instead returns a raster with all available data. This may still fail when a single asset fails to download while downloading multiple assets combined within a single raster; please open an issue if this happens to you! Thanks to <a href="https://github.com/laurenkwick" class="external-link">@laurenkwick</a> in <a href="https://github.com/Permian-Global-Research/rsi/issues/74" class="external-link">#74</a> (<a href="https://github.com/Permian-Global-Research/rsi/issues/75" class="external-link">#75</a>).</li>
+<ul><li><p><code><a href="../reference/sentinel2_mask_function.html">sentinel2_mask_function()</a></code> now masks out SCL values of 2, “DARK_AREA”, by default.</p></li>
+<li><p><code><a href="../reference/landsat_mask_function.html">landsat_mask_function()</a></code> gains an argument, <code>masked_bits</code>, that allows you to specify the values you wish to mask out by bit values rather than just integers. Refer to the Landsat science product guide for further information on what bit values represent for your platform of interest.</p></li>
+<li><p><code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> no longer fails if downloading an asset fails, but instead returns a raster with all available data. This may still fail when a single asset fails to download while downloading multiple assets combined within a single raster; please open an issue if this happens to you! Thanks to <a href="https://github.com/laurenkwick" class="external-link">@laurenkwick</a> in <a href="https://github.com/Permian-Global-Research/rsi/issues/74" class="external-link">#74</a> (<a href="https://github.com/Permian-Global-Research/rsi/issues/75" class="external-link">#75</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="rsi-021">rsi 0.2.1<a class="anchor" aria-label="anchor" href="#rsi-021"></a></h2><p class="text-muted">CRAN release: 2024-06-27</p>
