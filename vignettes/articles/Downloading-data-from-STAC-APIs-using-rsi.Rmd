@@ -228,12 +228,14 @@ So, with that out of the way, let's actually download and composite some Landsat
 
 ```{r}
 projected_ashe <- sf::st_transform(ashe, 6542)
-get_landsat_imagery(
+ashe_landsat <- get_landsat_imagery(
   aoi = projected_ashe,
   start_date = "2021-06-01",
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif")
-) |>
+) 
+
+ashe_landsat |>
   terra::rast() |>
   terra::plot()
 ```
@@ -256,14 +258,15 @@ landsat_band_mapping$planetary_computer_v1["coastal"]
 And last but not least, if we wanted to skip compositing altogether, we could set the `composite_function` argument to `NULL` in order to download each image in our spatiotemporal AOI separately:
 
 ```{r}
-get_landsat_imagery(
+ashe_no_composite <- get_landsat_imagery(
   aoi = projected_ashe,
   start_date = "2021-06-01",
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif"),
   composite_function = NULL,
   mask_function = NULL # otherwise half of these images are blank
-) |>
+) 
+ashe_no_composite |>
   lapply(terra::rast) |>
   lapply(terra::plot) |>
   invisible()
@@ -338,13 +341,14 @@ custom_query_function <- function(bbox,
   rstac::items_fetch(rstac::post_request(request))
 }
 
-get_landsat_imagery(
+ashe_cql <- get_landsat_imagery(
   aoi = projected_ashe,
   start_date = "2021-06-01",
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif"),
   query_function = custom_query_function
-) |>
+)
+ashe_cql |>
   terra::rast() |>
   terra::plot()
 ```
