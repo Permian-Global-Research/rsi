@@ -8,8 +8,8 @@
 [![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
-[![License: Apache
-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
+[![License:
+Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![Project Status: Active – The project has reached a stable, usable
@@ -27,17 +27,29 @@ The goal of rsi is to address several **r**epeated **s**patial
 and help avoid **r**epetitive **s**tress **i**njuries. Specifically, rsi
 provides:
 
-- An interface to the **R**some – excuse me, [*Awesome* Spectral Indices
-  project](https://github.com/awesome-spectral-indices/awesome-spectral-indices),
-  providing the list of indices directly in R as a friendly tibble,
-- A method for efficiently *calculating* those awesome spectral indices
-  using local rasters, enabling **r**apid **s**pectral **i**nference,
-- A method for downloading STAC data – excuse me, **r**etriving **S**TAC
-  **i**nformation – from any STAC server, with additional helpers for
-  downloading Landsat, Sentinel-1, and Sentinel-2 data from free and
-  public STAC servers providing **r**apid **s**atellite **i**magery,
-- A **r**aster **s**tack **i**ntegration method for combining multiple
-  rasters containing distinct data sets into a single raster stack.
+  - An interface to the **R**some – excuse me, [*Awesome* Spectral
+    Indices
+    project](https://github.com/awesome-spectral-indices/awesome-spectral-indices),
+    providing the list of indices directly in R as a friendly tibble,
+  - A method for efficiently *calculating* those awesome spectral
+    indices using local rasters, enabling **r**apid **s**pectral
+    **i**nference,
+  - A method for downloading STAC data – excuse me, **r**etriving
+    **S**TAC **i**nformation – from any STAC server, with additional
+    helpers for downloading Landsat, Sentinel-1, and Sentinel-2 data
+    from free and public STAC servers providing **r**apid **s**atellite
+    **i**magery,
+  - A **r**aster **s**tack **i**ntegration method for combining multiple
+    rasters containing distinct data sets into a single raster stack.
+
+The functions in rsi are designed around letting you use the tools
+you’re familiar with to process raster data using compute that you
+control – whether that means grabbing imagery with your laptop to add
+some context to a map, or grabbing tranches of data to a virtual server
+hosted near your data provider for lightning fast downloads. The outputs
+from rsi functions are standard objects – usually the file paths of
+raster files saved to your hard drive – meaning it’s easy to incorporate
+rsi into broader spatial data processing workflows.
 
 ## Installation
 
@@ -201,7 +213,7 @@ other multi-band rasters from various data sources.
 
 ## Contributing
 
-We love contributions! See our [contribution
+We love contributions\! See our [contribution
 guide](https://github.com/Permian-Global-Research/rsi/blob/main/.github/CONTRIBUTING.md)
 for pointers on how to make your contribution as easy to accept as
 possible – in particular, consider [opening an
