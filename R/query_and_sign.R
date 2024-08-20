@@ -10,9 +10,10 @@
 #' available for your AOI, or to perform cloud filtering prior to downloading
 #' assets.
 #'
-#' @param bbox An sfc object representing the spatial bounding box of your area
-#' of interest. This must be in EPSG:4326 coordinates (and, if this function is
-#' called from within `get_stac_data()`, it will be)
+#' @param bbox A `bbox` or `sfc` object, from the sf package, representing the 
+#' spatial bounding box of your area of interest. This must be in EPSG:4326 
+#' coordinates (and, if this function is called from within `get_stac_data()`, 
+#' it will be) or else it will be automatically reprojected.
 #' @inheritParams get_stac_data
 #' @param start_date,end_date Character strings of length 1 representing the
 #' boundaries of your temporal range of interest, in RFC-3339 format. Set either
@@ -51,6 +52,26 @@ rsi_query_api <- function(bbox,
   } else {
     datetime <- NULL
   }
+
+  if (!(inherits(bbox, "bbox") | inherits(bbox, "sfc"))) {
+    rlang::abort(
+      "`bbox` must be either an sfc or a bbox object from the sf package.",
+      class = "rsi_bbox_wrong_class"
+    )
+  }
+
+  if (!(sf::st_crs(bbox) == sf::st_crs("EPSG:4326"))) {
+    rlang::warn(
+      "Reprojecting `bbox` to EPSG:4326.",
+      class = "rsi_reprojecting_bbox"
+    )
+    if (inherits(bbox, "bbox")) {
+      bbox <- sf::st_as_sfc(bbox)
+    }
+    bbox <- sf::st_transform(bbox, 4326)
+  }
+
+  if (inherits(bbox, "sfc")) bbox <- sf::st_bbox(bbox)
 
   items <- rstac::stac_search(
     rstac::stac(stac_source),
