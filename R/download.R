@@ -80,6 +80,12 @@ rsi_download_rasters <- function(items,
     gdalwarp_options <- set_gdalwarp_extent(gdalwarp_options, aoi, NULL)
   }
 
+  # Which loop gets parallelized is determined based on which has more steps,
+  # working from the assumption that all downloads take about as long
+  #
+  # so if we aren't merging, or if there's more assets than tiles, we'll
+  # parallelize the outside loop that walks over assets (which, unless the user 
+  # has set up wild nested futures, turns the inside one into a serial process)
   asset_iterator <- ifelse(
     merge || (n_tiles_out < ncol(download_locations)),
     function(...) future.apply::future_lapply(..., future.seed = TRUE),

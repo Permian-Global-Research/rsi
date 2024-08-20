@@ -132,7 +132,10 @@
 #' @param composite_function Character of length 1: The name of a
 #' function used to combine downloaded images into a single composite
 #' (i.e., to aggregate pixel values from multiple images into a single value).
-#' Must be one of of "sum", "mean", "median", "min", "max".
+#' Options include "merge", which 'stamps' images on top of one another such that
+#' the "last" value downloaded for a pixel -- which isn't guaranteed to be the most
+#' recent one -- will be the only value used, or any of "sum", "mean", "median", 
+#' "min", or "max", which consider all values available at each pixel.
 #' Set to `NULL` to not composite
 #' (i.e., to rescale and save each individual file independently).
 #' @inheritParams rstac::stac_search
