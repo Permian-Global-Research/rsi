@@ -184,6 +184,11 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' 
+#' landsat_image |> 
+#'   terra::rast() |>
+#'   terra::stretch() |>
+#'   terra::plotRGB()
+#' 
 #' # The `get_*_imagery()` functions will download 
 #' # all available "data" assets by default
 #' # (usually including measured values, and excluding derived bands)

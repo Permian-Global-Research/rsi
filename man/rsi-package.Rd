@@ -24,6 +24,8 @@ Useful links:
 
 Other contributors:
 \itemize{
+  \item Felipe Carvalho (Felipe reviewed the package (v. 0.3.0) for rOpenSci, see <https://github.com/ropensci/software-review/issues/636>) [reviewer]
+  \item Michael Sumner (Michael reviewed the package (v. 0.3.0) for rOpenSci, see <https://github.com/ropensci/software-review/issues/636>) [reviewer]
   \item Permian Global [copyright holder, funder]
 }
 

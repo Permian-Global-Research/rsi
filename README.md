@@ -136,9 +136,9 @@ terra::plot(terra::rast(landsat_image))
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-For these common use cases, however, rsi also provides helper functions
-which provide most of these arguments for you. For instance, that
-`get_stac_data()` call could be as simple as:
+For common data sets, rsi also provides helper functions which provide
+most of these arguments for you. For instance, that `get_stac_data()`
+call could be as simple as:
 
 ``` r
 landsat_image <- get_landsat_imagery(
@@ -151,6 +151,20 @@ terra::plot(terra::rast(landsat_image))
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Note that we’ve been plotting each band individually so far by calling
+`terra::plot()`. We could also use `terra::plotRGB()` (after
+`terra::stretch()`ing the band values) to see what this mosaic of images
+would look like to the human eye:
+
+``` r
+landsat_image |> 
+  terra::rast(lyrs = c("R", "G", "B")) |> 
+  terra::stretch() |>
+  terra::plotRGB()
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 By default, these functions download data from Microsoft’s Planetary
 Computer API, using a number of configuration options set in
@@ -188,7 +202,7 @@ indices <- calculate_indices(
 terra::plot(terra::rast(indices))
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 And last but not least, rsi includes a utility for efficiently combining
 rasters containing different data about the same location into a
@@ -206,7 +220,7 @@ raster_stack <- stack_rasters(
 terra::plot(terra::rast(raster_stack))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 This can be extremely useful as a way to create predictor bricks and
 other multi-band rasters from various data sources.
