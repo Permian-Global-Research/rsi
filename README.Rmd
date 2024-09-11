@@ -34,6 +34,8 @@ The goal of rsi is to address several **r**epeated **s**patial **i**nfelicities,
 + A method for downloading STAC data -- excuse me, **r**etriving **S**TAC **i**nformation -- from any STAC server, with additional helpers for downloading Landsat, Sentinel-1, and Sentinel-2 data from free and public STAC servers providing **r**apid **s**atellite **i**magery, 
 + A **r**aster **s**tack **i**ntegration method for combining multiple rasters containing distinct data sets into a single raster stack.
 
+The functions in rsi are designed around letting you use the tools you're familiar with to process raster data using compute that you control -- whether that means grabbing imagery with your laptop to add some context to a map, or grabbing tranches of data to a virtual server hosted near your data provider for lightning fast downloads. The outputs from rsi functions are standard objects -- usually the file paths of raster files saved to your hard drive -- meaning it's easy to incorporate rsi into broader spatial data processing workflows.
+
 ## Installation
 
 You can install rsi via:
@@ -87,7 +89,7 @@ landsat_image <- get_stac_data(
 terra::plot(terra::rast(landsat_image))
 ```
 
-For these common use cases, however, rsi also provides helper functions which
+For common data sets, rsi also provides helper functions which
 provide most of these arguments for you. For instance, that `get_stac_data()`
 call could be as simple as:
 
@@ -99,6 +101,15 @@ landsat_image <- get_landsat_imagery(
   output_filename = tempfile(fileext = ".tif")
 )
 terra::plot(terra::rast(landsat_image))
+```
+
+Note that we've been plotting each band individually so far by calling `terra::plot()`. We could also use `terra::plotRGB()` (after `terra::stretch()`ing the band values) to see what this mosaic of images would look like to the human eye:
+
+```{r}
+landsat_image |> 
+  terra::rast(lyrs = c("R", "G", "B")) |> 
+  terra::stretch() |>
+  terra::plotRGB()
 ```
 
 By default, these functions download data from Microsoft's Planetary Computer

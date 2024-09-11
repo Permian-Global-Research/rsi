@@ -132,7 +132,10 @@
 #' @param composite_function Character of length 1: The name of a
 #' function used to combine downloaded images into a single composite
 #' (i.e., to aggregate pixel values from multiple images into a single value).
-#' Must be one of of "sum", "mean", "median", "min", "max".
+#' Options include "merge", which 'stamps' images on top of one another such that
+#' the "last" value downloaded for a pixel -- which isn't guaranteed to be the most
+#' recent one -- will be the only value used, or any of "sum", "mean", "median", 
+#' "min", or "max", which consider all values available at each pixel.
 #' Set to `NULL` to not composite
 #' (i.e., to rescale and save each individual file independently).
 #' @inheritParams rstac::stac_search
@@ -184,6 +187,11 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' 
+#' landsat_image |> 
+#'   terra::rast() |>
+#'   terra::stretch() |>
+#'   terra::plotRGB()
+#' 
 #' # The `get_*_imagery()` functions will download 
 #' # all available "data" assets by default
 #' # (usually including measured values, and excluding derived bands)
@@ -214,6 +222,26 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' names(terra::rast(sentinel2_imagery))
+#' 
+#' # If you're downloading data for a particularly large AOI,
+#' # and can't composite the resulting images or want to make
+#' # sure you can continue an interrupted download,
+#' # consider tiling your AOI and requesting each tile separately:
+#' aoi <- sf::st_make_grid(aoi, n = 2)
+#' tiles <- lapply(
+#'   seq_along(aoi),
+#'   function(i) {
+#'     get_landsat_imagery(
+#'       aoi[i],
+#'       start_date = "2022-06-01",
+#'       end_date = "2022-08-30",
+#'       output_filename = tempfile(fileext = ".tif")
+#'     )
+#'   }
+#' )
+#' # You'll get a list of tiles that you can then composite or 
+#' # work with however you wish:
+#' unlist(tiles)
 #'
 #' @export
 get_stac_data <- function(aoi,

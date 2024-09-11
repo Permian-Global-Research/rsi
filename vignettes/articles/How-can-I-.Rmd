@@ -53,6 +53,40 @@ This ensures that `get_stac_data()` is run using the same arguments each time, s
 invisible(lapply(lapply(downloaded_years, terra::rast), terra::plot))
 ```
 
+## Get each distinct item that matches a query, without compositing?
+
+If we want to download the individual STAC items that are returned by our query, we can set the `composite_function` argument to `NULL`. This will return one file per STAC item, with the `datetime` element of the item appended to the filename if it exists (and a sequential identifier if it doesn't):
+
+```{r}
+aoi <- sf::st_point(c(-74.912131, 44.080410))
+aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
+
+our_imagery <- get_landsat_imagery(
+  aoi,
+  start_date = "2023-06-01",
+  end_date = "2023-07-01",
+  output_filename = tempfile(fileext = ".tif"),
+  composite_function = NULL
+)
+
+our_imagery
+```
+
+Each of these files will then contain the assets corresponding to that individual STAC item:
+
+```{r}
+terra::rast(our_imagery[[2]], lyrs = c("R", "G", "B")) |>
+  terra::stretch() |>
+  terra::plotRGB()
+```
+
+```{r}
+terra::rast(our_imagery[[4]], lyrs = c("R", "G", "B")) |>
+  terra::stretch() |>
+  terra::plotRGB()
+```
+
 ## Filter the imagery I download by cloud cover (or other metadata)?
 
 If you want to refine the outputs from your STAC query, the best approach is to write a custom query function using CQL2. CQL2 is a complicated topic, which is covered in a bit more detail both [in the Downloading Data vignette](https://permian-global-research.github.io/rsi/articles/Downloading-data-from-STAC-APIs-using-rsi.html#using-cql2-to-refine-queries-to-stac-apis) as well as in [the STAC website's tutorials](https://github.com/radiantearth/stac-site/blob/main/app/tutorials/r/2-using-rstac-and-cql2-to-query-stac-api/2-using-rstac-and-cql2-to-query-stac-api.en.md), but at its core is a query language that lets us filter our results down using a spatiotemporal area of interest as well as other item-level metadata.

@@ -7,9 +7,10 @@
 rsi_query_api(bbox, stac_source, collection, start_date, end_date, limit, ...)
 }
 \arguments{
-\item{bbox}{An sfc object representing the spatial bounding box of your area
-of interest. This must be in EPSG:4326 coordinates (and, if this function is
-called from within \code{get_stac_data()}, it will be)}
+\item{bbox}{A \code{bbox} or \code{sfc} object, from the sf package, representing the
+spatial bounding box of your area of interest. This must be in EPSG:4326
+coordinates (and, if this function is called from within \code{get_stac_data()},
+it will be) or else it will be automatically reprojected.}
 
 \item{stac_source}{Character of length 1: the STAC URL to download
 imagery from.}
