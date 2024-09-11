@@ -325,7 +325,10 @@ sequential ID will be appended instead.</p></dd>
 <dd><p>Character of length 1: The name of a
 function used to combine downloaded images into a single composite
 (i.e., to aggregate pixel values from multiple images into a single value).
-Must be one of of "sum", "mean", "median", "min", "max".
+Options include "merge", which 'stamps' images on top of one another such that
+the "last" value downloaded for a pixel – which isn't guaranteed to be the most
+recent one – will be the only value used, or any of "sum", "mean", "median",
+"min", or "max", which consider all values available at each pixel.
 Set to <code>NULL</code> to not composite
 (i.e., to rescale and save each individual file independently).</p></dd>
 
@@ -486,6 +489,11 @@ and indices). To convert to backscatter (decibels) use the following formula:
 <span class="r-in"><span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">landsat_image</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">plotRGB</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The `get_*_imagery()` functions will download </span></span></span>
 <span class="r-in"><span><span class="co"># all available "data" assets by default</span></span></span>
 <span class="r-in"><span><span class="co"># (usually including measured values, and excluding derived bands)</span></span></span>
@@ -516,6 +524,26 @@ and indices). To convert to backscatter (decibels) use the following formula:
 <span class="r-in"><span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">sentinel2_imagery</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If you're downloading data for a particularly large AOI,</span></span></span>
+<span class="r-in"><span><span class="co"># and can't composite the resulting images or want to make</span></span></span>
+<span class="r-in"><span><span class="co"># sure you can continue an interrupted download,</span></span></span>
+<span class="r-in"><span><span class="co"># consider tiling your AOI and requesting each tile separately:</span></span></span>
+<span class="r-in"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_make_grid.html" class="external-link">st_make_grid</a></span><span class="op">(</span><span class="va">aoi</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu">get_landsat_imagery</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="va">aoi</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>      start_date <span class="op">=</span> <span class="st">"2022-06-01"</span>,</span></span>
+<span class="r-in"><span>      end_date <span class="op">=</span> <span class="st">"2022-08-30"</span>,</span></span>
+<span class="r-in"><span>      output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># You'll get a list of tiles that you can then composite or </span></span></span>
+<span class="r-in"><span><span class="co"># work with however you wish:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">tiles</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

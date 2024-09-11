@@ -72,6 +72,7 @@
 <li>A method for downloading STAC data – excuse me, <strong>r</strong>etriving <strong>S</strong>TAC <strong>i</strong>nformation – from any STAC server, with additional helpers for downloading Landsat, Sentinel-1, and Sentinel-2 data from free and public STAC servers providing <strong>r</strong>apid <strong>s</strong>atellite <strong>i</strong>magery,</li>
 <li>A <strong>r</strong>aster <strong>s</strong>tack <strong>i</strong>ntegration method for combining multiple rasters containing distinct data sets into a single raster stack.</li>
 </ul>
+<p>The functions in rsi are designed around letting you use the tools you’re familiar with to process raster data using compute that you control – whether that means grabbing imagery with your laptop to add some context to a map, or grabbing tranches of data to a virtual server hosted near your data provider for lightning fast downloads. The outputs from rsi functions are standard objects – usually the file paths of raster files saved to your hard drive – meaning it’s easy to incorporate rsi into broader spatial data processing workflows.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -131,7 +132,7 @@
 <span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
-<p>For these common use cases, however, rsi also provides helper functions which provide most of these arguments for you. For instance, that <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> call could be as simple as:</p>
+<p>For common data sets, rsi also provides helper functions which provide most of these arguments for you. For instance, that <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> call could be as simple as:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
 <span>  <span class="va">aoi</span>,</span>
@@ -141,8 +142,15 @@
 <span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
-<p>By default, these functions download data from Microsoft’s Planetary Computer API, using a number of configuration options set in <code>rsi_band_mapping</code> objects provided by the package. You can see these default configuration options by printing the band mapping objects, and can adjust them through arguments to any <code>get_*</code> function in the package.</p>
+<p>Note that we’ve been plotting each band individually so far by calling <code><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">terra::plot()</a></code>. We could also use <code><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">terra::plotRGB()</a></code> (after <code><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">terra::stretch()</a></code>ing the band values) to see what this mosaic of images would look like to the human eye:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">landsat_image</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span>lyrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"G"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">plotRGB</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<p>By default, these functions download data from Microsoft’s Planetary Computer API, using a number of configuration options set in <code>rsi_band_mapping</code> objects provided by the package. You can see these default configuration options by printing the band mapping objects, and can adjust them through arguments to any <code>get_*</code> function in the package.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span></span>
 <span><span class="co">#&gt; An rsi band mapping object with attributes:</span></span>
 <span><span class="co">#&gt; names mask_band mask_function stac_source collection_name query_function download_function sign_function class</span></span>
@@ -150,7 +158,7 @@
 <span><span class="co">#&gt; coastal    blue   green     red   nir08  swir16  swir22    lwir  lwir11 </span></span>
 <span><span class="co">#&gt;     "A"     "B"     "G"     "R"     "N"    "S1"    "S2"     "T"    "T1"</span></span></code></pre></div>
 <p>We can put these pieces together and calculate as many spectral indices as we can based on our downloaded Landsat imagery. The <code><a href="reference/calculate_indices.html">calculate_indices()</a></code> function, well, calculates indices, using subsets of our <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> data frame:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">available_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filters.html">filter_bands</a></span><span class="op">(</span></span>
 <span>  bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -163,9 +171,9 @@
 <span></span>
 <span><span class="co"># Plot the first handful of spatial indices</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">indices</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
 <p>And last but not least, rsi includes a utility for efficiently combining rasters containing different data about the same location into a <a href="https://gdal.org/drivers/raster/vrt.html" class="external-link">VRT</a>, which allows programs like GDAL to treat these separate data sources as a single file. For instance, we can combine our Landsat imagery with the derived indices:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raster_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/stack_rasters.html">stack_rasters</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">landsat_image</span>, <span class="va">indices</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".vrt"</span><span class="op">)</span></span>
@@ -173,7 +181,7 @@
 <span></span>
 <span><span class="co"># The first few panels are now Landsat measurements, not indices:</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">raster_stack</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
 <p>This can be extremely useful as a way to create predictor bricks and other multi-band rasters from various data sources.</p>
 </div>
 <div class="section level2">
@@ -230,6 +238,7 @@
 <a href="https://www.mm218.dev/" class="external-link">Michael Mahoney</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2402-304X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>
 <a href="https://permianglobal.com/" class="external-link"><img src="reference/figures/permian-logo.svg" alt="Permian Global" width="72"></a> <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 

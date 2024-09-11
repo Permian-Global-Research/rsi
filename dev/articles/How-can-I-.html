@@ -112,14 +112,54 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpVMA3rF/2018.tif" "/tmp/RtmpVMA3rF/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpVMA3rF/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpDq3B6f/2018.tif" "/tmp/RtmpDq3B6f/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpDq3B6f/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">downloaded_years</span>, <span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">)</span>, <span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="How-can-I-_files/figure-html/unnamed-chunk-3-1.png" width="768"><img src="How-can-I-_files/figure-html/unnamed-chunk-3-2.png" width="768"><img src="How-can-I-_files/figure-html/unnamed-chunk-3-3.png" width="768"></p>
+</div>
+<div class="section level2">
+<h2 id="get-each-distinct-item-that-matches-a-query-without-compositing">Get each distinct item that matches a query, without
+compositing?<a class="anchor" aria-label="anchor" href="#get-each-distinct-item-that-matches-a-query-without-compositing"></a>
+</h2>
+<p>If we want to download the individual STAC items that are returned by
+our query, we can set the <code>composite_function</code> argument to
+<code>NULL</code>. This will return one file per STAC item, with the
+<code>datetime</code> element of the item appended to the filename if it
+exists (and a sequential identifier if it doesn’t):</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
+<span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">our_imagery</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
+<span>  <span class="va">aoi</span>,</span>
+<span>  start_date <span class="op">=</span> <span class="st">"2023-06-01"</span>,</span>
+<span>  end_date <span class="op">=</span> <span class="st">"2023-07-01"</span>,</span>
+<span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
+<span>  composite_function <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">our_imagery</span></span>
+<span><span class="co">#&gt; [1] "/tmp/RtmpDq3B6f/file26df5a7c1f7c_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpDq3B6f/file26df5a7c1f7c_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpDq3B6f/file26df5a7c1f7c_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/RtmpDq3B6f/file26df5a7c1f7c_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<p>Each of these files will then contain the assets corresponding to
+that individual STAC item:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, lyrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"G"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">plotRGB</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="How-can-I-_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>, lyrs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R"</span>, <span class="st">"G"</span>, <span class="st">"B"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">stretch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">plotRGB</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="How-can-I-_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
 <div class="section level2">
 <h2 id="filter-the-imagery-i-download-by-cloud-cover-or-other-metadata">Filter the imagery I download by cloud cover (or other
@@ -140,7 +180,7 @@ extension</a> will have an <code>eo:cloud_cover</code> field which we
 could use to filter the results of our query.</p>
 <p>Writing a query function to filter using this field might look like
 this:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
@@ -169,7 +209,7 @@ instance, we could download Landsat imagery for our area of interest
 <em>without</em> using our new query function and setting
 <code>composite_function</code> to <code>NULL</code>, so that we’ll get
 one file per Landsat image:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">unfiltered_landsat_images</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
 <span>  <span class="va">aoi</span>,</span>
 <span>  start_date <span class="op">=</span> <span class="st">"2023-06-01"</span>,</span>
@@ -185,7 +225,7 @@ one file per Landsat image:</p>
 <span><span class="co">#&gt; [1] 12</span></span></code></pre></div>
 <p>And we could compare that to a query using our custom query function,
 to see how many images are filtered out by our CQL2 query:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">filtered_landsat_images</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_stac_data.html">get_landsat_imagery</a></span><span class="op">(</span></span>
 <span>  <span class="va">aoi</span>,</span>
 <span>  start_date <span class="op">=</span> <span class="st">"2023-06-01"</span>,</span>
@@ -205,7 +245,7 @@ to see how many images are filtered out by our CQL2 query:</p>
 <h2 id="calculate-all-possible-indices-using-a-certain-data-set">Calculate all possible indices using a certain data set?<a class="anchor" aria-label="anchor" href="#calculate-all-possible-indices-using-a-certain-data-set"></a>
 </h2>
 <p>Say you’ve got some imagery:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">74.912131</span>, <span class="fl">44.080410</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
@@ -224,7 +264,7 @@ throw as many indices in the mix as possible.</p>
 need to only provide formulas for the indices that can be calculated
 from your particular data source. We might look at the columns available
 for filtering from <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
@@ -238,7 +278,7 @@ so we probably want to calculate indices that correspond to this
 platform. Unfortunately, if we use <code><a href="../reference/filters.html">filter_platforms()</a></code> to do
 this filtering, we’ll get an error inside of
 <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
 <span>    <span class="va">our_imagery</span>,</span>
@@ -267,7 +307,7 @@ can be calculated using the bands available in our raster.</p>
 your raster bands should automatically be named to match the band names
 used in the ASI project. That means we can pass the names of your raster
 directly to <code><a href="../reference/filters.html">filter_bands()</a></code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
@@ -278,7 +318,7 @@ directly to <code><a href="../reference/filters.html">filter_bands()</a></code>:
 <p>And we can pass the outputs of that function to
 <code><a href="../reference/calculate_indices.html">calculate_indices()</a></code> to only calculate this subset of
 indices:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
 <span>    <span class="va">our_imagery</span>,</span>
 <span>    <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -287,9 +327,9 @@ indices:</p>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in x@ptr$writeStop(): GDAL Message 1:</span></span>
-<span><span class="co">#&gt; /tmp/RtmpVMA3rF/file26f03133c324.tif: Metadata exceeding 32000 bytes cannot be</span></span>
+<span><span class="co">#&gt; /tmp/RtmpDq3B6f/file26df10cb2751.tif: Metadata exceeding 32000 bytes cannot be</span></span>
 <span><span class="co">#&gt; written into GeoTIFF. Transferred to PAM instead.</span></span></code></pre></div>
-<p><img src="How-can-I-_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
+<p><img src="How-can-I-_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
