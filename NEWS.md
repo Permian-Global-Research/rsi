@@ -1,4 +1,4 @@
-# rsi (development version)
+# rsi 0.3.0
 
 * rsi has been peer-reviewed by the rOpenSci project! Huge thank you to 
   @OldLipe and @mdsumner for their extremely helpful reviews.
