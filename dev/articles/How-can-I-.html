@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,8 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpuZP4gA/2018.tif" "/tmp/RtmpuZP4gA/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpuZP4gA/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpuE5bgm/2018.tif" "/tmp/RtmpuE5bgm/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpuE5bgm/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -144,10 +144,10 @@ exists (and a sequential identifier if it doesn’t):</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpuZP4gA/file26c525e8042c_2023-06-28T154415.862937Z.tif"</span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmpuZP4gA/file26c525e8042c_2023-06-20T154419.579981Z.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpuZP4gA/file26c525e8042c_2023-06-12T154413.224112Z.tif"</span></span>
-<span><span class="co">#&gt; [4] "/tmp/RtmpuZP4gA/file26c525e8042c_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpuE5bgm/file267a5963688_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpuE5bgm/file267a5963688_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpuE5bgm/file267a5963688_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/RtmpuE5bgm/file267a5963688_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
 <p>Each of these files will then contain the assets corresponding to
 that individual STAC item:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -327,7 +327,7 @@ indices:</p>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in x@ptr$writeStop(): GDAL Message 1:</span></span>
-<span><span class="co">#&gt; /tmp/RtmpuZP4gA/file26c568e14532.tif: Metadata exceeding 32000 bytes cannot be</span></span>
+<span><span class="co">#&gt; /tmp/RtmpuE5bgm/file267a27748455.tif: Metadata exceeding 32000 bytes cannot be</span></span>
 <span><span class="co">#&gt; written into GeoTIFF. Transferred to PAM instead.</span></span></code></pre></div>
 <p><img src="How-can-I-_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 </div>
