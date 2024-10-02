@@ -139,7 +139,7 @@ indices <- calculate_indices(
 terra::plot(terra::rast(indices))
 ```
 
-And last but not least, rsi includes a utility for efficiently combining rasters containing different data about the same location into a [VRT](https://gdal.org/drivers/raster/vrt.html), which allows programs like GDAL to treat these separate data sources as a single file. For instance, we can combine our Landsat imagery with the derived indices:
+And last but not least, rsi includes a utility for efficiently combining rasters containing different data about the same location into a [VRT](https://gdal.org/en/latest/drivers/raster/vrt.html), which allows programs like GDAL to treat these separate data sources as a single file. For instance, we can combine our Landsat imagery with the derived indices:
 
 ```{r}
 raster_stack <- stack_rasters(

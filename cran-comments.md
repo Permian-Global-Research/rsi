@@ -1,5 +1,5 @@
-This is the fifth CRAN release of rsi. This version adds several arguments 
-to package functions, making them more flexible for processing spatial data.
+This is the sixth CRAN release of rsi. The package has now been reviewed
+by rOpenSci and contains improvements stemming from that review.
 
 ## R CMD check results
 

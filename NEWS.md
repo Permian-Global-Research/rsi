@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* rsi has been peer-reviewed by the rOpenSci project! Huge thank you to 
+  @OldLipe and @mdsumner for their extremely helpful reviews.
+
 * `sentinel2_mask_function()` now masks out SCL values of 2, "DARK_AREA", by 
   default.
 

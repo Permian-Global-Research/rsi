@@ -8,8 +8,8 @@
 [![R-CMD-check](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Permian-Global-Research/rsi/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Permian-Global-Research/rsi/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Permian-Global-Research/rsi?branch=main)
-[![License:
-Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
+[![License: Apache
+2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![Project Status: Active – The project has reached a stable, usable
@@ -27,20 +27,17 @@ The goal of rsi is to address several **r**epeated **s**patial
 and help avoid **r**epetitive **s**tress **i**njuries. Specifically, rsi
 provides:
 
-  - An interface to the **R**some – excuse me, [*Awesome* Spectral
-    Indices
-    project](https://github.com/awesome-spectral-indices/awesome-spectral-indices),
-    providing the list of indices directly in R as a friendly tibble,
-  - A method for efficiently *calculating* those awesome spectral
-    indices using local rasters, enabling **r**apid **s**pectral
-    **i**nference,
-  - A method for downloading STAC data – excuse me, **r**etriving
-    **S**TAC **i**nformation – from any STAC server, with additional
-    helpers for downloading Landsat, Sentinel-1, and Sentinel-2 data
-    from free and public STAC servers providing **r**apid **s**atellite
-    **i**magery,
-  - A **r**aster **s**tack **i**ntegration method for combining multiple
-    rasters containing distinct data sets into a single raster stack.
+- An interface to the **R**some – excuse me, [*Awesome* Spectral Indices
+  project](https://github.com/awesome-spectral-indices/awesome-spectral-indices),
+  providing the list of indices directly in R as a friendly tibble,
+- A method for efficiently *calculating* those awesome spectral indices
+  using local rasters, enabling **r**apid **s**pectral **i**nference,
+- A method for downloading STAC data – excuse me, **r**etriving **S**TAC
+  **i**nformation – from any STAC server, with additional helpers for
+  downloading Landsat, Sentinel-1, and Sentinel-2 data from free and
+  public STAC servers providing **r**apid **s**atellite **i**magery,
+- A **r**aster **s**tack **i**ntegration method for combining multiple
+  rasters containing distinct data sets into a single raster stack.
 
 The functions in rsi are designed around letting you use the tools
 you’re familiar with to process raster data using compute that you
@@ -78,7 +75,7 @@ project](https://github.com/awesome-spectral-indices/awesome-spectral-indices):
 library(rsi)
 
 spectral_indices()
-#> # A tibble: 243 × 9
+#> # A tibble: 231 × 9
 #>    application_domain bands     contributor   date_of_addition formula long_name
 #>    <chr>              <list>    <chr>         <chr>            <chr>   <chr>    
 #>  1 vegetation         <chr [2]> https://gith… 2021-11-17       (N - 0… Aerosol …
@@ -91,7 +88,7 @@ spectral_indices()
 #>  8 vegetation         <chr [2]> https://gith… 2022-04-08       (N * (… Advanced…
 #>  9 water              <chr [4]> https://gith… 2021-09-18       4.0 * … Automate…
 #> 10 water              <chr [5]> https://gith… 2021-09-18       B + 2.… Automate…
-#> # ℹ 233 more rows
+#> # ℹ 221 more rows
 #> # ℹ 3 more variables: platforms <list>, reference <chr>, short_name <chr>
 ```
 
@@ -147,6 +144,70 @@ landsat_image <- get_landsat_imagery(
   end_date = "2022-08-30",
   output_filename = tempfile(fileext = ".tif")
 )
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 
+#> ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06
 terra::plot(terra::rast(landsat_image))
 ```
 
@@ -206,9 +267,10 @@ terra::plot(terra::rast(indices))
 
 And last but not least, rsi includes a utility for efficiently combining
 rasters containing different data about the same location into a
-[VRT](https://gdal.org/drivers/raster/vrt.html), which allows programs
-like GDAL to treat these separate data sources as a single file. For
-instance, we can combine our Landsat imagery with the derived indices:
+[VRT](https://gdal.org/en/latest/drivers/raster/vrt.html), which allows
+programs like GDAL to treat these separate data sources as a single
+file. For instance, we can combine our Landsat imagery with the derived
+indices:
 
 ``` r
 raster_stack <- stack_rasters(
@@ -227,7 +289,7 @@ other multi-band rasters from various data sources.
 
 ## Contributing
 
-We love contributions\! See our [contribution
+We love contributions! See our [contribution
 guide](https://github.com/Permian-Global-Research/rsi/blob/main/.github/CONTRIBUTING.md)
 for pointers on how to make your contribution as easy to accept as
 possible – in particular, consider [opening an
