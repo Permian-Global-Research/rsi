@@ -1,99 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/404.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/SUPPORT.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/articles/Downloading-data-from-STAC-APIs-using-rsi.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/articles/How-can-I-.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/articles/rsi.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/index.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_band_mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_mask_function.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/calculate_indices.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/dem_band_mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/deprecated.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/filters.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/get_stac_data.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/landsat_band_mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/landsat_mask_function.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/landsat_platform_filter.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/rsi-package.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/rsi_download_rasters.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/rsi_query_api.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/sentinel1_band_mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/sentinel2_band_mapping.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/sentinel2_mask_function.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/sign_planetary_computer.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/spectral_indices.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/spectral_indices_url.html</loc>
-  </url>
-  <url>
-    <loc>https://permian-global-research.github.io/rsi/reference/stack_rasters.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://permian-global-research.github.io/rsi/404.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/CONTRIBUTING.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/LICENSE.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/SUPPORT.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/articles/Downloading-data-from-STAC-APIs-using-rsi.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/articles/How-can-I-.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/articles/index.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/articles/rsi.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/authors.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/index.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/news/index.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_band_mapping.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/alos_palsar_mask_function.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/calculate_indices.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/dem_band_mapping.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/deprecated.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/filters.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/get_stac_data.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/index.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/landsat_band_mapping.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/landsat_mask_function.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/landsat_platform_filter.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/rsi-package.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/rsi_download_rasters.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/rsi_gdal_options.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/rsi_query_api.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/sentinel1_band_mapping.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/sentinel2_band_mapping.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/sentinel2_mask_function.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/sign_planetary_computer.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/spectral_indices.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/spectral_indices_url.html</loc></url>
+<url><loc>https://permian-global-research.github.io/rsi/reference/stack_rasters.html</loc></url>
 </urlset>
+
