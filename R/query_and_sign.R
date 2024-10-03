@@ -119,6 +119,8 @@ rsi_query_api <- function(bbox,
 #' @export
 sign_planetary_computer <- function(items,
                                     subscription_key = Sys.getenv("rsi_pc_key")) {
+  # check for the variable used by sits if the rsi one isn't set
+  if (subscription_key == "") subscription_key <- Sys.getenv("MPC_TOKEN")
   if (subscription_key == "") {
     rstac::items_sign(items, rstac::sign_planetary_computer(rsi_user_agent))
   } else {
