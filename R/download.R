@@ -129,6 +129,7 @@ rsi_download_rasters <- function(items,
               )
             },
             error = function(e) {
+              browser()
               rlang::warn(
                 glue::glue(
                   "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint

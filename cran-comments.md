@@ -1,5 +1,5 @@
-This is the sixth CRAN release of rsi. The package has now been reviewed
-by rOpenSci and contains improvements stemming from that review.
+This is the seventh CRAN release of rsi, fixing a test error that
+arose on CRAN.
 
 ## R CMD check results
 

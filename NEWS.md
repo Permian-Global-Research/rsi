@@ -1,5 +1,8 @@
 # rsi (development version)
 
+* A test that requires online resources is now skipped on CRAN. There are
+  no user-facing changes in this version.
+
 # rsi 0.3.0
 
 * rsi has been peer-reviewed by the rOpenSci project! Huge thank you to 
