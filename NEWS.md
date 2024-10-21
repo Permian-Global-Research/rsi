@@ -1,4 +1,4 @@
-# rsi (development version)
+# rsi 0.3.1
 
 * A test that requires online resources is now skipped on CRAN. There are
   no user-facing changes in this version.
