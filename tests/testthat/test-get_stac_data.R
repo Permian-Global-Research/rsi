@@ -200,7 +200,7 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
   aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
   aoi <- sf::st_buffer(sf::st_transform(aoi, 3857), 100)
 
-  expect_snapshot(
+  expect_warning(
     x <- get_landsat_imagery(
       aoi = aoi,
       start_date = "2022-06-01",
@@ -208,7 +208,8 @@ test_that("warning (but not error) fires if `mask_band` is not NULL with NULL `m
       mask_function = NULL,
       rescale_bands = FALSE,
       output_filename = tempfile(fileext = ".tif")
-    )
+    ),
+    class = "rsi_ignored_mask_band"
   )
 })
 
