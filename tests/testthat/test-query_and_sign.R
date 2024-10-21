@@ -1,4 +1,7 @@
 test_that("non-4326 CRS warns", {
+  skip_on_cran()
+  skip_if_offline()
+
   nc <- sf::read_sf(
     system.file("shape/nc.shp", package = "sf")
   )
