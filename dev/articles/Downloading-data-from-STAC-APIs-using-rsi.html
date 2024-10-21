@@ -173,7 +173,7 @@ API, which lists all the collections available from this API:</p>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Collections</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (124 item(s)):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (125 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
@@ -184,7 +184,7 @@ API, which lists all the collections available from this API:</p>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
 <span><span class="co">#&gt;   - daymet-annual-hi</span></span>
-<span><span class="co">#&gt;   - ... with 114 more collection(s).</span></span>
+<span><span class="co">#&gt;   - ... with 115 more collection(s).</span></span>
 <span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
 Computer data catalog</a>; the Planetary Computer is organized so that
@@ -303,7 +303,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmprhefQX/file1e1757c176cb.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpfNEQGi/file1e35646541b1.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -516,6 +516,198 @@ download Landsat imagery looks like this:</p>
 <span>  end_date <span class="op">=</span> <span class="st">"2021-06-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span> </span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 298310 318260 </span></span>
+<span><span class="co">#&gt; ext 0: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 363713 386153 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 0: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 1: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 2: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 3: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 4: 386153 408593 278390 298310 </span></span>
+<span><span class="co">#&gt; ext 5: 386153 408593 278390 298310</span></span>
 <span></span>
 <span><span class="va">ashe_landsat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -545,7 +737,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55b0248fd630&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b38a743530&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -640,7 +832,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55b01fad4948&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b389585198&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
