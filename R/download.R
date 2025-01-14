@@ -27,7 +27,6 @@
 #'   download_function = rsi_download_rasters
 #' )
 #'
-#'
 #' @export
 rsi_download_rasters <- function(items,
                                  aoi,
@@ -84,7 +83,7 @@ rsi_download_rasters <- function(items,
   # working from the assumption that all downloads take about as long
   #
   # so if we aren't merging, or if there's more assets than tiles, we'll
-  # parallelize the outside loop that walks over assets (which, unless the user 
+  # parallelize the outside loop that walks over assets (which, unless the user
   # has set up wild nested futures, turns the inside one into a serial process)
   asset_iterator <- ifelse(
     merge || (n_tiles_out < ncol(download_locations)),
@@ -129,7 +128,6 @@ rsi_download_rasters <- function(items,
               )
             },
             error = function(e) {
-              browser()
               rlang::warn(
                 glue::glue(
                   "Failed to download {items$features[[which_item]]$id %||% 'UNKNOWN'} from {items$features[[which_item]]$properties$datetime %||% 'UNKNOWN'}" # nolint
