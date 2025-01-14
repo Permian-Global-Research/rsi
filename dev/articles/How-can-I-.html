@@ -9,8 +9,8 @@
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Libre_Franklin-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="How can I...?">
 <meta name="robots" content="noindex">
 </head>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,8 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmptfGF5W/2018.tif" "/tmp/RtmptfGF5W/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmptfGF5W/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpQuYAck/2018.tif" "/tmp/RtmpQuYAck/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpQuYAck/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -144,10 +144,10 @@ exists (and a sequential identifier if it doesn’t):</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmptfGF5W/file2546337b56b8_2023-06-28T154415.862937Z.tif"</span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmptfGF5W/file2546337b56b8_2023-06-20T154419.579981Z.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmptfGF5W/file2546337b56b8_2023-06-12T154413.224112Z.tif"</span></span>
-<span><span class="co">#&gt; [4] "/tmp/RtmptfGF5W/file2546337b56b8_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
 <p>Each of these files will then contain the assets corresponding to
 that individual STAC item:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -255,39 +255,7 @@ to see how many images are filtered out by our CQL2 query:</p>
 <span>  start_date <span class="op">=</span> <span class="st">"2023-06-01"</span>,</span>
 <span>  end_date <span class="op">=</span> <span class="st">"2023-07-01"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>You want to calculate some indices from this imagery. Specifically,
 you want to calculate all the indices you can from this imagery – you’re
 doing some sort of machine learning/data mining work, and you want to
@@ -357,10 +325,7 @@ indices:</p>
 <span>    output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in x@ptr$writeStop(): GDAL Message 1:</span></span>
-<span><span class="co">#&gt; /tmp/RtmptfGF5W/file25467f5f73e9.tif: Metadata exceeding 32000 bytes cannot be</span></span>
-<span><span class="co">#&gt; written into GeoTIFF. Transferred to PAM instead.</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="How-can-I-_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
