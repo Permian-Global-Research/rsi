@@ -386,3 +386,16 @@ test_that("Providing no asset names fires the expected warning", {
     )
   )
 })
+
+test_that("Providing a single point geometry throws an error", {
+  expect_error(
+    get_landsat_imagery(
+      aoi = sf::st_sfc(sf::st_point(c(-74.912131, 44.080410)), crs = 4326),
+      start_date = "2022-06-01",
+      end_date = "2022-08-01",
+      composite_function = NULL,
+      output_filename = tempfile(fileext = ".tif")
+    ),
+    class = "rsi_aoi_is_point"
+  )
+})
