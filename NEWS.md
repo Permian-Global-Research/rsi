@@ -1,5 +1,12 @@
 # rsi (development version)
 
+* Failed downloads and merges should now be handled a bit better. Thanks
+  to @h-a-graham for #89 and to @lucas-johnson for #81.
+
+* If `composite = NULL` and the resource has duplicated asset timestamps,
+  `get_stac_data()` will now generate unique filenames (rather than saving
+  multiple files to the same path). Thanks to @h-a-graham for #89 and #90.
+
 # rsi 0.3.1
 
 * A test that requires online resources is now skipped on CRAN. There are
