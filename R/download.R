@@ -131,10 +131,10 @@ rsi_download_rasters <- function(items,
               # stop if failure occurs when merging.
               if (merge) {
                 rlang::abort(
-                  c("x" = glue::glue(
+                  glue::glue(
                     "GDAL warp failed when attempting to merge ",
                     "{length(unlist(feature_iter))} items"
-                  )),
+                  ),
                   class = "download_warp_error", parent = e
                 )
               }
