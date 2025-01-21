@@ -134,7 +134,7 @@
 #' (i.e., to aggregate pixel values from multiple images into a single value).
 #' Options include "merge", which 'stamps' images on top of one another such that
 #' the "last" value downloaded for a pixel -- which isn't guaranteed to be the most
-#' recent one -- will be the only value used, or any of "sum", "mean", "median", 
+#' recent one -- will be the only value used, or any of "sum", "mean", "median",
 #' "min", or "max", which consider all values available at each pixel.
 #' Set to `NULL` to not composite
 #' (i.e., to rescale and save each individual file independently).
@@ -143,7 +143,7 @@
 #' argument of [sf::gdal_utils()]. The same set of options are used for all
 #' downloaded data and the final output images; this means that some common
 #' options (for instance, `PREDICTOR=3`) may cause errors if bands are of
-#' varying data types. The default values are provided by 
+#' varying data types. The default values are provided by
 #' [rsi_gdalwarp_options()].
 #' @param gdal_config_options Options passed to `gdalwarp` through the
 #' `config_options` argument of [sf::gdal_utils()]. The default values are
@@ -186,13 +186,13 @@
 #'   end_date = "2022-08-30",
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
-#' 
-#' landsat_image |> 
+#'
+#' landsat_image |>
 #'   terra::rast() |>
 #'   terra::stretch() |>
 #'   terra::plotRGB()
-#' 
-#' # The `get_*_imagery()` functions will download 
+#'
+#' # The `get_*_imagery()` functions will download
 #' # all available "data" assets by default
 #' # (usually including measured values, and excluding derived bands)
 #' sentinel1_data <- get_sentinel1_imagery(
@@ -202,17 +202,17 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' names(terra::rast(sentinel1_data))
-#' 
+#'
 #' # You can see what bands will be downloaded by a function
 #' # by inspecting the corresponding `band_mapping` object:
 #' sentinel2_band_mapping$planetary_computer_v1
-#' 
+#'
 #' # And you can add additional assets using `c()`:
 #' c(
 #'   sentinel2_band_mapping$planetary_computer_v1,
 #'   "scl"
 #' )
-#' 
+#'
 #' # Or subset the assets downloaded using `[` or `[[`:
 #' sentinel2_imagery <- get_sentinel2_imagery(
 #'   aoi,
@@ -222,7 +222,7 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #' names(terra::rast(sentinel2_imagery))
-#' 
+#'
 #' # If you're downloading data for a particularly large AOI,
 #' # and can't composite the resulting images or want to make
 #' # sure you can continue an interrupted download,
@@ -239,7 +239,7 @@
 #'     )
 #'   }
 #' )
-#' # You'll get a list of tiles that you can then composite or 
+#' # You'll get a list of tiles that you can then composite or
 #' # work with however you wish:
 #' unlist(tiles)
 #'
@@ -270,6 +270,17 @@ get_stac_data <- function(aoi,
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
       class = "rsi_aoi_not_sf"
+    )
+  }
+
+  aoi_bbox <- sf::st_bbox(aoi)
+  if (aoi_bbox$xmin == aoi_bbox$xmax | aoi_bbox$ymin == aoi_bbox$ymax) {
+    rlang::abort(
+      c(
+        "`aoi` has no extent.",
+        "i" = "This can occur when `aoi` is a single point geometry."
+      ),
+      class = "rsi_aoi_is_point"
     )
   }
 
@@ -360,13 +371,14 @@ get_stac_data <- function(aoi,
   if (is.null(asset_names)) {
     asset_names <- rstac::items_assets(items)
     if (length(asset_names) > 1) {
-      rlang::warn(c(
-        "`asset_names` was `NULL`, so rsi is attempting to download all assets in items in this collection.",
-        i = "This includes multiple assets, so rsi is attempting to download all of them using the same download function.",
-        i = "This might cause errors or not be what you want! Specify `asset_names` to fix this (and to silence this warning)."
-      ),
-      class = "rsi_missing_asset_names"
-    )
+      rlang::warn(
+        c(
+          "`asset_names` was `NULL`, so rsi is attempting to download all assets in items in this collection.",
+          i = "This includes multiple assets, so rsi is attempting to download all of them using the same download function.",
+          i = "This might cause errors or not be what you want! Specify `asset_names` to fix this (and to silence this warning)."
+        ),
+        class = "rsi_missing_asset_names"
+      )
     }
   }
   if (is.null(names(asset_names))) names(asset_names) <- asset_names
@@ -412,6 +424,9 @@ get_stac_data <- function(aoi,
   if (!is.null(stats::na.action(download_results))) {
     items$features[stats::na.action(download_results)] <- NULL
   }
+
+  temp_ras_files <- unlist(download_results)
+  on.exit(file.remove(temp_ras_files), add = TRUE)
   # mask
   if (!is.null(mask_band)) {
     download_results <- rsi_apply_masks(
@@ -440,10 +455,7 @@ get_stac_data <- function(aoi,
     lapply(download_results, rescale_band, scale_strings)
   }
 
-  on.exit(file.remove(unlist(download_results)), add = TRUE)
-
   if (drop_mask_band) items_urls[[mask_band]] <- NULL
-
   mapply(
     function(in_bands, vrt) {
       stack_rasters(
@@ -724,15 +736,17 @@ rsi_composite_bands <- function(download_locations,
           )
         )
       } else {
-        do.call(
-          terra::mosaic,
-          list(
-            x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
-            fun = composite_function,
-            filename = out_file,
-            overwrite = TRUE
+        capture.output({
+          do.call(
+            terra::mosaic,
+            list(
+              x = terra::sprc(lapply(download_locations[[band_name]], terra::rast)),
+              fun = composite_function,
+              filename = out_file,
+              overwrite = TRUE
+            )
           )
-        )
+        })
       }
 
       out_file
@@ -845,11 +859,12 @@ get_rescaling_formula <- function(items, band_name, element) {
   )
 
   if (length(unique(elements)) != 1) {
-    rlang::warn(c(
-      glue::glue("Images in band {band_name} have different {element}s."),
-      i = "Returning images without rescaling."
-    ),
-    class = "rsi_multiple_scaling_formulas"
+    rlang::warn(
+      c(
+        glue::glue("Images in band {band_name} have different {element}s."),
+        i = "Returning images without rescaling."
+      ),
+      class = "rsi_multiple_scaling_formulas"
     )
     elements <- NA_real_
   }
