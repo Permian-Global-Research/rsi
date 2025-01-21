@@ -472,7 +472,7 @@ get_stac_data <- function(aoi,
 
   if (is.null(composite_function)) {
     app <- tryCatch(rstac::items_datetime(items), error = function(e) NA)
-    app <- gsub(":", "", app)
+    app <- gsub(":", "", app) # #29, #32
     if (any(is.na(app))) app <- NULL
     app <- app %||% as.character(seq_along(download_results))
     app <- make.unique(app, sep = "_")

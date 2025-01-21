@@ -135,7 +135,7 @@ rsi_download_rasters <- function(items,
                     "GDAL warp failed when attempting to merge ",
                     "{length(unlist(feature_iter))} items"
                   ),
-                  class = "download_warp_error", parent = e
+                  class = "rsi_download_warp_error", parent = e
                 )
               }
 
@@ -148,7 +148,7 @@ rsi_download_rasters <- function(items,
 
               # stop if failure occurs when there is only one item to download.
               if (length(feature_iter) == 1) {
-                rlang::abort(err_msg, class = "download_warp_error", parent = e)
+                rlang::abort(err_msg, class = "rsi_download_warp_error", parent = e)
               }
 
               # warn if failure occurs when multiple items are being downloaded.
