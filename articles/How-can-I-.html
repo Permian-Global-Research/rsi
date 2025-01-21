@@ -9,8 +9,8 @@
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Libre_Franklin-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="How can I...?">
 </head>
 <body>
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>How can I...?</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Permian-Global-Research/rsi/blob/v0.3.0/vignettes/articles/How-can-I-.Rmd" class="external-link"><code>vignettes/articles/How-can-I-.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Permian-Global-Research/rsi/blob/main/vignettes/articles/How-can-I-.Rmd" class="external-link"><code>vignettes/articles/How-can-I-.Rmd</code></a></small>
       <div class="d-none name"><code>How-can-I-.Rmd</code></div>
     </div>
 
@@ -111,8 +111,8 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpwHJdDK/2018.tif" "/tmp/RtmpwHJdDK/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpwHJdDK/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpGzaYqF/2018.tif" "/tmp/RtmpGzaYqF/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpGzaYqF/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -143,10 +143,10 @@ exists (and a sequential identifier if it doesn’t):</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpwHJdDK/file25ec54c1938a_2023-06-28T154415.862937Z.tif"</span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmpwHJdDK/file25ec54c1938a_2023-06-20T154419.579981Z.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpwHJdDK/file25ec54c1938a_2023-06-12T154413.224112Z.tif"</span></span>
-<span><span class="co">#&gt; [4] "/tmp/RtmpwHJdDK/file25ec54c1938a_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpGzaYqF/file2d0228135df3_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpGzaYqF/file2d0228135df3_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpGzaYqF/file2d0228135df3_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/RtmpGzaYqF/file2d0228135df3_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
 <p>Each of these files will then contain the assets corresponding to
 that individual STAC item:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -324,10 +324,7 @@ indices:</p>
 <span>    output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in x@ptr$writeStop(): GDAL Message 1:</span></span>
-<span><span class="co">#&gt; /tmp/RtmpwHJdDK/file25ec7b3f9aa.tif: Metadata exceeding 32000 bytes cannot be</span></span>
-<span><span class="co">#&gt; written into GeoTIFF. Transferred to PAM instead.</span></span></code></pre></div>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="How-can-I-_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

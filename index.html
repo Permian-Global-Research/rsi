@@ -9,8 +9,8 @@
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Libre_Franklin-0.4.9/font.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Efficiently Retrieve and Process Satellite Imagery">
 <meta name="description" content="Downloads spatial data from spatiotemporal asset catalogs (STAC), computes standard spectral indices from the Awesome Spectral Indices project (Montero et al. (2023) &lt;doi:10.1038/s41597-023-02096-0&gt;) against raster data, and glues the outputs together into predictor bricks. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from sf and terra, and data downloading functions support complex CQL2 queries using rstac.">
 <meta property="og:description" content="Downloads spatial data from spatiotemporal asset catalogs (STAC), computes standard spectral indices from the Awesome Spectral Indices project (Montero et al. (2023) &lt;doi:10.1038/s41597-023-02096-0&gt;) against raster data, and glues the outputs together into predictor bricks. Methods focus on interoperability with the broader spatial ecosystem; function arguments and outputs use classes from sf and terra, and data downloading functions support complex CQL2 queries using rstac.">
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Permian-Global-Research/rsi" class="external-link">rsi</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 231 × 9</span></span>
+<span><span class="co">#&gt; # A tibble: 243 × 9</span></span>
 <span><span class="co">#&gt;    application_domain bands     contributor   date_of_addition formula long_name</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;              &lt;list&gt;    &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;    </span></span>
 <span><span class="co">#&gt;  1 vegetation         &lt;chr [2]&gt; https://gith… 2021-11-17       (N - 0… Aerosol …</span></span>
@@ -104,7 +104,7 @@
 <span><span class="co">#&gt;  8 vegetation         &lt;chr [2]&gt; https://gith… 2022-04-08       (N * (… Advanced…</span></span>
 <span><span class="co">#&gt;  9 water              &lt;chr [4]&gt; https://gith… 2021-09-18       4.0 * … Automate…</span></span>
 <span><span class="co">#&gt; 10 water              &lt;chr [5]&gt; https://gith… 2021-09-18       B + 2.… Automate…</span></span>
-<span><span class="co">#&gt; # ℹ 221 more rows</span></span>
+<span><span class="co">#&gt; # ℹ 233 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 3 more variables: platforms &lt;list&gt;, reference &lt;chr&gt;, short_name &lt;chr&gt;</span></span></code></pre></div>
 <p>The first time <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> is called it will download the most up-to-date version of the spectral indices JSON file, and then write the resulting table to a cache file in <code>tools::R_user_dir("rsi")</code>. After that, <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> will only download a new file if the cache is older than 1 day, or if the <code>update_cache</code> argument is <code>TRUE</code>, in order to provide the most up-to-date data as quickly as possible. If offline, <code><a href="reference/spectral_indices.html">spectral_indices()</a></code> will always fall back to the cache or, if no cache file exists, a (possibly out-of-date) data file included in rsi itself.</p>
 <p>Separately, the <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> function provides a generic interface for downloading composite images from any accessible STAC catalog. For instance, we could download a cloud-masked composite of Landsat’s visible layers using <code><a href="reference/get_stac_data.html">get_stac_data()</a></code> and a few helper functions from rsi:</p>
@@ -139,70 +139,6 @@
 <span>  end_date <span class="op">=</span> <span class="st">"2022-08-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 0: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 1: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 2: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 3: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 4: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 5: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 6: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06 </span></span>
-<span><span class="co">#&gt; ext 7: 1.66848e+06 1.67049e+06 2.52827e+06 2.53028e+06</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">landsat_image</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png" width="100%"></p>
 <p>Note that we’ve been plotting each band individually so far by calling <code><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">terra::plot()</a></code>. We could also use <code><a href="https://rspatial.github.io/terra/reference/plotRGB.html" class="external-link">terra::plotRGB()</a></code> (after <code><a href="https://rspatial.github.io/terra/reference/stretch.html" class="external-link">terra::stretch()</a></code>ing the band values) to see what this mosaic of images would look like to the human eye:</p>

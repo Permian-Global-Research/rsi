@@ -9,8 +9,8 @@
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Libre_Franklin-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Downloading data from STAC APIs using rsi">
 </head>
 <body>
@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Downloading data from STAC APIs using rsi</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Permian-Global-Research/rsi/blob/v0.3.0/vignettes/articles/Downloading-data-from-STAC-APIs-using-rsi.Rmd" class="external-link"><code>vignettes/articles/Downloading-data-from-STAC-APIs-using-rsi.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Permian-Global-Research/rsi/blob/main/vignettes/articles/Downloading-data-from-STAC-APIs-using-rsi.Rmd" class="external-link"><code>vignettes/articles/Downloading-data-from-STAC-APIs-using-rsi.Rmd</code></a></small>
       <div class="d-none name"><code>Downloading-data-from-STAC-APIs-using-rsi.Rmd</code></div>
     </div>
 
@@ -302,7 +302,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmp79TGjg/file1db111c1302.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmprttBDP/file234e74dc63bf.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -532,19 +532,32 @@ and all others are masked out:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_band"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "qa_pixel"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">landsat_band_mapping</span><span class="op">$</span><span class="va">planetary_computer_v1</span>, <span class="st">"mask_function"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; function (raster, include = c("land", "water", "both")) </span></span>
+<span><span class="co">#&gt; function (raster, include = c("land", "water", "both"), ..., </span></span>
+<span><span class="co">#&gt;     masked_bits) </span></span>
 <span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     if (missing(include)) </span></span>
-<span><span class="co">#&gt;         include &lt;- include[[1]]</span></span>
-<span><span class="co">#&gt;     include &lt;- rlang::arg_match(include, multiple = TRUE)</span></span>
-<span><span class="co">#&gt;     classes &lt;- numeric()</span></span>
-<span><span class="co">#&gt;     if (any(c("land", "both") %in% include)) </span></span>
-<span><span class="co">#&gt;         classes &lt;- c(classes, 21824)</span></span>
-<span><span class="co">#&gt;     if (any(c("water", "both") %in% include)) </span></span>
-<span><span class="co">#&gt;         classes &lt;- c(classes, 21952)</span></span>
+<span><span class="co">#&gt;     rlang::check_dots_empty()</span></span>
+<span><span class="co">#&gt;     if (missing(masked_bits)) {</span></span>
+<span><span class="co">#&gt;         if (missing(include)) </span></span>
+<span><span class="co">#&gt;             include &lt;- include[[1]]</span></span>
+<span><span class="co">#&gt;         include &lt;- rlang::arg_match(include, multiple = TRUE)</span></span>
+<span><span class="co">#&gt;         masked_bits &lt;- list()</span></span>
+<span><span class="co">#&gt;         if (any(c("land", "both") %in% include)) {</span></span>
+<span><span class="co">#&gt;             masked_bits &lt;- c(masked_bits, list(c(0:5, 7, 9, 11, </span></span>
+<span><span class="co">#&gt;                 13, 15)))</span></span>
+<span><span class="co">#&gt;         }</span></span>
+<span><span class="co">#&gt;         if (any(c("water", "both") %in% include)) {</span></span>
+<span><span class="co">#&gt;             masked_bits &lt;- c(masked_bits, list(c(0:5, 9, 11, </span></span>
+<span><span class="co">#&gt;                 13, 15)))</span></span>
+<span><span class="co">#&gt;         }</span></span>
+<span><span class="co">#&gt;     }</span></span>
+<span><span class="co">#&gt;     else if (!missing(include)) {</span></span>
+<span><span class="co">#&gt;         rlang::abort("Only one of `include` and `masked_bits` can be specified.", </span></span>
+<span><span class="co">#&gt;             class = "rsi_masked_bits_and_include")</span></span>
+<span><span class="co">#&gt;     }</span></span>
+<span><span class="co">#&gt;     classes &lt;- vapply(masked_bits, bits_to_int, integer(1), USE.NAMES = FALSE)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55968783b088&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x56440b553148&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -639,7 +652,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x559682726de0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x56440ab9b110&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
