@@ -58,13 +58,13 @@ build_progressr <- function(n) {
 }
 
 #' Default options for GDAL
-#' 
+#'
 #' These functions provide useful default options for GDAL functions,
 #' making downloading and warping (hopefully!) more efficient for
-#' most use cases. 
-#' 
+#' most use cases.
+#'
 #' @returns A vector of options for GDAL commands.
-#' 
+#'
 #' @name rsi_gdal_options
 #' @export
 rsi_gdal_config_options <- function() {

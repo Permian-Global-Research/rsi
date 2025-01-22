@@ -74,6 +74,5 @@ landsat_image <- get_landsat_imagery(
   end_date = "2022-08-30",
   download_function = rsi_download_rasters
 )
-
 \dontshow{\}) # examplesIf}
 }

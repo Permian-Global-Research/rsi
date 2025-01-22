@@ -10,9 +10,9 @@
 #' available for your AOI, or to perform cloud filtering prior to downloading
 #' assets.
 #'
-#' @param bbox A `bbox` or `sfc` object, from the sf package, representing the 
-#' spatial bounding box of your area of interest. This must be in EPSG:4326 
-#' coordinates (and, if this function is called from within `get_stac_data()`, 
+#' @param bbox A `bbox` or `sfc` object, from the sf package, representing the
+#' spatial bounding box of your area of interest. This must be in EPSG:4326
+#' coordinates (and, if this function is called from within `get_stac_data()`,
 #' it will be) or else it will be automatically reprojected.
 #' @inheritParams get_stac_data
 #' @param start_date,end_date Character strings of length 1 representing the

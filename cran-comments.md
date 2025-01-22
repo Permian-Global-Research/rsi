@@ -1,5 +1,6 @@
-This is the seventh CRAN release of rsi, fixing a test error that
-arose on CRAN.
+This is the eigth CRAN release of rsi, fixing how downloads
+handle duplicated asset timestamps and how errors are
+handled during merging.
 
 ## R CMD check results
 

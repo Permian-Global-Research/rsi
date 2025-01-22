@@ -34,7 +34,7 @@
 #' when given a character vector of band names, returns a character vector of
 #' the same length containing new band names.
 #' @param check_crs Logical: Should this function check that all `rasters` share
-#' the same CRS? Set to `FALSE` only if you are entirely confident that rasters 
+#' the same CRS? Set to `FALSE` only if you are entirely confident that rasters
 #' have equivalent CRS definitions, but not identical WKT strings.
 #' @param gdalwarp_options Options passed to `gdalwarp` through the `options`
 #' argument of [sf::gdal_utils()]. This argument is ignored (with a warning)

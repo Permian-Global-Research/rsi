@@ -100,21 +100,21 @@ aoi <- sf::st_point(c(-74.912131, 44.080410))
 aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
 aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 1000)
 
-custom_query_function <- function(bbox, 
-                                  stac_source, 
-                                  collection, 
-                                  start_date, 
-                                  end_date, 
-                                  limit, 
+custom_query_function <- function(bbox,
+                                  stac_source,
+                                  collection,
+                                  start_date,
+                                  end_date,
+                                  limit,
                                   ...) {
-  geometry <- rstac::cql2_bbox_as_geojson(bbox) 
+  geometry <- rstac::cql2_bbox_as_geojson(bbox)
   datetime <- rstac::cql2_interval(start_date, end_date)
-  
+
   request <- rstac::ext_filter(
     rstac::stac(stac_source),
-    collection == {{collection}} &&
-      t_intersects(datetime, {{datetime}}) &&
-      s_intersects(geometry, {{geometry}}) && 
+    collection == {{ collection }} &&
+      t_intersects(datetime, {{ datetime }}) &&
+      s_intersects(geometry, {{ geometry }}) &&
       `eo:cloud_cover` < 50
   )
   rstac::items_fetch(rstac::post_request(request))
@@ -179,7 +179,7 @@ You want to calculate some indices from this imagery. Specifically, you want to 
 To do that using `calculate_indices()`, you're going to need to only provide formulas for the indices that can be calculated from your particular data source. We might look at the columns available for filtering from `spectral_indices()`:
 
 ```{r}
-spectral_indices() |> 
+spectral_indices() |>
   head(1)
 ```
 
@@ -204,7 +204,7 @@ However, if you're looking to automatically calculate just the indices that don'
 Assuming you used one of the wrapper functions in rsi, like `get_landsat_data()` or `get_sentinel2_data()`, your raster bands should automatically be named to match the band names used in the ASI project. That means we can pass the names of your raster directly to `filter_bands()`:
 
 ```{r}
-filter_bands(bands = names(terra::rast(our_imagery))) |> 
+filter_bands(bands = names(terra::rast(our_imagery))) |>
   head(1)
 ```
 
@@ -212,10 +212,10 @@ And we can pass the outputs of that function to `calculate_indices()` to only ca
 
 ```{r}
 calculate_indices(
-    our_imagery,
-    filter_bands(bands = names(terra::rast(our_imagery))),
-    output_filename = tempfile(fileext = ".tif")
-  ) |> 
-  terra::rast() |> 
+  our_imagery,
+  filter_bands(bands = names(terra::rast(our_imagery))),
+  output_filename = tempfile(fileext = ".tif")
+) |>
+  terra::rast() |>
   terra::plot()
 ```

@@ -113,7 +113,6 @@ landsat_mask_function <- function(raster,
     if (any(c("water", "both") %in% include)) {
       masked_bits <- c(masked_bits, list(c(0:5, 9, 11, 13, 15)))
     }
-
   } else if (!missing(include)) {
     rlang::abort(
       "Only one of `include` and `masked_bits` can be specified.",

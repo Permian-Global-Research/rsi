@@ -399,12 +399,12 @@ landsat_image <- get_landsat_imagery(
   output_filename = tempfile(fileext = ".tif")
 )
 
-landsat_image |> 
+landsat_image |>
   terra::rast() |>
   terra::stretch() |>
   terra::plotRGB()
 
-# The `get_*_imagery()` functions will download 
+# The `get_*_imagery()` functions will download
 # all available "data" assets by default
 # (usually including measured values, and excluding derived bands)
 sentinel1_data <- get_sentinel1_imagery(
@@ -451,7 +451,7 @@ tiles <- lapply(
     )
   }
 )
-# You'll get a list of tiles that you can then composite or 
+# You'll get a list of tiles that you can then composite or
 # work with however you wish:
 unlist(tiles)
 \dontshow{\}) # examplesIf}

@@ -233,7 +233,7 @@ ashe_landsat <- get_landsat_imagery(
   start_date = "2021-06-01",
   end_date = "2021-06-30",
   output_filename = tempfile(fileext = ".tif")
-) 
+)
 
 ashe_landsat |>
   terra::rast() |>
@@ -265,7 +265,7 @@ ashe_no_composite <- get_landsat_imagery(
   output_filename = tempfile(fileext = ".tif"),
   composite_function = NULL,
   mask_function = NULL # otherwise half of these images are blank
-) 
+)
 ashe_no_composite |>
   lapply(terra::rast) |>
   lapply(terra::plot) |>

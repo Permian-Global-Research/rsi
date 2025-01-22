@@ -737,7 +737,7 @@ rsi_composite_bands <- function(download_locations,
           )
         )
       } else {
-        capture.output({
+        utils::capture.output({
           do.call(
             terra::mosaic,
             list(

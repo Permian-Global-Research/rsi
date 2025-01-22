@@ -30,12 +30,12 @@
 #' @param output_filename The filename to write the computed metrics to.
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams terra::predict
-#' @param extra_objects A named list of additional objects to pass to the 
+#' @param extra_objects A named list of additional objects to pass to the
 #' minimal environment that formulas are executed in. For instance, if you
-#' need to use the `pmax` function in order to calculate an index, you can 
-#' make it available in the environment by setting 
-#' `extra_objects = list("pmax" = pmax)`. Providing extra functionality is 
-#' inherently less safe than the default minimal environment, and as such always 
+#' need to use the `pmax` function in order to calculate an index, you can
+#' make it available in the environment by setting
+#' `extra_objects = list("pmax" = pmax)`. Providing extra functionality is
+#' inherently less safe than the default minimal environment, and as such always
 #' emits a warning, which you can suppress with `suppressWarnings()`.
 #' @param names_suffix If not `NULL`, will be used (with [paste()]) to add a
 #' suffix to each of the band names returned.
@@ -63,7 +63,7 @@
 #'     tempfile(fileext = ".tif")
 #'   )
 #' )
-#' 
+#'
 #' # Because of this, formulas which try to use most R functions
 #' # will wind up erroring as well:
 #' example_indices$formula <- "pmax(VH, VV)"
@@ -74,7 +74,7 @@
 #'     tempfile(fileext = ".tif")
 #'   )
 #' )
-#' 
+#'
 #' # To fix this, pass the objects you want to use to `extra_objects`
 #' calculate_indices(
 #'   system.file("rasters/example_sentinel1.tif", package = "rsi"),
@@ -145,10 +145,11 @@ calculate_indices <- function(raster,
   )
 
   if (length(extra_objects)) {
-    rlang::warn(c(
-      "Providing extra objects can potentially make it easier for malicious code to impact your system.",
-      i = "Make sure you closely inspect the formulas you're running, before running them, and understand why they need extra objects!",
-      i = "This warning can be silenced using `suppressWarnings(..., classes = 'rsi_extra_objects')`"
+    rlang::warn(
+      c(
+        "Providing extra objects can potentially make it easier for malicious code to impact your system.",
+        i = "Make sure you closely inspect the formulas you're running, before running them, and understand why they need extra objects!",
+        i = "This warning can be silenced using `suppressWarnings(..., classes = 'rsi_extra_objects')`"
       ),
       class = "rsi_extra_objects"
     )
