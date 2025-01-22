@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rsi-development-version">rsi (development version)<a class="anchor" aria-label="anchor" href="#rsi-development-version"></a></h2>
-</div>
+<ul><li><p>Failed downloads and merges should now be handled a bit better. Thanks to <a href="https://github.com/h-a-graham" class="external-link">@h-a-graham</a> for <a href="https://github.com/Permian-Global-Research/rsi/issues/89" class="external-link">#89</a> and to <a href="https://github.com/lucas-johnson" class="external-link">@lucas-johnson</a> for <a href="https://github.com/Permian-Global-Research/rsi/issues/81" class="external-link">#81</a>.</p></li>
+<li><p>If <code>composite = NULL</code> and the resource has duplicated asset timestamps, <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> will now generate unique filenames (rather than saving multiple files to the same path). Thanks to <a href="https://github.com/h-a-graham" class="external-link">@h-a-graham</a> for <a href="https://github.com/Permian-Global-Research/rsi/issues/89" class="external-link">#89</a> and <a href="https://github.com/Permian-Global-Research/rsi/issues/90" class="external-link">#90</a>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="rsi-031">rsi 0.3.1<a class="anchor" aria-label="anchor" href="#rsi-031"></a></h2><p class="text-muted">CRAN release: 2024-10-22</p>
 <ul><li>A test that requires online resources is now skipped on CRAN. There are no user-facing changes in this version.</li>

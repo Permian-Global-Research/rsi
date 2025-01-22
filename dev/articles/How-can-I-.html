@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,8 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpQuYAck/2018.tif" "/tmp/RtmpQuYAck/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpQuYAck/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpEqLNEp/2018.tif" "/tmp/RtmpEqLNEp/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpEqLNEp/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -144,10 +144,10 @@ exists (and a sequential identifier if it doesn’t):</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-28T154415.862937Z.tif"</span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-20T154419.579981Z.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-12T154413.224112Z.tif"</span></span>
-<span><span class="co">#&gt; [4] "/tmp/RtmpQuYAck/file2d3e59bb021f_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
 <p>Each of these files will then contain the assets corresponding to
 that individual STAC item:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -185,21 +185,21 @@ this:</p>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">aoi</span><span class="op">)</span>, <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="va">aoi</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">aoi</span>, <span class="fl">5070</span><span class="op">)</span>, <span class="fl">1000</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">custom_query_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">bbox</span>, </span>
-<span>                                  <span class="va">stac_source</span>, </span>
-<span>                                  <span class="va">collection</span>, </span>
-<span>                                  <span class="va">start_date</span>, </span>
-<span>                                  <span class="va">end_date</span>, </span>
-<span>                                  <span class="va">limit</span>, </span>
+<span><span class="va">custom_query_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">bbox</span>,</span>
+<span>                                  <span class="va">stac_source</span>,</span>
+<span>                                  <span class="va">collection</span>,</span>
+<span>                                  <span class="va">start_date</span>,</span>
+<span>                                  <span class="va">end_date</span>,</span>
+<span>                                  <span class="va">limit</span>,</span>
 <span>                                  <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_bbox_as_geojson</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span> </span>
+<span>  <span class="va">geometry</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_bbox_as_geojson</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span></span>
 <span>  <span class="va">datetime</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/cql2_helpers.html" class="external-link">cql2_interval</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">request</span> <span class="op">&lt;-</span> <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/ext_filter.html" class="external-link">ext_filter</a></span><span class="op">(</span></span>
 <span>    <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="va">stac_source</span><span class="op">)</span>,</span>
-<span>    <span class="va">collection</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span><span class="va">collection</span><span class="op">}</span><span class="op">}</span> <span class="op">&amp;&amp;</span></span>
-<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span><span class="va">datetime</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
-<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span><span class="va">geometry</span><span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span> </span>
+<span>    <span class="va">collection</span> <span class="op">==</span> <span class="op">{</span><span class="op">{</span> <span class="va">collection</span> <span class="op">}</span><span class="op">}</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="fu">t_intersects</span><span class="op">(</span><span class="va">datetime</span>, <span class="op">{</span><span class="op">{</span> <span class="va">datetime</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span>      <span class="fu">s_intersects</span><span class="op">(</span><span class="va">geometry</span>, <span class="op">{</span><span class="op">{</span> <span class="va">geometry</span> <span class="op">}</span><span class="op">}</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
 <span>      <span class="va">`eo:cloud_cover`</span> <span class="op">&lt;</span> <span class="fl">50</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_fetch</a></span><span class="op">(</span><span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="va">request</span><span class="op">)</span><span class="op">)</span></span>
@@ -265,7 +265,7 @@ need to only provide formulas for the indices that can be calculated
 from your particular data source. We might look at the columns available
 for filtering from <code><a href="../reference/spectral_indices.html">spectral_indices()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/spectral_indices.html">spectral_indices</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
 <span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
@@ -308,7 +308,7 @@ your raster bands should automatically be named to match the band names
 used in the ASI project. That means we can pass the names of your raster
 directly to <code><a href="../reference/filters.html">filter_bands()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
 <span><span class="co">#&gt;   application_domain bands     contributor    date_of_addition formula long_name</span></span>
@@ -320,11 +320,11 @@ directly to <code><a href="../reference/filters.html">filter_bands()</a></code>:
 indices:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/calculate_indices.html">calculate_indices</a></span><span class="op">(</span></span>
-<span>    <span class="va">our_imagery</span>,</span>
-<span>    <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="va">our_imagery</span>,</span>
+<span>  <span class="fu"><a href="../reference/filters.html">filter_bands</a></span><span class="op">(</span>bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">our_imagery</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="How-can-I-_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 </div>
