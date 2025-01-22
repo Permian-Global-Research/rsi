@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsi</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.1.9001</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,8 @@ interest, construct your <code>start_date</code> and
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">downloaded_years</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpEqLNEp/2018.tif" "/tmp/RtmpEqLNEp/2019.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpEqLNEp/2020.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp7frp19/2018.tif" "/tmp/Rtmp7frp19/2019.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/Rtmp7frp19/2020.tif"</span></span></code></pre></div>
 <p>This ensures that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is run using the same
 arguments each time, so your outputs should be standardized across each
 interval!</p>
@@ -144,10 +144,10 @@ exists (and a sequential identifier if it doesn’t):</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">our_imagery</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-28T154415.862937Z.tif"</span></span>
-<span><span class="co">#&gt; [2] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-20T154419.579981Z.tif"</span></span>
-<span><span class="co">#&gt; [3] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-12T154413.224112Z.tif"</span></span>
-<span><span class="co">#&gt; [4] "/tmp/RtmpEqLNEp/file2c2a749e9f1f_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/Rtmp7frp19/file2f5053c7c0c4_2023-06-28T154415.862937Z.tif"</span></span>
+<span><span class="co">#&gt; [2] "/tmp/Rtmp7frp19/file2f5053c7c0c4_2023-06-20T154419.579981Z.tif"</span></span>
+<span><span class="co">#&gt; [3] "/tmp/Rtmp7frp19/file2f5053c7c0c4_2023-06-12T154413.224112Z.tif"</span></span>
+<span><span class="co">#&gt; [4] "/tmp/Rtmp7frp19/file2f5053c7c0c4_2023-06-04T154412.531019Z.tif"</span></span></code></pre></div>
 <p>Each of these files will then contain the assets corresponding to
 that individual STAC item:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
