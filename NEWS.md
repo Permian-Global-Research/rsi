@@ -1,3 +1,5 @@
+# rsi (development version)
+
 # rsi 0.3.2
 
 * Failed downloads and merges should now be handled a bit better. Thanks
