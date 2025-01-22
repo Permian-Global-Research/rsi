@@ -187,10 +187,8 @@
 #'   output_filename = tempfile(fileext = ".tif")
 #' )
 #'
-#' landsat_image |>
-#'   terra::rast() |>
-#'   terra::stretch() |>
-#'   terra::plotRGB()
+#' landsat_image <- terra::rast(landsat_image)
+#' terra::plotRGB(terra::stretch(landsat_image))
 #'
 #' # The `get_*_imagery()` functions will download
 #' # all available "data" assets by default
@@ -265,7 +263,7 @@ get_stac_data <- function(aoi,
                           limit = 999,
                           gdalwarp_options = rsi_gdalwarp_options(),
                           gdal_config_options = rsi_gdal_config_options()) {
-  # query |> filter |> download |> mask |> composite |> rescale
+  # query, filter, download, mask, composite, rescale
   if (!(inherits(aoi, "sf") || inherits(aoi, "sfc"))) {
     rlang::abort(
       "`aoi` must be an sf or sfc object.",
@@ -345,7 +343,7 @@ get_stac_data <- function(aoi,
     end_date <- process_dates(end_date)
   }
 
-  if (is.null(item_filter_function)) item_filter_function <- \(x, ...) identity(x)
+  if (is.null(item_filter_function)) item_filter_function <- function(x, ...) identity(x)
 
   # query
   items <- query_function(
