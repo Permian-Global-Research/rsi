@@ -302,7 +302,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/RtmprttBDP/file234e74dc63bf.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpRTp0i4/file25406be85e50.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -514,7 +514,7 @@ download Landsat imagery looks like this:</p>
 <span>  start_date <span class="op">=</span> <span class="st">"2021-06-01"</span>,</span>
 <span>  end_date <span class="op">=</span> <span class="st">"2021-06-30"</span>,</span>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span></span>
-<span><span class="op">)</span> </span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_landsat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -557,7 +557,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;     classes &lt;- vapply(masked_bits, bits_to_int, integer(1), USE.NAMES = FALSE)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x56440b553148&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55f148535848&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -585,7 +585,7 @@ AOI separately:</p>
 <span>  output_filename <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tif"</span><span class="op">)</span>,</span>
 <span>  composite_function <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mask_function <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># otherwise half of these images are blank</span></span>
-<span><span class="op">)</span> </span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: `mask_function` was NULL, but `mask_band` was not `NULL`.</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">ℹ</span> `mask_band` will be ignored (not downloaded or used).</span></span>
 <span><span class="va">ashe_no_composite</span> <span class="op">|&gt;</span></span>
@@ -652,7 +652,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x56440ab9b110&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55f149b2fff0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
