@@ -51,11 +51,26 @@ sentinel2_band_mapping <- list(
 
 sentinel2_band_mapping$planetary_computer_v1 <- sentinel2_band_mapping$aws_v0
 attr(sentinel2_band_mapping$planetary_computer_v1, "scl_name") <- "SCL"
-attr(sentinel2_band_mapping$planetary_computer_v1, "stac_source") <- "https://planetarycomputer.microsoft.com/api/stac/v1/"
-attr(sentinel2_band_mapping$planetary_computer_v1, "collection_name") <- "sentinel-2-l2a"
-attr(sentinel2_band_mapping$planetary_computer_v1, "query_function") <- rsi_query_api
-attr(sentinel2_band_mapping$planetary_computer_v1, "download_function") <- rsi_download_rasters
-attr(sentinel2_band_mapping$planetary_computer_v1, "sign_function") <- sign_planetary_computer
+attr(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "stac_source"
+) <- "https://planetarycomputer.microsoft.com/api/stac/v1/"
+attr(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "collection_name"
+) <- "sentinel-2-l2a"
+attr(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "query_function"
+) <- rsi_query_api
+attr(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "download_function"
+) <- rsi_download_rasters
+attr(
+  sentinel2_band_mapping$planetary_computer_v1,
+  "sign_function"
+) <- sign_planetary_computer
 
 usethis::use_data(sentinel2_band_mapping, overwrite = TRUE)
 
@@ -143,11 +158,26 @@ dem_band_mapping <- list(
   planetary_computer_v1 = list(
     nasadem = pc_dem_mapping(c("elevation" = "elevation"), "nasadem"),
     "alos-dem" = pc_dem_mapping(c("data" = "elevation"), "alos-dem"),
-    "cop-dem-glo-30" = pc_dem_mapping(c("data" = "elevation"), "cop-dem-glo-30"),
-    "cop-dem-glo-90" = pc_dem_mapping(c("data" = "elevation"), "cop-dem-glo-90"),
-    "3dep-lidar-dtm" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dtm"),
-    "3dep-lidar-dsm" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dsm"),
-    "3dep-lidar-dtm-native" = pc_dem_mapping(c("data" = "elevation"), "3dep-lidar-dtm-native"),
+    "cop-dem-glo-30" = pc_dem_mapping(
+      c("data" = "elevation"),
+      "cop-dem-glo-30"
+    ),
+    "cop-dem-glo-90" = pc_dem_mapping(
+      c("data" = "elevation"),
+      "cop-dem-glo-90"
+    ),
+    "3dep-lidar-dtm" = pc_dem_mapping(
+      c("data" = "elevation"),
+      "3dep-lidar-dtm"
+    ),
+    "3dep-lidar-dsm" = pc_dem_mapping(
+      c("data" = "elevation"),
+      "3dep-lidar-dsm"
+    ),
+    "3dep-lidar-dtm-native" = pc_dem_mapping(
+      c("data" = "elevation"),
+      "3dep-lidar-dtm-native"
+    ),
     "3dep-seamless" = pc_dem_mapping(c("data" = "elevation"), "3dep-seamless")
   )
 )

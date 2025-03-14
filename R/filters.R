@@ -21,9 +21,13 @@
 #'
 #' @rdname filters
 #' @export
-filter_platforms <- function(indices = spectral_indices(),
-                             platforms = unique(unlist(spectral_indices(download_indices = FALSE, update_cache = FALSE)$platforms)),
-                             operand = c("all", "any")) {
+filter_platforms <- function(
+  indices = spectral_indices(),
+  platforms = unique(unlist(
+    spectral_indices(download_indices = FALSE, update_cache = FALSE)$platforms
+  )),
+  operand = c("all", "any")
+) {
   platforms <- rlang::arg_match(platforms, multiple = TRUE)
   if (missing(operand)) {
     operand <- rlang::arg_match(operand)
@@ -38,10 +42,14 @@ filter_platforms <- function(indices = spectral_indices(),
 
 #' @rdname filters
 #' @export
-filter_bands <- function(indices = spectral_indices(),
-                         bands = unique(unlist(spectral_indices(download_indices = FALSE, update_cache = FALSE)$bands)),
-                         operand = c("all", "any"),
-                         type = c("filter", "search")) {
+filter_bands <- function(
+  indices = spectral_indices(),
+  bands = unique(unlist(
+    spectral_indices(download_indices = FALSE, update_cache = FALSE)$bands
+  )),
+  operand = c("all", "any"),
+  type = c("filter", "search")
+) {
   bands <- rlang::arg_match(bands, multiple = TRUE)
   type <- rlang::arg_match(type)
   if (missing(operand)) {

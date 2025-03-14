@@ -28,32 +28,38 @@
 #' )
 #'
 #' @export
-rsi_download_rasters <- function(items,
-                                 aoi,
-                                 asset_names,
-                                 sign_function = NULL,
-                                 merge = FALSE,
-                                 gdalwarp_options = c(
-                                   "-r", "bilinear",
-                                   "-multi",
-                                   "-overwrite",
-                                   "-co", "COMPRESS=DEFLATE",
-                                   "-co", "PREDICTOR=2",
-                                   "-co", "NUM_THREADS=ALL_CPUS"
-                                 ),
-                                 gdal_config_options = c(
-                                   VSI_CACHE = "TRUE",
-                                   GDAL_CACHEMAX = "30%",
-                                   VSI_CACHE_SIZE = "10000000",
-                                   GDAL_HTTP_MULTIPLEX = "YES",
-                                   GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                                   GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                                   GDAL_HTTP_VERSION = "2",
-                                   GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                                   GDAL_NUM_THREADS = "ALL_CPUS",
-                                   GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
-                                 ),
-                                 ...) {
+rsi_download_rasters <- function(
+  items,
+  aoi,
+  asset_names,
+  sign_function = NULL,
+  merge = FALSE,
+  gdalwarp_options = c(
+    "-r",
+    "bilinear",
+    "-multi",
+    "-overwrite",
+    "-co",
+    "COMPRESS=DEFLATE",
+    "-co",
+    "PREDICTOR=2",
+    "-co",
+    "NUM_THREADS=ALL_CPUS"
+  ),
+  gdal_config_options = c(
+    VSI_CACHE = "TRUE",
+    GDAL_CACHEMAX = "30%",
+    VSI_CACHE_SIZE = "10000000",
+    GDAL_HTTP_MULTIPLEX = "YES",
+    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+    GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+    GDAL_NUM_THREADS = "ALL_CPUS",
+    GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"
+  ),
+  ...
+) {
   if (!inherits(aoi, "bbox")) aoi <- sf::st_bbox(aoi)
 
   check_type_and_length(
@@ -135,12 +141,14 @@ rsi_download_rasters <- function(items,
                     "GDAL warp failed when attempting to merge ",
                     "{length(unlist(feature_iter))} items"
                   ),
-                  class = "rsi_download_warp_error", parent = e
+                  class = "rsi_download_warp_error",
+                  parent = e
                 )
               }
 
               expr1 <- items$features[[which_item]]$id %||% "UNKNOWN"
-              expr2 <- items$features[[which_item]]$properties$datetime %||% "UNKNOWN"
+              expr2 <- items$features[[which_item]]$properties$datetime %||%
+                "UNKNOWN"
 
               err_msg <- glue::glue(
                 "Failed to download {expr1} from {expr2}" # nolint
@@ -148,7 +156,11 @@ rsi_download_rasters <- function(items,
 
               # stop if failure occurs when there is only one item to download.
               if (length(feature_iter) == 1) {
-                rlang::abort(err_msg, class = "rsi_download_warp_error", parent = e)
+                rlang::abort(
+                  err_msg,
+                  class = "rsi_download_warp_error",
+                  parent = e
+                )
               }
 
               # warn if failure occurs when multiple items are being downloaded.

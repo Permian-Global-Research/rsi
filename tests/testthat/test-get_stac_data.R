@@ -119,7 +119,10 @@ test_that("non-default mappings work", {
 })
 
 test_that("can download RTC products", {
-  skip_if(Sys.getenv("rsi_pc_key") == "", "Environment variable `rsi_pc_key` not set")
+  skip_if(
+    Sys.getenv("rsi_pc_key") == "",
+    "Environment variable `rsi_pc_key` not set"
+  )
   skip_on_cran()
   skip_if_offline()
   aoi <- sf::st_point(c(-74.912131, 44.080410))
@@ -358,7 +361,10 @@ test_that("Providing pixel sizes with geographic coords fires the expected warni
   expect_error(
     tryCatch(
       get_stac_data(aoi, pixel_x_size = 30, pixel_y_size = 30),
-      rsi_default_pixel_size_geographic_coords = rlang::abort("The warning fired", class = "success")
+      rsi_default_pixel_size_geographic_coords = rlang::abort(
+        "The warning fired",
+        class = "success"
+      )
     ),
     class = "success"
   )
@@ -381,7 +387,10 @@ test_that("Providing no asset names fires the expected warning", {
         collection = "usgs-lcmap-conus-v13",
         output_filename = tempfile(fileext = ".tif"),
       ),
-      rsi_missing_asset_names = rlang::abort("The warning fired", class = "success"),
+      rsi_missing_asset_names = rlang::abort(
+        "The warning fired",
+        class = "success"
+      ),
       class = "success"
     )
   )
