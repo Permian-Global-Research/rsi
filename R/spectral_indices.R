@@ -43,7 +43,12 @@ spectral_indices_url <- function() {
 #' @source [https://github.com/awesome-spectral-indices/awesome-spectral-indices](https://github.com/awesome-spectral-indices/awesome-spectral-indices)
 #'
 #' @export
-spectral_indices <- function(..., url = spectral_indices_url(), download_indices = NULL, update_cache = NULL) {
+spectral_indices <- function(
+  ...,
+  url = spectral_indices_url(),
+  download_indices = NULL,
+  update_cache = NULL
+) {
   rlang::check_dots_empty()
   indices_path <- file.path(tools::R_user_dir("rsi"), "indices.rda")
 
@@ -71,7 +76,8 @@ spectral_indices <- function(..., url = spectral_indices_url(), download_indices
   if (update_cache && isTRUE(download_indices)) {
     tryCatch(
       update_cached_indices(url),
-      error = function(e) { # nocov start
+      error = function(e) {
+        # nocov start
         rlang::warn(
           c(
             "Failed to update the cache of indices.",
@@ -89,7 +95,8 @@ spectral_indices <- function(..., url = spectral_indices_url(), download_indices
   } else if (isTRUE(download_indices)) {
     tryCatch(
       download_web_indices(url),
-      error = function(e) { # nocov start
+      error = function(e) {
+        # nocov start
         rlang::warn(
           c(
             "Failed to download new indices.",

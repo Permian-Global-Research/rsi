@@ -1,6 +1,8 @@
-check_type_and_length <- function(...,
-                                  call = rlang::caller_env(),
-                                  env = rlang::caller_env()) {
+check_type_and_length <- function(
+  ...,
+  call = rlang::caller_env(),
+  env = rlang::caller_env()
+) {
   dots <- list(...)
   if (length(dots) == 0) {
     return(invisible(TRUE))
@@ -29,14 +31,18 @@ check_type_and_length <- function(...,
       } else {
         problem_args <- c(
           problem_args,
-          glue::glue("{dot} should be a {class(dots[[dot]])}, but is a {class(arg)}.")
+          glue::glue(
+            "{dot} should be a {class(dots[[dot]])}, but is a {class(arg)}."
+          )
         )
       }
     }
     if (length(dots[[dot]]) && length(arg) != length(dots[[dot]])) {
       problem_args <- c(
         problem_args,
-        glue::glue("{dot} should be of length {length(dots[[dot]])}, but is length {length(arg)}.")
+        glue::glue(
+          "{dot} should be of length {length(dots[[dot]])}, but is length {length(arg)}."
+        )
       )
     }
   }

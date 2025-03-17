@@ -10,7 +10,10 @@ test_that("stack_rasters works", {
         )
       )
     ),
-    terra::values(terra::rast(system.file("rasters/example_sentinel1.tif", package = "rsi")))
+    terra::values(terra::rast(system.file(
+      "rasters/example_sentinel1.tif",
+      package = "rsi"
+    )))
   )
 })
 
@@ -28,12 +31,19 @@ test_that("stack_rasters works with non-VRT outputs", {
   # but it should still be a decent sized file, not just a text file
   expect_true(
     file.info(out_tif)$size >
-      (file.info(system.file("rasters/example_sentinel1.tif", package = "rsi"))$size / 2)
+      (file.info(system.file(
+        "rasters/example_sentinel1.tif",
+        package = "rsi"
+      ))$size /
+        2)
   )
 
   expect_equal(
     terra::values(terra::rast(out_tif, drivers = "GTiff")),
-    terra::values(terra::rast(system.file("rasters/example_sentinel1.tif", package = "rsi")))
+    terra::values(terra::rast(system.file(
+      "rasters/example_sentinel1.tif",
+      package = "rsi"
+    )))
   )
 })
 

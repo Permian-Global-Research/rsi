@@ -55,33 +55,38 @@
 #' )
 #'
 #' @export
-stack_rasters <- function(rasters,
-                          output_filename,
-                          ...,
-                          resolution,
-                          extent,
-                          reference_raster = 1,
-                          resampling_method = "bilinear",
-                          band_names,
-                          check_crs = TRUE,
-                          gdalwarp_options = c(
-                            "-multi",
-                            "-overwrite",
-                            "-co", "COMPRESS=DEFLATE",
-                            "-co", "PREDICTOR=2",
-                            "-co", "NUM_THREADS=ALL_CPUS"
-                          ),
-                          gdal_config_options = c(
-                            VSI_CACHE = "TRUE",
-                            GDAL_CACHEMAX = "30%",
-                            VSI_CACHE_SIZE = "10000000",
-                            GDAL_HTTP_MULTIPLEX = "YES",
-                            GDAL_INGESTED_BYTES_AT_OPEN = "32000",
-                            GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
-                            GDAL_HTTP_VERSION = "2",
-                            GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
-                            GDAL_NUM_THREADS = "ALL_CPUS"
-                          )) {
+stack_rasters <- function(
+  rasters,
+  output_filename,
+  ...,
+  resolution,
+  extent,
+  reference_raster = 1,
+  resampling_method = "bilinear",
+  band_names,
+  check_crs = TRUE,
+  gdalwarp_options = c(
+    "-multi",
+    "-overwrite",
+    "-co",
+    "COMPRESS=DEFLATE",
+    "-co",
+    "PREDICTOR=2",
+    "-co",
+    "NUM_THREADS=ALL_CPUS"
+  ),
+  gdal_config_options = c(
+    VSI_CACHE = "TRUE",
+    GDAL_CACHEMAX = "30%",
+    VSI_CACHE_SIZE = "10000000",
+    GDAL_HTTP_MULTIPLEX = "YES",
+    GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR",
+    GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES",
+    GDAL_NUM_THREADS = "ALL_CPUS"
+  )
+) {
   rlang::check_dots_empty()
 
   check_type_and_length(
@@ -103,19 +108,28 @@ stack_rasters <- function(rasters,
 
   use_warper <- tolower(tools::file_ext(output_filename)) != "vrt"
 
-  if (!use_warper && (!missing(gdal_config_options) || !missing(gdalwarp_options))) {
+  if (
+    !use_warper && (!missing(gdal_config_options) || !missing(gdalwarp_options))
+  ) {
     rlang::warn(
       "`gdal_config_options` and `gdalwarp_options` are both ignored when `output_filename` ends in 'vrt'.",
       class = "rsi_gdal_options_ignored"
     )
   }
 
-  if (!(reference_raster %in% seq_along(rasters) ||
-    reference_raster %in% names(rasters))) {
+  if (
+    !(reference_raster %in%
+      seq_along(rasters) ||
+      reference_raster %in% names(rasters))
+  ) {
     if (is.numeric(reference_raster)) {
-      msg <- glue::glue("`rasters` is of length {length(rasters)}, but `reference_raster` is {reference_raster}.")
+      msg <- glue::glue(
+        "`rasters` is of length {length(rasters)}, but `reference_raster` is {reference_raster}."
+      )
     } else {
-      msg <- glue::glue("`reference_raster` is '{reference_raster}', but none of the elements in `rasters` are named '{reference_raster}'.")
+      msg <- glue::glue(
+        "`reference_raster` is '{reference_raster}', but none of the elements in `rasters` are named '{reference_raster}'."
+      )
     }
     rlang::abort(
       c(
@@ -198,10 +212,14 @@ stack_rasters <- function(rasters,
     rasters[[reference_raster]],
     vrt_container_file,
     options = c(
-      "-b", 1,
-      "-te", extent,
-      "-tr", resolution,
-      "-r", resampling_method
+      "-b",
+      1,
+      "-te",
+      extent,
+      "-tr",
+      resolution,
+      "-r",
+      resampling_method
     )
   )
   vrt_container <- readLines(vrt_container_file)
@@ -224,10 +242,14 @@ stack_rasters <- function(rasters,
             raster,
             out_files[[b]],
             options = c(
-              "-b", b,
-              "-te", extent,
-              "-tr", resolution,
-              "-r", resampling_method
+              "-b",
+              b,
+              "-te",
+              extent,
+              "-tr",
+              resolution,
+              "-r",
+              resampling_method
             )
           )
         }

@@ -40,13 +40,15 @@
 #' )
 #'
 #' @export
-rsi_query_api <- function(bbox,
-                          stac_source,
-                          collection,
-                          start_date,
-                          end_date,
-                          limit,
-                          ...) {
+rsi_query_api <- function(
+  bbox,
+  stac_source,
+  collection,
+  start_date,
+  end_date,
+  limit,
+  ...
+) {
   if (!is.null(start_date)) {
     datetime <- paste0(start_date, "/", end_date)
   } else {
@@ -117,8 +119,10 @@ rsi_query_api <- function(bbox,
 #' )
 #'
 #' @export
-sign_planetary_computer <- function(items,
-                                    subscription_key = Sys.getenv("rsi_pc_key")) {
+sign_planetary_computer <- function(
+  items,
+  subscription_key = Sys.getenv("rsi_pc_key")
+) {
   # check for the variable used by sits if the rsi one isn't set
   if (subscription_key == "") subscription_key <- Sys.getenv("MPC_TOKEN")
   if (subscription_key == "") {

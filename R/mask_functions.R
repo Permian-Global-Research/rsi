@@ -97,10 +97,12 @@ sentinel2_mask_function <- function(raster) {
 #' )
 #'
 #' @export
-landsat_mask_function <- function(raster,
-                                  include = c("land", "water", "both"),
-                                  ...,
-                                  masked_bits) {
+landsat_mask_function <- function(
+  raster,
+  include = c("land", "water", "both"),
+  ...,
+  masked_bits
+) {
   rlang::check_dots_empty()
   if (missing(masked_bits)) {
     if (missing(include)) include <- include[[1]]
@@ -158,8 +160,9 @@ bits_to_int <- function(vals) {
 #'
 #' @export
 alos_palsar_mask_function <- function(
-    raster,
-    include = c("land", "water", "both")) {
+  raster,
+  include = c("land", "water", "both")
+) {
   if (missing(include)) include <- include[[1]]
   include <- rlang::arg_match(include, multiple = TRUE)
   # includes no data (0), layover (100) and shadow (150)

@@ -23,21 +23,36 @@ test_that("landsat_mask_function arguments work", {
 
   expect_gt(
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat)))),
-    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "water")))
+    sum(terra::values(landsat_mask_function(
+      terra::rast(boston_landsat),
+      "water"
+    )))
   )
 
   expect_gt(
-    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
+    sum(terra::values(landsat_mask_function(
+      terra::rast(boston_landsat),
+      "both"
+    ))),
     sum(terra::values(landsat_mask_function(terra::rast(boston_landsat))))
   )
 
   expect_equal(
-    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
-    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), c("land", "water"))))
+    sum(terra::values(landsat_mask_function(
+      terra::rast(boston_landsat),
+      "both"
+    ))),
+    sum(terra::values(landsat_mask_function(
+      terra::rast(boston_landsat),
+      c("land", "water")
+    )))
   )
 
   expect_equal(
-    sum(terra::values(landsat_mask_function(terra::rast(boston_landsat), "both"))),
+    sum(terra::values(landsat_mask_function(
+      terra::rast(boston_landsat),
+      "both"
+    ))),
     sum(
       terra::values(
         landsat_mask_function(

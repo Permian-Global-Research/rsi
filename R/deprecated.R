@@ -12,13 +12,15 @@
 #' @name deprecated
 #' @keywords internal
 #' @export
-default_query_function <- function(bbox,
-                                   stac_source,
-                                   collection,
-                                   start_date,
-                                   end_date,
-                                   limit,
-                                   ...) {
+default_query_function <- function(
+  bbox,
+  stac_source,
+  collection,
+  start_date,
+  end_date,
+  limit,
+  ...
+) {
   lifecycle::deprecate_warn(
     "0.2.0",
     "default_query_function()",

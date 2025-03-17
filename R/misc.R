@@ -86,11 +86,15 @@ rsi_gdal_config_options <- function() {
 #' @export
 rsi_gdalwarp_options <- function() {
   c(
-    "-r", "bilinear",
+    "-r",
+    "bilinear",
     "-multi",
     "-overwrite",
-    "-co", "COMPRESS=DEFLATE",
-    "-co", "PREDICTOR=2",
-    "-co", "NUM_THREADS=ALL_CPUS"
+    "-co",
+    "COMPRESS=DEFLATE",
+    "-co",
+    "PREDICTOR=2",
+    "-co",
+    "NUM_THREADS=ALL_CPUS"
   )
 }
