@@ -399,10 +399,8 @@ landsat_image <- get_landsat_imagery(
   output_filename = tempfile(fileext = ".tif")
 )
 
-landsat_image |>
-  terra::rast() |>
-  terra::stretch() |>
-  terra::plotRGB()
+landsat_image <- terra::rast(landsat_image)
+terra::plotRGB(terra::stretch(landsat_image))
 
 # The `get_*_imagery()` functions will download
 # all available "data" assets by default
