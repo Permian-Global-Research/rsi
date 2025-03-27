@@ -21,11 +21,9 @@ calculate_indices(
 \code{\link[terra:rast]{terra::rast()}}) to compute indices from.}
 
 \item{indices}{A data frame of indices to compute. The intent is for this
-function to work with subsets of \link{spectral_indices}, but any data frame with
-columns \code{formula} (containing a string representation of the equation used
-to calculate the index), \code{bands} (a list column containing character vectors
-of the necessary bands) and \code{short_name} (which will be used as the band
-name) will work.}
+function to work with subsets of \code{\link[=spectral_indices]{spectral_indices()}}, but you can provide
+any data frame with \code{formula}, \code{bands}, and \code{short_name} columns; see
+"Custom indices" below.}
 
 \item{output_filename}{The filename to write the computed metrics to.}
 
@@ -71,6 +69,30 @@ there's nothing nasty hiding in any of the formulas you're going to run.
 Additionally, consider using pre-saved indices tables or
 \code{spectral_indices(download_indices = FALSE)} if using this in an unsupervised
 workload.
+}
+
+\section{Custom indices}{
+
+While this function is designed to work with subsets of \code{\link[=spectral_indices]{spectral_indices()}},
+you can also provide your own custom indices by providing a data frame with
+at least three columns:
+\itemize{
+\item \code{formula} should contain a string representation of the equation used to
+calculate the index. This string will be interpreted as R code, and should use
+normal R arithmetic operators. Any additional functions used in calculating the
+index will need to be passed through \code{extra_objects}.
+\item \code{bands} should be a list column containing character vectors identifying the
+bands required to calculate the index. These vectors will be checked against the
+band names of \code{raster} to make sure that all necessary bands are available
+before indices are calculated.
+\item \code{short_name} should contain a string which will be used as the band name in
+the final output file.
+}
+
+Sometimes you might want to tweak the formula used for an existing index, for
+instance to set non-data parameters to constant values. In that case, make sure
+you also update \code{bands} to reflect just the bands required by your updated formula,
+so that the function won't error unnecessarily.
 }
 
 \examples{

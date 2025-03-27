@@ -22,11 +22,9 @@
 #' @param raster The raster (either as a SpatRaster or object readable by
 #' [terra::rast()]) to compute indices from.
 #' @param indices A data frame of indices to compute. The intent is for this
-#' function to work with subsets of [spectral_indices], but any data frame with
-#' columns `formula` (containing a string representation of the equation used
-#' to calculate the index), `bands` (a list column containing character vectors
-#' of the necessary bands) and `short_name` (which will be used as the band
-#' name) will work.
+#' function to work with subsets of [spectral_indices()], but you can provide
+#' any data frame with `formula`, `bands`, and `short_name` columns; see
+#' "Custom indices" below.
 #' @param output_filename The filename to write the computed metrics to.
 #' @inheritParams rlang::args_dots_empty
 #' @inheritParams terra::predict
@@ -39,6 +37,27 @@
 #' emits a warning, which you can suppress with `suppressWarnings()`.
 #' @param names_suffix If not `NULL`, will be used (with [paste()]) to add a
 #' suffix to each of the band names returned.
+#'
+#' @section Custom indices:
+#' While this function is designed to work with subsets of [spectral_indices()],
+#' you can also provide your own custom indices by providing a data frame with
+#' at least three columns:
+#'
+#' * `formula` should contain a string representation of the equation used to
+#' calculate the index. This string will be interpreted as R code, and should use
+#' normal R arithmetic operators. Any additional functions used in calculating the
+#' index will need to be passed through `extra_objects`.
+#' * `bands` should be a list column containing character vectors identifying the
+#' bands required to calculate the index. These vectors will be checked against the
+#' band names of `raster` to make sure that all necessary bands are available
+#' before indices are calculated.
+#' * `short_name` should contain a string which will be used as the band name in
+#' the final output file.
+#'
+#' Sometimes you might want to tweak the formula used for an existing index, for
+#' instance to set non-data parameters to constant values. In that case, make sure
+#' you also update `bands` to reflect just the bands required by your updated formula,
+#' so that the function won't error unnecessarily.
 #'
 #' @return `output_filename`, unchanged.
 #'
