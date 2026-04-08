@@ -61,7 +61,7 @@ test_that("filter_bands() works", {
 
   expect_true(
     all(
-      vapply(both_bands$bands, function(x) all(test_bands %in% x), logical(1))
+      vapply(both_bands$bands, function(x) all(x %in% test_bands), logical(1))
     )
   )
 

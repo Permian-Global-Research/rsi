@@ -19,7 +19,7 @@ Description: Downloads spatial data from spatiotemporal asset catalogs
     downloading functions support complex 'CQL2' queries using 'rstac'.
 License: Apache License (>= 2)
 Depends: 
-    R (>= 4.0)
+    R (>= 4.1)
 Imports: 
     future.apply,
     glue,
