@@ -8,7 +8,7 @@
 <title>Downloading data from STAC APIs using rsi • rsi</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Libre_Franklin-0.4.9/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Libre_Franklin-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Downloading data from STAC APIs using rsi">
@@ -173,19 +173,19 @@ API, which lists all the collections available from this API:</p>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">rstac</span><span class="fu">::</span><span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">get_request</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">###Collections</span></span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (124 item(s)):</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">collections</span> (136 item(s)):</span></span>
 <span><span class="co">#&gt;   - daymet-annual-pr</span></span>
 <span><span class="co">#&gt;   - daymet-daily-hi</span></span>
 <span><span class="co">#&gt;   - 3dep-seamless</span></span>
 <span><span class="co">#&gt;   - 3dep-lidar-dsm</span></span>
 <span><span class="co">#&gt;   - fia</span></span>
-<span><span class="co">#&gt;   - sentinel-1-rtc</span></span>
 <span><span class="co">#&gt;   - gridmet</span></span>
 <span><span class="co">#&gt;   - daymet-annual-na</span></span>
 <span><span class="co">#&gt;   - daymet-monthly-na</span></span>
 <span><span class="co">#&gt;   - daymet-annual-hi</span></span>
-<span><span class="co">#&gt;   - ... with 114 more collection(s).</span></span>
-<span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links</span></span></code></pre></div>
+<span><span class="co">#&gt;   - daymet-monthly-hi</span></span>
+<span><span class="co">#&gt;   - ... with 126 more collection(s).</span></span>
+<span><span class="co">#&gt; - <span style="font-weight: bold;">field(s):</span> collections, links, numberMatched, numberReturned</span></span></code></pre></div>
 <p>These collections are a subset of the data sets available in the <a href="https://planetarycomputer.microsoft.com/catalog" class="external-link">Planetary
 Computer data catalog</a>; the Planetary Computer is organized so that
 each collection corresponds to a distinct data set in the catalog.</p>
@@ -280,7 +280,7 @@ package to get the county’s geometry:</p>
 <span><span class="va">ashe</span> <span class="op">&lt;-</span> <span class="va">nc</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">ashe</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" alt="" width="768"></p>
 <p>And… that’s all the prep we need. We can go ahead and use this object
 with the <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> function from rsi, which takes a
 number of arguments to determine <em>which</em> STAC data we’re trying
@@ -303,7 +303,7 @@ the <code>lcpri</code> asset:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ashe_lcpri</span></span>
-<span><span class="co">#&gt; [1] "/tmp/Rtmp4nzh2a/file255130d674e8.tif"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "/tmp/RtmpATGHrI/file23ff265f5b5.tif"</span></span></code></pre></div>
 <p>And a few seconds later, we’ve got our data! The output from
 <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> is a path to this data, saved as a raster
 somewhere on our computer; that means we can pass this object to
@@ -312,7 +312,7 @@ data into R and visualize it:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" alt="" width="768"></p>
 <p>If we draw our Ashe county polygon on top of this raster, we can see
 that <code><a href="../reference/get_stac_data.html">get_stac_data()</a></code> has only downloaded the portion of
 this asset that falls within the bounding box we provided:</p>
@@ -320,7 +320,7 @@ this asset that falls within the bounding box we provided:</p>
 <code class="sourceCode R"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">ashe_lcpri</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="va">ashe</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-10-1.png" class="r-plt" alt="" width="768"></p>
 <p>What if we wanted to download more than one raster asset? We could
 choose to pass multiple asset names to <code>asset_names</code>. For
 instance, if we wanted to also download the secondary land cover
@@ -338,7 +338,7 @@ write:</p>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" alt="" width="768"></p>
 <p>Neat!</p>
 <p>Now, as it happens, Ashe county is entirely contained inside a single
 LCMAP tile – so it’s returned by our API as a single STAC item. What if
@@ -361,7 +361,7 @@ relevant pieces of each object and merging them together:</p>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-12-1.png" class="r-plt" alt="" width="768"></p>
 <p>If we wanted, we could parallelize these downloads using
 <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code>, and set up a progress bar using
 <code><a href="https://progressr.futureverse.org/reference/handlers.html" class="external-link">progressr::handlers()</a></code>. We won’t use these functions in this
@@ -402,37 +402,37 @@ defaults have been changed:</p>
 <span></span>
 <span><span class="co"># Highlight changed default values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">gli_formals</span>, <span class="va">gsd_formals</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $platforms</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; c("landsat-9", "landsat-8")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $pixel_x_size</span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; [1] 30</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $asset_names</span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
 <span><span class="co">#&gt; rsi::landsat_band_mapping$planetary_computer_v1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $stac_source</span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "stac_source")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $collection</span></span>
+<span><span class="co">#&gt; [[5]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "collection_name")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $query_function</span></span>
+<span><span class="co">#&gt; [[6]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "query_function")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $download_function</span></span>
+<span><span class="co">#&gt; [[7]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "download_function")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $sign_function</span></span>
+<span><span class="co">#&gt; [[8]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "sign_function")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mask_band</span></span>
+<span><span class="co">#&gt; [[9]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "mask_band")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $mask_function</span></span>
+<span><span class="co">#&gt; [[10]]</span></span>
 <span><span class="co">#&gt; attr(asset_names, "mask_function")</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $composite_function</span></span>
+<span><span class="co">#&gt; [[11]]</span></span>
 <span><span class="co">#&gt; [1] "median"</span></span></code></pre></div>
 <p>Some of these defaults make sense: we can see that our function is
 going to be downloading data from Landsat-9 and Landsat-8, at a 30 meter
@@ -520,7 +520,7 @@ download Landsat imagery looks like this:</p>
 <span><span class="va">ashe_landsat</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="768"></p>
 <p>You can see transparent parts of each band where pixels in all images
 from June were automatically masked out, due to their value in their
 corresponding QA band. This behavior happens automatically, controlled
@@ -558,7 +558,7 @@ and all others are masked out:</p>
 <span><span class="co">#&gt;     classes &lt;- vapply(masked_bits, bits_to_int, integer(1), USE.NAMES = FALSE)</span></span>
 <span><span class="co">#&gt;     terra::`%in%`(raster, classes)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x563c4caa53f0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b58f429d00&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>You can control this behavior by passing your own function to the
 <code>mask_function</code> argument, or set this argument to
@@ -593,7 +593,7 @@ AOI separately:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="va"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-1.png" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-2.png" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-3.png" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-4.png" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-5.png" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-6.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-2.png" class="r-plt" alt="" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-3.png" class="r-plt" alt="" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-4.png" class="r-plt" alt="" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-5.png" class="r-plt" alt="" width="768"><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-19-6.png" class="r-plt" alt="" width="768"></p>
 </div>
 <div class="section level2">
 <h2 id="using-cql2-to-refine-queries-to-stac-apis">Using CQL2 to refine queries to STAC APIs<a class="anchor" aria-label="anchor" href="#using-cql2-to-refine-queries-to-stac-apis"></a>
@@ -653,7 +653,7 @@ parentheses:</p>
 <span><span class="co">#&gt;         start_date = start_date, end_date = end_date, limit = limit, </span></span>
 <span><span class="co">#&gt;         ...)</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x563c48faf5a8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55b589e35110&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:rsi&gt;</span></span></code></pre></div>
 <p>This is a relatively straightforward function – it composes a
 datetime from the start date and end date, then uses rstac to get a list
@@ -700,7 +700,7 @@ and pass that to <code><a href="../reference/get_stac_data.html">get_landsat_ima
 <span><span class="va">ashe_cql</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
+<p><img src="Downloading-data-from-STAC-APIs-using-rsi_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="768"></p>
 <p>If we know how to express our desired query in CQL2, we can write
 arbitrarily complex functions to make sure we’re only downloading the
 precise data we’re interested in.</p>
@@ -754,7 +754,7 @@ result in notably faster download speeds.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

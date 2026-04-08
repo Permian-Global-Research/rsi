@@ -1,0 +1,101 @@
+# Download specific assets from a set of STAC items
+
+Download specific assets from a set of STAC items
+
+## Usage
+
+``` r
+rsi_download_rasters(
+  items,
+  aoi,
+  asset_names,
+  sign_function = NULL,
+  merge = FALSE,
+  gdalwarp_options = c("-r", "bilinear", "-multi", "-overwrite", "-co",
+    "COMPRESS=DEFLATE", "-co", "PREDICTOR=2", "-co", "NUM_THREADS=ALL_CPUS"),
+  gdal_config_options = c(VSI_CACHE = "TRUE", GDAL_CACHEMAX = "30%", VSI_CACHE_SIZE =
+    "10000000", GDAL_HTTP_MULTIPLEX = "YES", GDAL_INGESTED_BYTES_AT_OPEN = "32000",
+    GDAL_DISABLE_READDIR_ON_OPEN = "EMPTY_DIR", GDAL_HTTP_VERSION = "2",
+    GDAL_HTTP_MERGE_CONSECUTIVE_RANGES = "YES", GDAL_NUM_THREADS = "ALL_CPUS",
+    GDAL_HTTP_USERAGENT = "rsi (https://permian-global-research.github.io/rsi/)"),
+  ...
+)
+```
+
+## Arguments
+
+- items:
+
+  A `StacItemCollection` object, as returned by
+  [`rsi_query_api()`](https://permian-global-research.github.io/rsi/dev/reference/rsi_query_api.md).
+
+- aoi:
+
+  Either an sf(c) object outlining the area of interest to get imagery
+  for, or a `bbox` image containing the bounding box of your AOI.
+
+- asset_names:
+
+  The names of the assets to download. If this vector has names, then
+  the names of the vector are assumed to be the names of assets on the
+  STAC server, which will be renamed to the elements of the vector in
+  the final output.
+
+- sign_function:
+
+  A function that takes the output from `query_function` and signs the
+  item URLs, if necessary.
+
+- merge:
+
+  Logical: for each asset, should data from multiple items be merged
+  into a single downloaded file? If `TRUE`, this returns a single file
+  for each asset, which has been merged via gdalwarp. No resampling or
+  compositing is performed, but rather each pixel uses the last data
+  downloaded. This is fast, but precludes per-item masking and
+  compositing. If `FALSE`, each asset from each item is saved as a
+  separate file.
+
+- gdalwarp_options:
+
+  Options passed to `gdalwarp` through the `options` argument of
+  [`sf::gdal_utils()`](https://r-spatial.github.io/sf/reference/gdal_utils.html).
+  The same set of options are used for all downloaded data and the final
+  output images; this means that some common options (for instance,
+  `PREDICTOR=3`) may cause errors if bands are of varying data types.
+  The default values are provided by
+  [`rsi_gdalwarp_options()`](https://permian-global-research.github.io/rsi/dev/reference/rsi_gdal_options.md).
+
+- gdal_config_options:
+
+  Options passed to `gdalwarp` through the `config_options` argument of
+  [`sf::gdal_utils()`](https://r-spatial.github.io/sf/reference/gdal_utils.html).
+  The default values are provided by
+  [`rsi_gdal_config_options()`](https://permian-global-research.github.io/rsi/dev/reference/rsi_gdal_options.md).
+
+- ...:
+
+  Passed to `item_filter_function`.
+
+## Value
+
+A data frame where columns correspond to distinct assets, rows
+correspond to distinct items, and cells contain file paths to the
+downloaded data.
+
+## Examples
+
+``` r
+if (FALSE) { # interactive()
+aoi <- sf::st_point(c(-74.912131, 44.080410))
+aoi <- sf::st_set_crs(sf::st_sfc(aoi), 4326)
+aoi <- sf::st_buffer(sf::st_transform(aoi, 5070), 100)
+
+landsat_image <- get_landsat_imagery(
+  aoi,
+  start_date = "2022-06-01",
+  end_date = "2022-08-30",
+  download_function = rsi_download_rasters
+)
+}
+```
