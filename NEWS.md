@@ -1,4 +1,4 @@
-# rsi (development version)
+# rsi 0.3.3
 
 * Test fixes for CRAN
 
