@@ -3,7 +3,7 @@
     Code
       suppressWarnings(spectral_indices(update_cache = FALSE))
     Output
-      # A tibble: 231 x 9
+      # A tibble: 271 x 9
          application_domain bands     contributor   date_of_addition formula long_name
          <chr>              <list>    <chr>         <chr>            <chr>   <chr>    
        1 vegetation         <chr [2]> https://gith~ 2021-11-17       (N - 0~ Aerosol ~
@@ -16,7 +16,7 @@
        8 vegetation         <chr [2]> https://gith~ 2022-04-08       (N * (~ Advanced~
        9 water              <chr [4]> https://gith~ 2021-09-18       4.0 * ~ Automate~
       10 water              <chr [5]> https://gith~ 2021-09-18       B + 2.~ Automate~
-      # i 221 more rows
+      # i 261 more rows
       # i 3 more variables: platforms <list>, reference <chr>, short_name <chr>
 
 # no cache, download false
@@ -28,7 +28,7 @@
       No cache file present and `download_indices` set to `FALSE`.
       i Returning (likely outdated) package data instead.
     Output
-      # A tibble: 231 x 9
+      # A tibble: 271 x 9
          application_domain bands     contributor   date_of_addition formula long_name
          <chr>              <list>    <chr>         <chr>            <chr>   <chr>    
        1 vegetation         <chr [2]> https://gith~ 2021-11-17       (N - 0~ Aerosol ~
@@ -41,7 +41,7 @@
        8 vegetation         <chr [2]> https://gith~ 2022-04-08       (N * (~ Advanced~
        9 water              <chr [4]> https://gith~ 2021-09-18       4.0 * ~ Automate~
       10 water              <chr [5]> https://gith~ 2021-09-18       B + 2.~ Automate~
-      # i 221 more rows
+      # i 261 more rows
       # i 3 more variables: platforms <list>, reference <chr>, short_name <chr>
 
 # no cache, download and update false
@@ -53,7 +53,7 @@
       No cache file present and `download_indices` set to `FALSE`.
       i Returning (likely outdated) package data instead.
     Output
-      # A tibble: 231 x 9
+      # A tibble: 271 x 9
          application_domain bands     contributor   date_of_addition formula long_name
          <chr>              <list>    <chr>         <chr>            <chr>   <chr>    
        1 vegetation         <chr [2]> https://gith~ 2021-11-17       (N - 0~ Aerosol ~
@@ -66,7 +66,7 @@
        8 vegetation         <chr [2]> https://gith~ 2022-04-08       (N * (~ Advanced~
        9 water              <chr [4]> https://gith~ 2021-09-18       4.0 * ~ Automate~
       10 water              <chr [5]> https://gith~ 2021-09-18       B + 2.~ Automate~
-      # i 221 more rows
+      # i 261 more rows
       # i 3 more variables: platforms <list>, reference <chr>, short_name <chr>
 
 # download false and update true

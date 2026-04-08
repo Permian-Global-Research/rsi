@@ -1,7 +1,15 @@
-This is the eigth CRAN release of rsi, fixing how downloads
-handle duplicated asset timestamps and how errors are
-handled during merging.
+This is the nine CRAN release of rsi, updating the
+required R version to 4.1 and fixing a test to pass
+on CRAN.
 
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
+
+## revdepcheck results
+
+We checked 1 reverse dependencies (0 from CRAN + 1 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
+
